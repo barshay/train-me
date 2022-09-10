@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import Home from './components/Home';
+import MyContext from './MyContext';
 import {
     BrowserRouter,
     Routes,
     Route,
     NavLink,
-} from "react-router-dom";
-import MyContext from './MyContext';
-import About from './components/about/About';
-import NotFound from './notFound/NotFound';
+} from 'react-router-dom';
 import { useClock } from './customHooks/useClock';
-import './StyledLink.css';
-
+import './Routing.css';
+import Logo from './images/Logo.png'
+import Home from './components/Home';
+import About from './components/about/About';
+import NotFound from './components/notFound/NotFound';
+import CommonQuestions from './components/commonQuestions/CommonQuestions';
+import Contact from './components/contact/Contact'
+// import axios from 'axios';
 // import IconButton from "@mui/material/IconButton";
 // import PunchClockIcon from '@mui/icons-material/PunchClock';
 // import axios from 'axios';
@@ -24,7 +27,9 @@ const Routing = () => {
 
     const [productsData, setProductsData] = useState([]);
 
-    const [isAdmin, setisAdmin] = useState(true);
+    // const [isAdmin, setIsAdmin] = useState(true);
+    // const [isTrainer, setIsTrainer] = useState(true);
+    // const [isCustomer, setIsCustomer] = useState(true);
 
     // get api + set loading - fetch api
     // useEffect(() => {
@@ -113,13 +118,21 @@ const Routing = () => {
             }}
         >
             <BrowserRouter>
-                <NavLink to="/" className="active-link"> Home</NavLink>
-                <NavLink to="/about" className="active-link">
-                    About
-                </NavLink>
-                {isAdmin && <NavLink to="/admin" className="active-link">Admin</NavLink>}
+                {/* <img className="logo" src="https://images-workbench.99static.com/4irGNePViw4qqiSO2V9EiXh052Y=/99designs-contests-attachments/90/90841/attachment_90841919" alt="logo-pic" /> */}
+                <div className="container-header">
+                    <span>
+                        <img className="logo" src={Logo} alt="logo-pic" />
+                    </span>
+                    <span style={{marginTop: '1em'}}>
+                        <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
+                        <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
+                        <NavLink to="/about" className="active-link">About</NavLink>
+                        <NavLink to="/" className="active-link">Home</NavLink>
+                    </span>
+                </div>
+                {/* {isAdmin && <NavLink to="/admin" className="active-link">Admin</NavLink>}
                 {isTrainer && <NavLink to="/trainer" className="active-link">Trainer</NavLink>}
-                {isCustomer && <NavLink to="/customer" className="active-link">Customer</NavLink>}
+                {isCustomer && <NavLink to="/customer" className="active-link">Customer</NavLink>} */}
 
                 {/* <span>
                     <IconButton
@@ -149,9 +162,12 @@ const Routing = () => {
                         />
                         }
                     />
-                    <Route path="login" element={<Login />} />
-                    <Route path="register" element={<Register />} />
+                    {/* <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} /> */}
                     <Route path="about" element={<About />} />
+                    <Route path="questions" element={<CommonQuestions />} />
+                    <Route path="contact" element={<Contact />} />
+
                     {/* <Route path="cart" element=
                         {<Cart removeCartItem={removeCartItem} />}
                     /> */}
