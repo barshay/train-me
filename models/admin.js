@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const adminSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    // user:{type: Schema.Types.ObjectId, ref: 'User'} 
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    // email: { type: String, required: true },
+    profilePic: { type: String, required: true },
+    password: { type: String, required: true },
 });
 
 const Admin = mongoose.model("Product", adminSchema);

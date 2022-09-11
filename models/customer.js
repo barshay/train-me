@@ -6,9 +6,17 @@ const customerSchema = new mongoose.Schema({
     lastname: { type: String, required: true },
     age: { type: Number, required: true },
     email: { type: String, required: true },
-    profilePic: { type: String, required: true }
+    profilePic: { type: String },
+    password: { type: String, required: true },
+    isTrainer: { type: Boolean, required: true },
+    gender: {
+        type: String,
+        enum: ['male', 'female'],
+        required: true
+    },
+    // trainer:{type: Schema.Types.ObjectId, ref: 'Trainer'} 
 });
 
-const Customer = mongoose.model("User", customerSchema);
+const Customer = mongoose.model("Customer", customerSchema);
 
 module.exports = Customer;

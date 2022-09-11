@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "dev": "concurrently \"nodemon server.js\" \"cd client && npm start\""
+    "dev": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
+    "render-postbuild": "cd client && yarn install && yarn build"
   },
   "repository": {
     "type": "git",

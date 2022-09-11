@@ -8,15 +8,13 @@ import {
 } from 'react-router-dom';
 import { useClock } from './customHooks/useClock';
 import './Routing.css';
-import Logo from './images/Logo.png'
+import Logo from './images/Logo.png';
 import Home from './components/Home';
-import About from './components/about/About';
-import NotFound from './components/notFound/NotFound';
-import CommonQuestions from './components/commonQuestions/CommonQuestions';
-import Contact from './components/contact/Contact'
-// import axios from 'axios';
-// import IconButton from "@mui/material/IconButton";
-// import PunchClockIcon from '@mui/icons-material/PunchClock';
+import About from './views/about/About';
+import NotFound from './views/notFound/NotFound';
+import CommonQuestions from './views/commonQuestions/CommonQuestions';
+import Contact from './views/contact/Contact';
+import Footer from './components/footer/Footer';
 // import axios from 'axios';
 
 
@@ -118,38 +116,23 @@ const Routing = () => {
             }}
         >
             <BrowserRouter>
-                {/* <img className="logo" src="https://images-workbench.99static.com/4irGNePViw4qqiSO2V9EiXh052Y=/99designs-contests-attachments/90/90841/attachment_90841919" alt="logo-pic" /> */}
                 <div className="container-header">
                     <span>
                         <img className="logo" src={Logo} alt="logo-pic" />
+                        <span>{clock}</span>
                     </span>
                     <span style={{marginTop: '1em'}}>
-                        <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
-                        <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
-                        <NavLink to="/about" className="active-link">About</NavLink>
                         <NavLink to="/" className="active-link">Home</NavLink>
+                        <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
+                        {/* <NavLink to="/about" className="active-link">About</NavLink> */}
+                        <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
                     </span>
                 </div>
+                <Footer />
                 {/* {isAdmin && <NavLink to="/admin" className="active-link">Admin</NavLink>}
                 {isTrainer && <NavLink to="/trainer" className="active-link">Trainer</NavLink>}
                 {isCustomer && <NavLink to="/customer" className="active-link">Customer</NavLink>} */}
 
-                {/* <span>
-                    <IconButton
-                        style={{
-                            display: "inline-flex",
-                            alignSelf: "flex-start",
-                            marginLeft: "115vh",
-                            color: "lightgray",
-                            fontSize: "20px"
-                        }}
-                        // aria-label="add an alarm"
-                        variant="outline"
-                        sx={{ m: -1 }}>
-                        <span >{clock}</span>
-                        <PunchClockIcon style={{ color: "rgb(142, 135, 86)" }} />
-                    </IconButton>
-                </span> */}
                 {/* {
                 isLoggedIn ? ( */}
                 <Routes>
@@ -167,10 +150,6 @@ const Routing = () => {
                     <Route path="about" element={<About />} />
                     <Route path="questions" element={<CommonQuestions />} />
                     <Route path="contact" element={<Contact />} />
-
-                    {/* <Route path="cart" element=
-                        {<Cart removeCartItem={removeCartItem} />}
-                    /> */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

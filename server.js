@@ -3,6 +3,9 @@ const express = require('express');
 // const cors = require('cors')
 // const serverResponse = require('./utils/serverResponse')
 // const { productAllowedUpdates } = require('./constants/allowedUpdates')
+const Questions = require("./models/question");
+
+
 
 const app = express();
 
@@ -21,6 +24,15 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
+})
+
+app.get("/api/questions", async (req, res) => {
+  try {
+    const allQuestions = await Questions.find({})
+    return serverResponse(res, 200, allQuestions)
+  } catch (e) {
+    return serverResponse(res, 500, { message: "internal error occured" + e })
+  }
 })
 
 // app.get("*", (req, res) => {
