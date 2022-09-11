@@ -8,13 +8,13 @@ const customerSchema = new mongoose.Schema({
     email: { type: String, required: true },
     profilePic: { type: String },
     password: { type: String, required: true },
-    isTrainer: { type: Boolean, required: true },
+    // isTrainer: { type: Boolean, required: true },
     gender: {
         type: String,
         enum: ['male', 'female'],
         required: true
     },
-    // trainer:{type: Schema.Types.ObjectId, ref: 'Trainer'} 
+    customerCourses: [],
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

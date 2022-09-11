@@ -8,7 +8,7 @@ const trainerSchema = new mongoose.Schema({
     email: { type: String, required: true },
     profilePic: { type: String, required: true },
     password: { type: String, required: true },
-    isTrainer: { type: Boolean, required: true },
+    // isTrainer: { type: Boolean, required: true },
     rating: {
         // type: Object,
         rate: Number,
@@ -18,9 +18,7 @@ const trainerSchema = new mongoose.Schema({
         type: String,
         enum: ['male', 'female'],
         required: true
-    },
-    // customer: { type: Schema.Types.ObjectId, ref: 'Customer' }
-});
+    }});
 
 const Trainer = mongoose.model("Trainer", trainerSchema);
 

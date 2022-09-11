@@ -26,14 +26,14 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get("/api/questions", async (req, res) => {
-  try {
-    const allQuestions = await Questions.find({})
-    return serverResponse(res, 200, allQuestions)
-  } catch (e) {
-    return serverResponse(res, 500, { message: "internal error occured" + e })
-  }
-})
+// app.get("/api/questions", async (req, res) => {
+//   try {
+//     const allQuestions = await Questions.find({})
+//     return serverResponse(res, 200, allQuestions)
+//   } catch (e) {
+//     return serverResponse(res, 500, { message: "internal error occured" + e })
+//   }
+// })
 
 // app.get("*", (req, res) => {
 //   res.sendFile(__dirname + "/client/build/index.html")
