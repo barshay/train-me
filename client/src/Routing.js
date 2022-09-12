@@ -14,7 +14,6 @@ import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
 import Contact from './views/contact/Contact';
-import Footer from './components/footer/Footer';
 // import axios from 'axios';
 
 
@@ -124,11 +123,10 @@ const Routing = () => {
                     <span style={{marginTop: '1em'}}>
                         <NavLink to="/" className="active-link">Home</NavLink>
                         <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
-                        {/* <NavLink to="/about" className="active-link">About</NavLink> */}
+                        <NavLink to="/about" className="active-link">About</NavLink>
                         <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
                     </span>
                 </div>
-                <Footer />
                 {/* {isAdmin && <NavLink to="/admin" className="active-link">Admin</NavLink>}
                 {isTrainer && <NavLink to="/trainer" className="active-link">Trainer</NavLink>}
                 {isCustomer && <NavLink to="/customer" className="active-link">Customer</NavLink>} */}
