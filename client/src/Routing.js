@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MyContext from './MyContext';
 import {
     BrowserRouter,
@@ -14,7 +14,7 @@ import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
 import Contact from './views/contact/Contact';
-// import axios from 'axios';
+import axios from 'axios';
 
 
 
@@ -22,44 +22,28 @@ const Routing = () => {
     const clock = useClock();
     const [loading, setLoading] = useState(true);
 
-    const [productsData, setProductsData] = useState([]);
+    const [CustomerData, setCustomerData] = useState([]);
 
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
     // const [isCustomer, setIsCustomer] = useState(true);
 
-    // get api + set loading - fetch api
-    // useEffect(() => {
-    //     const getApiAnswer = async () => {
-    //         try {
-    //             const response = await fetch('https://gocode-bituach-yashir.glitch.me/products')
-    //             const dataFromApi = await response.json()
-
-    //             setProductsData(dataFromApi);
-    //             setLoading(false);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    //     getApiAnswer();
-    // }, [])
-
     // get api + set loading - fetch from DB
-    // useEffect(() => {
-    //     const getApiAnswer = async () => {
-    //         try {
-    //             const productsUrl = 'http://localhost:8000/api/products';
-    //             const response = await axios.get(productsUrl);
-    //             console.log(response)
-    //             const data = await response.data;
-    //             setProductsData(data);
-    //             setLoading(false);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    //     getApiAnswer();
-    // }, [])
+    useEffect(() => {
+        const getApiAnswer = async () => {
+            try {
+                const productsUrl = 'http://localhost:8080/api/customers';
+                const response = await axios.get(productsUrl);
+                console.log(response)
+                const data = await response.data;
+                setCustomerData(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getApiAnswer();
+    }, [])
 
 
 
@@ -110,8 +94,8 @@ const Routing = () => {
     return (
         <MyContext.Provider
             value={{
-                productsData,
-                loading
+                loading,
+                CustomerData
             }}
         >
             <BrowserRouter>
