@@ -22,7 +22,7 @@ const Routing = () => {
     const clock = useClock();
     const [loading, setLoading] = useState(true);
 
-    const [CustomerData, setCustomerData] = useState([]);
+    const [customerData, setCustomerData] = useState([]);
 
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
@@ -95,7 +95,8 @@ const Routing = () => {
         <MyContext.Provider
             value={{
                 loading,
-                CustomerData
+                setCustomerData,
+                customerData
             }}
         >
             <BrowserRouter>

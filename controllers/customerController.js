@@ -13,7 +13,7 @@ const getAllCustomer = async (req, res) => {
         const allCustomer = await Customer.find({});
         return serverResponse(res, 200, allCustomer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -23,7 +23,7 @@ const addNewCustomer = async (req, res) => {
         await customer.save();
         return serverResponse(res, 200, customer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -33,7 +33,7 @@ const getCustomerById = async (req, res) => {
         const customer = await Customer.findOne({ _id: customerId });
         return serverResponse(res, 200, customer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -43,7 +43,7 @@ const deleteCustomer = async (req, res) => {
         const customer = await Customer.findOneAndDelete({ _id: customerId });
         return serverResponse(res, 200, customer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 

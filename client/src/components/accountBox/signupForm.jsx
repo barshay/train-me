@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   BoldLink,
   BoxContainer,
@@ -10,11 +10,13 @@ import {
 import { Marginer } from "../marginer";
 import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
+import axios from 'axios';
 
 export function SignupForm(props) {
   const { switchToSignin } = useContext(AccountContext);
 
-  const { setCustomerData } = useContext(MyContext);
+  const { customerData, setCustomerData } = useContext(MyContext);
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [age, setAge] = useState('');
@@ -25,112 +27,148 @@ export function SignupForm(props) {
   const [prophilePicture, setProphilePicture] = useState('');
   const [gender, setGender] = useState('');
 
-  // const [isFormValid, setIsFormValid] = useState(true);
+  // const [isFormValid, setIsFormValid] = useState(false);
+  // const [errors, setErrors] = useState({});
   const [error, setError] = useState([]);
-
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   }
 
-  const handleSubmitCustomerAdding = () => {
+  let errors = {};
+  const handleSubmitCustomerAdding = (async (event) => {
     let isValid = true;
+    errors = {};
+    // setErrors({});
     setError([]);
     if ((firstName && firstName.length < 2) || firstName.length > 20) {
       setError(prev => [...prev, 'Name cannot be lower than 2 or exceed from 20 character!']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
+      errors.firstName = "Name must in a range of 2-20 characters!";
+      // setErrors(...errors, "Name must in a range of 2-20 characters!");
+      console.log("errors" + errors.firstName);
+
+    } else if (!firstName) {
+      setError(prev => [...prev, 'Name feild is mandatory!']);
+      isValid = false;
+      errors.firstName = "Name feild is mandatory!";
+      // setErrors(...errors, "Name feild is mandatory!");
+      // setErrors(prevState => ({
+      //   ...prevState,
+      //   [name]: value
+      // }));
+      console.log("errors" + errors.firstName);
+
     }
     if ((lastName && lastName.length < 2) || lastName.length > 20) {
       setError(prev => [...prev, 'Last name cannot be lower than 2 or exceed from 20 character! ']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
+      errors.lastName = "Last Name must in a range of 2-20 characters!";
+    } else if (!lastName) {
+      isValid = false;
+      setError(prev => [...prev, 'Last Name feild is mandatory!']);
+      errors.lastName = "Last Name feild is mandatory!";
     }
-    if (!isValidEmail(email)) {
+    if (!email) {
+      setError(prev => [...prev, 'Email feild is mandatory!']);
+      errors.email = "Email feild is mandatory!";
+      isValid = false;
+    } else if (!isValidEmail(email)) {
       setError(prev => [...prev, 'This is not a valid email!']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
-    }
+      errors.email = "This is not a valid email!";
+    };
     if ((phone && phone.length < 7) || phone.length > 12) {
       setError(prev => [...prev, 'This is not a valid phone number!']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
-    }
-    if ((password && password.length < 4) || password.length > 10) {
-      setError(prev => [...prev, 'Password length must be in the range of 4-10!']);
+      errors.phone = "Phone numbers must be in a range of 7-12";
+    } else if (!phone) {
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
-    }
+      setError(prev => [...prev, 'Phone feild is mandatory!']);
+      errors.phone = "Phone feild is mandatory!";
+    };
+    if ((password && password.length < 4) || password.length > 10) {
+      setError(prev => [...prev, 'Password length must be in the range of 4-10 characters!']);
+      isValid = false;
+      errors.password = "Password length must be in the range of 4-10 characters!"
+    } else if (!password) {
+      isValid = false;
+      setError(prev => [...prev, 'Password feild is mandatory!']);
+      errors.password = "Password feild is mandatory!";
+    };
     if (confirmPassword && confirmPassword !== password) {
       setError(prev => [...prev, 'Confirm Password must be the same as password!']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
-    }
+      errors.confirmPassword = "Confirm Password must be the same as password!";
+    } else if (!confirmPassword) {
+      isValid = false;
+      setError(prev => [...prev, 'Confirm Password feild is mandatory!']);
+      errors.confirmPassword = "Confirm Password feild is mandatory!";
+    };
     if (age && age < 14) {
       setError(prev => [...prev, 'You are too young for the courses offered!']);
       isValid = false;
-    } else {
-      setError(prev => [...prev, 'This feild is mandatory!']);
-    }
-    if (!firstName && !lastName && !age && !email && !phone && !password && !confirmPassword && !gender) {
-      setError(prev => [...prev, 'the fields is empty, please fill them! ']);
+      errors.age = "You are too young for the courses offered!";
+    } else if (!age) {
       isValid = false;
-    }
-     else if (!firstName || !lastName || !age || !email || !phone || !password || !confirmPassword || !gender) {
-      // setError(prev => [...prev, 'one or more of the mandatory fields is empty! ']);
-      // isValid = false;
-      console.log("one of the mandatory field is missing");
-    }
+      setError(prev => [...prev, 'Age feild is mandatory!']);
+      errors.age = "Age feild is mandatory!";
+    };
+    if (!firstName || !lastName || !age || !email || !phone || !password || !confirmPassword || !gender) {
+      setError(prev => [...prev, 'one or more of the mandatory fields is missing! ']);
+    };
 
     if (!isValid) {
       console.log('form isn\'t valid!!');
+      errors.isValid = "form isn't valid!!"
+      console.log("errors" + errors.firstName);
       return;
-    }
+    };
 
     // if (error.length === 0) {
     //   setIsFormValid(true);
     // }
 
-    const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, prophilePicture }
-    setCustomerData(prev => [newCustomer, ...prev])
-    setFirstName('')
-    setLastName('')
-    setAge('')
-    setEmail('')
-    setPhone('')
-    setPassword('')
-    setConfirmPassword('')
-    setGender('')
-    setProphilePicture('')
-    console.log(newCustomer);
-  }
+    const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, prophilePicture };
+    setCustomerData((prev) => [newCustomer, ...prev]);
+    console.log(customerData);
+    setFirstName('');
+    setLastName('');
+    setAge('');
+    setEmail('');
+    setPhone('');
+    setPassword('');
+    setConfirmPassword('');
+    setGender('');
+    setProphilePicture('');
 
 
-  // const initialValues = {
-  //   firstName: "",
-  //   lastName: "",
-  //   age: "",
-  //   email: "",
-  //   phone: "",
-  //   password: "",
-  //   confirmPassword: "",
-  //   prophilePicture: "",
-  //   gender: "",
-  // };
+    const customerToAddToDB = {
+      firstname: firstName,
+      lastname: lastName,
+      age: +age,
+      email: email,
+      phone: phone,
+      password: password,
+      confirmPassword: confirmPassword,
+      gender: gender,
+      prophilePicture: prophilePicture
+    };
 
-  // const [formValues, setFormValues] = useState(initialValues);
+    console.log(customerToAddToDB);
+    axios({
+      method: 'post',
+      url: "http://localhost:8080/api/customer",
+      headers: { 'content-type': 'application/json' },
+      data: customerToAddToDB
+    })
+      .then(res => console.log('Posting a New Customer ', res.data))
+      .catch(err => console.log(err));
+  });
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   console.log(e.target.value);
-  //   setFormValues({ ...formValues, [name]: value });
-  //   console.log(formValues);
-  // }
+  useEffect(() => {
+    console.log("errors: " + error);
+  }, [error]);
+
   return (
     <BoxContainer>
       <FormContainer>
@@ -139,6 +177,9 @@ export function SignupForm(props) {
           placeholder="First Name"
           value={firstName}
           onChange={(e) => { setFirstName(e.target.value) }} />
+        {(errors.firstname > 0) ? console.log(typeof (errors.firstname)) : ''}
+        {/* console.log("ahaa!!!") */}
+        {/* {errors.firstName > 0 ? console.log("ahaa!!!") : ''} */}
         <Input
           type="text"
           placeholder="Last Name"
@@ -175,15 +216,20 @@ export function SignupForm(props) {
           placeholder="Prophile Picture"
           value={prophilePicture}
           onChange={(e) => { setProphilePicture(e.target.value) }} />
-        <Input
+        <select
           type="text"
           placeholder="Gender"
           value={gender}
-          onChange={(e) => { setGender(e.target.value) }} />
-
+          onChange={(e) => { setGender(e.target.value) }}>
+          <option>Choose your gender</option>
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
-      <SubmitButton type="submit" onClick={handleSubmitCustomerAdding}>Signup</SubmitButton>
+      <SubmitButton
+        type="submit" /** disabled={!isFormValid} */
+        onClick={handleSubmitCustomerAdding}>Signup</SubmitButton>
       <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">
         Already have an account?
@@ -198,5 +244,4 @@ export function SignupForm(props) {
 
 
 // picture: string(URL) ?
-// age: number , Date format?
-// gender: enum [male, female] ?
+// age: number , Date format ?

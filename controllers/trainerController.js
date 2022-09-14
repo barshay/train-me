@@ -13,7 +13,7 @@ const getAllTrainer = async (req, res) => {
         const allTrainer = await Trainer.find({});
         return serverResponse(res, 200, allTrainer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -25,7 +25,7 @@ const addNewTrainer = async (req, res) => {
         console.log(trainer);
         return serverResponse(res, 200, trainer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -35,7 +35,7 @@ const getTrainerById = async (req, res) => {
         const trainer = await Trainer.findOne({ _id: trainerId });
         return serverResponse(res, 200, trainer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
@@ -45,7 +45,7 @@ const deleteTrainer = async (req, res) => {
         const trainer = await Trainer.findOneAndDelete({ _id: trainerId });
         return serverResponse(res, 200, trainer);
     } catch (e) {
-        return serverResponse(res, 500, { message: "internal error occured" + e });
+        return serverResponse(res, 500, { message: "internal error occured " + e });
     }
 };
 
