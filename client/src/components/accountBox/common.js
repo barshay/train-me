@@ -30,11 +30,27 @@ export const BoldLink = styled.a`
   margin: 0 4px;
 `;
 
+export const BoldLinkCustomer = styled.a`
+  font-size: 11px;
+  color: green;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 0 4px;
+`;
+
+export const BoldLinkTrainer = styled.a`
+  font-size: 11px;
+  color: blue;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 0 4px;
+`;
+
 export const Input = styled.input`
   width: 100%;
   height: 32px;
   outline: none;
-  border: 1px solid rgba(200, 200, 200, 0.3);
+  border: 1px solid rgba(200, 200, 200, 2);
   padding: 0px 10px;
   border-bottom: 1.4px solid transparent;
   transition: all 200ms ease-in-out;

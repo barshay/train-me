@@ -4,6 +4,8 @@ import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
 import { SignupForm } from "./signupForm";
+import { TrainerSignupForm } from "./TrainerSignupForm";
+
 
 const BoxContainer = styled.div`
   width: 280px;
@@ -79,7 +81,7 @@ const InnerContainer = styled.div`
 const backdropVariants = {
   expanded: {
     width: "233%",
-    height: "1100px",
+    height: "1250px",
     borderRadius: "20%",
     transform: "rotate(60deg)",
   },
@@ -93,8 +95,8 @@ const backdropVariants = {
 
 const expandingTransition = {
   type: "spring",
-  duration: 2.3,
-  stiffness: 30,
+  duration: 2.5,
+  stiffness: 20,
 };
 
 export function AccountBox(props) {
@@ -112,7 +114,7 @@ export function AccountBox(props) {
     playExpandingAnimation();
     setTimeout(() => {
       setActive("signup");
-    }, 400);
+    }, 450);
   };
 
   const switchToSignin = () => {
@@ -122,7 +124,14 @@ export function AccountBox(props) {
     }, 400);
   };
 
-  const contextValue = { switchToSignup, switchToSignin };
+  const switchToTrainerSignup = () => {
+    playExpandingAnimation();
+    setTimeout(() => {
+      setActive("signup as a trainer");
+    }, 450);
+  };
+
+  const contextValue = { switchToSignup, switchToSignin, switchToTrainerSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -145,13 +154,21 @@ export function AccountBox(props) {
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText>Please sign-up to continue!</SmallText>
+              <SmallText>Please sign-up as a <b style={{color: "green", fontSize: "14px"}}>Customer</b> to continue!</SmallText>
+            </HeaderContainer>
+          )}
+          {active === "signup as a trainer" && (
+            <HeaderContainer>
+              <HeaderText>Create</HeaderText>
+              <HeaderText>Account</HeaderText>
+              <SmallText>Please sign-up as a <b style={{ color: "blue", fontSize: "14px" }}>Trainer</b> to continue!</SmallText>
             </HeaderContainer>
           )}
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
           {active === "signup" && <SignupForm />}
+          {active === "signup as a trainer" && <TrainerSignupForm />}
         </InnerContainer>
       </BoxContainer>
     </AccountContext.Provider>
