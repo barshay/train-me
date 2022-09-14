@@ -8,7 +8,7 @@ const serverResponse = require('../utils/serverResponse');
  * our requests names and functionality
  */
 
-const getAllTrainer = async (req, res) => {
+const getAllTrainers = async (req, res) => {
     try {
         const allTrainer = await Trainer.find({});
         return serverResponse(res, 200, allTrainer);
@@ -52,7 +52,7 @@ const deleteTrainer = async (req, res) => {
 
 
 module.exports = {
-    getAllTrainer,
+    getAllTrainers,
     addNewTrainer,
     getTrainerById,
     deleteTrainer,

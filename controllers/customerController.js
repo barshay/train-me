@@ -8,7 +8,7 @@ const serverResponse = require('../utils/serverResponse');
  * our requests names and functionality
  */
 
-const getAllCustomer = async (req, res) => {
+const getAllCustomers = async (req, res) => {
     try {
         const allCustomer = await Customer.find({});
         return serverResponse(res, 200, allCustomer);
@@ -51,7 +51,7 @@ const deleteCustomer = async (req, res) => {
 
 module.exports = {
     addNewCustomer,
-    getAllCustomer,
+    getAllCustomers,
     deleteCustomer,
     getCustomerById,
 

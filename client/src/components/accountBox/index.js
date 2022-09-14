@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
-import { SignupForm } from "./signupForm";
+import { CustomerSignupForm } from "./CustomerSignupForm";
 import { TrainerSignupForm } from "./TrainerSignupForm";
 
 
@@ -110,18 +110,18 @@ export function AccountBox(props) {
     }, expandingTransition.duration * 1000 - 1500);
   };
 
-  const switchToSignup = () => {
-    playExpandingAnimation();
-    setTimeout(() => {
-      setActive("signup");
-    }, 450);
-  };
-
   const switchToSignin = () => {
     playExpandingAnimation();
     setTimeout(() => {
       setActive("signin");
     }, 400);
+  };
+
+  const switchToCustomerSignup = () => {
+    playExpandingAnimation();
+    setTimeout(() => {
+      setActive("signup as a customer");
+    }, 450);
   };
 
   const switchToTrainerSignup = () => {
@@ -131,7 +131,7 @@ export function AccountBox(props) {
     }, 450);
   };
 
-  const contextValue = { switchToSignup, switchToSignin, switchToTrainerSignup };
+  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -150,7 +150,7 @@ export function AccountBox(props) {
               <SmallText>Please sign-in to continue!</SmallText>
             </HeaderContainer>
           )}
-          {active === "signup" && (
+          {active === "signup as a customer" && (
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
@@ -167,7 +167,7 @@ export function AccountBox(props) {
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
-          {active === "signup" && <SignupForm />}
+          {active === "signup as a customer" && <CustomerSignupForm />}
           {active === "signup as a trainer" && <TrainerSignupForm />}
         </InnerContainer>
       </BoxContainer>

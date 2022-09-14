@@ -16,30 +16,45 @@ app.use(cors())
 //Customer API
 const {
   addNewCustomer,
-  getAllCustomer,
+  getAllCustomers,
   deleteCustomer,
   getCustomerById,
 } = require("./controllers/customerController");
 //Trainer API
 const {
-  getAllTrainer,
+  getAllTrainers,
   addNewTrainer,
   getTrainerById,
   deleteTrainer,
 } = require("./controllers/trainerController");
+//ContactUs API
+const {
+  getAllContactInquiries,
+  addNewPostOfContact,
+  getContactById,
+  deleteContactById,
+  deleteAllContactInquiries,
+} = require("./controllers/contuctUsController");
 
 /** ROUTES */
 //Customer Routes
 app.post("/api/customer", addNewCustomer);
-app.get("/api/customers", getAllCustomer);
-app.delete("/api/customer/:customerID", deleteCustomer);
 app.get("/api/customer/:customerID", getCustomerById);
+app.get("/api/customers", getAllCustomers);
+app.delete("/api/customer/:customerID", deleteCustomer);
 
 //Trainer Routes
-app.get("/api/trainers", getAllTrainer);
-app.delete("/api/trainer/:trainerID", deleteTrainer);
-app.get("/api/trainer/:trainerID", getTrainerById);
 app.post("/api/trainer", addNewTrainer);
+app.get("/api/trainer/:trainerID", getTrainerById);
+app.get("/api/trainers", getAllTrainers);
+app.delete("/api/trainer/:trainerID", deleteTrainer);
+
+//ContactUs Routes
+app.post("/api/contuctUs", addNewPostOfContact);
+app.get("/api/contuctUs/:contucutID", getContactById);
+app.get("/api/contactUs", getAllContactInquiries);
+app.delete("/api/contuctUs/:contucutID", deleteContactById);
+// api.delete("/api/contuctUs", deleteAllContactInquiries); //check error
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import {
-  BoldLink,
   BoldLinkTrainer,
   BoldLinkCustomer,
   BoxContainer,
@@ -13,7 +12,7 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
 export function LoginForm(props) {
-  const { switchToSignup, switchToTrainerSignup } = useContext(AccountContext);
+  const { switchToCustomerSignup, switchToTrainerSignup } = useContext(AccountContext);
 
   return (
     <BoxContainer>
@@ -29,7 +28,7 @@ export function LoginForm(props) {
       <MutedLink href="#">
         Don't have an account?{" "}
         <Marginer direction="vertical" margin="1em" />
-        <BoldLinkCustomer href="#" onClick={switchToSignup}>
+        <BoldLinkCustomer href="#" onClick={switchToCustomerSignup}>
           Signup as a customer
         </BoldLinkCustomer>
       </MutedLink>

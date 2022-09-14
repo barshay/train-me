@@ -22,7 +22,10 @@ const Routing = () => {
     const clock = useClock();
     const [loading, setLoading] = useState(true);
 
-    const [customerData, setCustomerData] = useState([]);
+    const [customersData, setCustomersData] = useState([]);
+    const [trainersData, setTrainersData] = useState([]);
+    const [contuctUsData, setContuctUsData] = useState([]);
+
 
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
@@ -30,20 +33,50 @@ const Routing = () => {
 
     // get api + set loading - fetch from DB
     useEffect(() => {
-        const getApiAnswer = async () => {
+        const getCustomersApiAnswer = async () => {
             try {
-                const productsUrl = 'http://localhost:8080/api/customers';
-                const response = await axios.get(productsUrl);
+                const customersUrl = 'http://localhost:8080/api/customers';
+                const response = await axios.get(customersUrl);
                 console.log(response)
                 const data = await response.data;
-                setCustomerData(data);
+                setCustomersData(data);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
             }
         }
-        getApiAnswer();
+
+        const getTrainerApiAnswer = async () => {
+            try {
+                const trainersUrl = 'http://localhost:8080/api/trainers';
+                const response = await axios.get(trainersUrl);
+                console.log(response)
+                const data = await response.data;
+                setTrainersData(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        const getContuctUsApiAnswer = async () => {
+            try {
+                const contuctUsUrl = 'http://localhost:8080/api/ContuctUs';
+                const response = await axios.get(contuctUsUrl);
+                console.log(response)
+                const data = await response.data;
+                setContuctUsData(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getTrainerApiAnswer();
+        getCustomersApiAnswer();
+        getContuctUsApiAnswer();
     }, [])
+
 
 
 
@@ -95,8 +128,13 @@ const Routing = () => {
         <MyContext.Provider
             value={{
                 loading,
-                setCustomerData,
-                customerData
+                setCustomersData,
+                setTrainersData,
+                setContuctUsData,
+                customersData,
+                trainersData,
+                contuctUsData,
+
             }}
         >
             <BrowserRouter>
@@ -105,7 +143,7 @@ const Routing = () => {
                         <img className="logo" src={Logo} alt="logo-pic" />
                         <span>{clock}</span>
                     </span>
-                    <span style={{marginTop: '1em'}}>
+                    <span style={{ marginTop: '1em' }}>
                         <NavLink to="/" className="active-link">Home</NavLink>
                         <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
                         <NavLink to="/about" className="active-link">About</NavLink>
