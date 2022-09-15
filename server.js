@@ -5,7 +5,62 @@ const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
 
-const trainerRoutes = require("./api/routers/trainer");
+
+require("dotenv").config()
+
+app.use(express.json());
+// app.use(express.static("client/build"))
+app.use(cors())
+
+
+/** MODELS + API's */
+//Customer API
+const {
+  addNewCustomer,
+  getAllCustomers,
+  deleteCustomer,
+  getCustomerById,
+} = require("./controllers/customerController");
+//Trainer API
+const {
+  getAllTrainers,
+  addNewTrainer,
+  getTrainerById,
+  deleteTrainer,
+} = require("./controllers/trainerController");
+//ContactUs API
+const {
+  getAllContactInquiries,
+  addNewPostOfContact,
+  getContactById,
+  deleteContactById,
+  deleteAllContactInquiries,
+} = require("./controllers/contactUsController");
+
+/** ROUTES */
+//Customer Routes
+app.post("/api/customer", addNewCustomer);
+app.get("/api/customer/:customerID", getCustomerById);
+app.get("/api/customers", getAllCustomers);
+app.delete("/api/customer/:customerID", deleteCustomer);
+
+//Trainer Routes
+app.post("/api/trainer", addNewTrainer);
+app.get("/api/trainer/:trainerID", getTrainerById);
+app.get("/api/trainers", getAllTrainers);
+app.delete("/api/trainer/:trainerID", deleteTrainer);
+
+//ContactUs Routes
+app.post("/api/contactUs", addNewPostOfContact);
+app.get("/api/contactUs/:contucutID", getContactById);
+app.get("/api/allContacts", getAllContactInquiries);
+app.delete("/api/contactUs/:contucutID", deleteContactById);
+app.delete("/api/allContucts", deleteAllContactInquiries); 
+
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 require("dotenv").config(); //TODO: Learn why needed
 
@@ -15,7 +70,7 @@ app.use(cors());
 
 //ROUTES
 
-app.use("/trainer", trainerRoutes);
+
 // app.get("/", (req, res) => {
 //   res.send("Hello World!!");
 // });

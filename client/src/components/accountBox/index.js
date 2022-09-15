@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
-import { SignupForm } from "./signupForm";
+import { CustomerSignupForm } from "./CustomerSignupForm";
 import { TrainerSignupForm } from "./TrainerSignupForm";
 
 
@@ -13,10 +13,14 @@ const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 19px;
-  background-color: #fff;
+  background-color: whitesmoke;
   box-shadow: 0 0 2px rgba(15, 15, 15, 0.28);
   position: relative;
   overflow: hidden;
+  margin-right: 3em;
+  margin-top: 4em;
+  margin-bottom: 2em;
+  opacity: 0.8;
 `;
 
 const TopContainer = styled.div`
@@ -25,7 +29,7 @@ const TopContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0 1.8em;
+  padding: 0 2.8em;
   padding-bottom: 5em;
 `;
 
@@ -110,18 +114,18 @@ export function AccountBox(props) {
     }, expandingTransition.duration * 1000 - 1500);
   };
 
-  const switchToSignup = () => {
-    playExpandingAnimation();
-    setTimeout(() => {
-      setActive("signup");
-    }, 450);
-  };
-
   const switchToSignin = () => {
     playExpandingAnimation();
     setTimeout(() => {
       setActive("signin");
     }, 400);
+  };
+
+  const switchToCustomerSignup = () => {
+    playExpandingAnimation();
+    setTimeout(() => {
+      setActive("signup as a customer");
+    }, 450);
   };
 
   const switchToTrainerSignup = () => {
@@ -131,7 +135,7 @@ export function AccountBox(props) {
     }, 450);
   };
 
-  const contextValue = { switchToSignup, switchToSignin, switchToTrainerSignup };
+  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -150,11 +154,11 @@ export function AccountBox(props) {
               <SmallText>Please sign-in to continue!</SmallText>
             </HeaderContainer>
           )}
-          {active === "signup" && (
+          {active === "signup as a customer" && (
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText>Please sign-up as a <b style={{color: "green", fontSize: "14px"}}>Customer</b> to continue!</SmallText>
+              <SmallText>Please sign-up as a <b style={{ color: "green", fontSize: "14px" }}>Customer</b> to continue!</SmallText>
             </HeaderContainer>
           )}
           {active === "signup as a trainer" && (
@@ -167,7 +171,7 @@ export function AccountBox(props) {
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
-          {active === "signup" && <SignupForm />}
+          {active === "signup as a customer" && <CustomerSignupForm />}
           {active === "signup as a trainer" && <TrainerSignupForm />}
         </InnerContainer>
       </BoxContainer>

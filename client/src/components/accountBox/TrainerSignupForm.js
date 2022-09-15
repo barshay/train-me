@@ -14,9 +14,9 @@ import { AccountContext } from "./accountContext";
 import axios from 'axios';
 
 export function TrainerSignupForm(props) {
-    const { switchToSignin, switchToSignup } = useContext(AccountContext);
+    const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
 
-    const { trainerData, setTrainerData } = useContext(MyContext);
+    const { trainersData, setTrainersData } = useContext(MyContext);
 
 
     const [firstName, setFirstName] = useState('');
@@ -170,8 +170,8 @@ export function TrainerSignupForm(props) {
 
 
         const newTrainer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, prophilePicture };
-        setTrainerData((prev) => [newTrainer, ...prev]);
-        console.log(trainerData);
+        setTrainersData((prev) => [newTrainer, ...prev]);
+        console.log(trainersData);
         setFirstName('');
         setLastName('');
         setAge('');
@@ -342,7 +342,7 @@ export function TrainerSignupForm(props) {
                     placeholder="Gender"
                     value={gender}
                     onChange={(e) => { setGender(e.target.value) }}>
-                    <option>Choose your gender</option>
+                    <option>Choose your gender please</option>
                     <option value="male">male</option>
                     <option value="female">female</option>
                 </select>
@@ -355,17 +355,17 @@ export function TrainerSignupForm(props) {
             <Marginer direction="vertical" margin={10} />
             <SubmitButton
                 type="submit"
-                onClick={handleSubmitTrainerAdding}>Signup</SubmitButton>
+                onClick={handleSubmitTrainerAdding}>Sign-Up</SubmitButton>
             <Marginer direction="vertical" margin="1em" />
             <MutedLink href="#">
                 Already have an account?
                 <Marginer direction="vertical" margin="0.5em" />
                 <BoldLink href="#" onClick={switchToSignin}>
-                    Signin
+                    Sign-In
                 </BoldLink>
                 <Marginer direction="vertical" margin="0.5em" />
-                <BoldLinkCustomer href="#" onClick={switchToSignup}>
-                    Signup as a customer
+                <BoldLinkCustomer href="#" onClick={switchToCustomerSignup}>
+                    Sign-up as a customer
                 </BoldLinkCustomer>
                 <Marginer direction="vertical" margin="0.5em" />
             </MutedLink>

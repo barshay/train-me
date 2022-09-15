@@ -13,10 +13,10 @@ import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
 
-export function SignupForm(props) {
+export function CustomerSignupForm(props) {
   const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
 
-  const { customerData, setCustomerData } = useContext(MyContext);
+  const { customersData, setCustomersData } = useContext(MyContext);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -169,8 +169,8 @@ export function SignupForm(props) {
 
 
     const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, prophilePicture };
-    setCustomerData((prev) => [newCustomer, ...prev]);
-    console.log(customerData);
+    setCustomersData((prev) => [newCustomer, ...prev]);
+    console.log(customersData);
     setFirstName('');
     setLastName('');
     setAge('');
@@ -341,7 +341,7 @@ export function SignupForm(props) {
           placeholder="Gender"
           value={gender}
           onChange={(e) => { setGender(e.target.value) }}>
-          <option>Choose your gender</option>
+          <option>Choose your gender please</option>
           <option value="male">male</option>
           <option value="female">female</option>
         </select>
@@ -354,17 +354,17 @@ export function SignupForm(props) {
       <Marginer direction="vertical" margin={10} />
       <SubmitButton
         type="submit"
-        onClick={handleSubmitCustomerAdding}>Signup</SubmitButton>
+        onClick={handleSubmitCustomerAdding}>Sign-Up</SubmitButton>
       <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">
         Already have an account?
         <Marginer direction="vertical" margin="0.5em" />
         <BoldLink href="#" onClick={switchToSignin}>
-          Signin
+          Sign-In
         </BoldLink>
         <Marginer direction="vertical" margin="0.5em" />
         <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
-          Signup as a Trainer
+          Sign-up as a Trainer
         </BoldLinkTrainer>
         <Marginer direction="vertical" margin="0.5em" />
       </MutedLink>

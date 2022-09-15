@@ -5,7 +5,7 @@ export const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 4px;
 `;
 
 export const FormContainer = styled.form`
@@ -74,7 +74,7 @@ export const Input = styled.input`
 
 export const SubmitButton = styled.button`
   width: 100%;
-  padding: 11px 40%;
+  padding: 11px 30%;
   color: #fff;
   font-size: 15px;
   font-weight: 600;
