@@ -1,4 +1,4 @@
-const ContuctUs = require("../models/contactUs");
+const ContactUs = require("../models/contactUs");
 const { allowedUpdates } = require('../constants/allowedUpdates');
 const serverResponse = require('../utils/serverResponse');
 
@@ -10,7 +10,7 @@ const serverResponse = require('../utils/serverResponse');
 
 const getAllContactInquiries = async (req, res) => {
     try {
-        const allContactUs = await ContuctUs.find({});
+        const allContactUs = await ContactUs.find({});
         return serverResponse(res, 200, allContactUs);
     } catch (e) {
         return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -19,7 +19,7 @@ const getAllContactInquiries = async (req, res) => {
 
 const addNewPostOfContact = async (req, res) => {
     try {
-        const newPostOfContact = new ContuctUs({ ...req.body });
+        const newPostOfContact = new ContactUs({ ...req.body });
         await newPostOfContact.save();
         return serverResponse(res, 200, newPostOfContact);
     } catch (e) {
@@ -29,8 +29,8 @@ const addNewPostOfContact = async (req, res) => {
 
 const getContactById = async (req, res) => {
     try {
-        const contactId = req.params.contactId;
-        const contact = await ContuctUs.findOne({ _id: contactId });
+        const contactId = req.params.contactID;
+        const contact = await ContactUs.findOne({ _id: contactId });
         return serverResponse(res, 200, contact);
     } catch (e) {
         return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -40,7 +40,7 @@ const getContactById = async (req, res) => {
 const deleteContactById = async (req, res) => {
     try {
         const contactId = req.params.contactId;
-        const contact = await ContuctUs.findOneAndDelete({ _id: contactId });
+        const contact = await ContactUs.findOneAndDelete({ _id: contactId });
         return serverResponse(res, 200, contact);
     } catch (e) {
         return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -49,7 +49,7 @@ const deleteContactById = async (req, res) => {
 
 const deleteAllContactInquiries = async (req, res) => {
     try {
-        const allContactUs = ContuctUs.remove({});
+        const allContactUs = await ContactUs.deleteMany({});
         return serverResponse(res, 200, allContactUs);
     } catch (e) {
         return serverResponse(res, 500, { message: "internal error occured " + e });

@@ -61,7 +61,7 @@ const Routing = () => {
 
         const getContuctUsApiAnswer = async () => {
             try {
-                const contuctUsUrl = 'http://localhost:8080/api/ContuctUs';
+                const contuctUsUrl = 'http://localhost:8080/api/allContucts';
                 const response = await axios.get(contuctUsUrl);
                 console.log(response)
                 const data = await response.data;

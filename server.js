@@ -34,7 +34,7 @@ const {
   getContactById,
   deleteContactById,
   deleteAllContactInquiries,
-} = require("./controllers/contuctUsController");
+} = require("./controllers/contactUsController");
 
 /** ROUTES */
 //Customer Routes
@@ -50,11 +50,12 @@ app.get("/api/trainers", getAllTrainers);
 app.delete("/api/trainer/:trainerID", deleteTrainer);
 
 //ContactUs Routes
-app.post("/api/contuctUs", addNewPostOfContact);
-app.get("/api/contuctUs/:contucutID", getContactById);
-app.get("/api/contactUs", getAllContactInquiries);
-app.delete("/api/contuctUs/:contucutID", deleteContactById);
-// api.delete("/api/contuctUs", deleteAllContactInquiries); //check error
+app.post("/api/contactUs", addNewPostOfContact);
+app.get("/api/contactUs/:contucutID", getContactById);
+app.get("/api/allContacts", getAllContactInquiries);
+app.delete("/api/contactUs/:contucutID", deleteContactById);
+app.delete("/api/allContucts", deleteAllContactInquiries); 
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

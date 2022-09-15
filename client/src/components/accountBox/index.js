@@ -13,10 +13,14 @@ const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 19px;
-  background-color: #fff;
+  background-color: whitesmoke;
   box-shadow: 0 0 2px rgba(15, 15, 15, 0.28);
   position: relative;
   overflow: hidden;
+  margin-right: 3em;
+  margin-top: 4em;
+  margin-bottom: 2em;
+  opacity: 0.8;
 `;
 
 const TopContainer = styled.div`
@@ -25,7 +29,7 @@ const TopContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0 1.8em;
+  padding: 0 2.8em;
   padding-bottom: 5em;
 `;
 
@@ -154,7 +158,7 @@ export function AccountBox(props) {
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText>Please sign-up as a <b style={{color: "green", fontSize: "14px"}}>Customer</b> to continue!</SmallText>
+              <SmallText>Please sign-up as a <b style={{ color: "green", fontSize: "14px" }}>Customer</b> to continue!</SmallText>
             </HeaderContainer>
           )}
           {active === "signup as a trainer" && (
