@@ -1,10 +1,13 @@
 import './Home.css';
+import { AccountBox } from './accountBox/index';
 
 function Home() {
   return (
-    <div className="Home">
-        Train-Me
-    </div>
+    <>
+      <div className="register">
+        <AccountBox />
+      </div>
+    </>
   );
 }
 

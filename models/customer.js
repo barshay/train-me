@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
     lastname: { type: String, required: true },
     age: { type: Number, required: true },
     email: { type: String, required: true },
+    phone: { type: String, required: true },
     profilePic: { type: String },
     password: { type: String, required: true },
     // isTrainer: { type: Boolean, required: true },
@@ -14,7 +15,9 @@ const customerSchema = new mongoose.Schema({
         enum: ['male', 'female'],
         required: true
     },
-    customerCourses: [],
+    // customerCourses: [
+    //     { type: Schema.Types.ObjectId, ref: 'Course', default: 'Not yet registered for course' }
+    // ],
 });
 
 const Customer = mongoose.model("Customer", customerSchema);
