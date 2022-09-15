@@ -111,7 +111,7 @@ const ContactUsForm = () => {
           onChange={handleMessageInputChange}
         ></input>
         {submitted && !values.message ? <span className="error-field">Please enter the message content</span> : null}
-        <div>
+        <div className="label-checkbox-holder">
           <p style={{fontSize: "16px", margin: "0"}}>Preferred contact method</p>
           <label className="label-feild" htmlFor="checkbox">Email
             <input
@@ -126,14 +126,14 @@ const ContactUsForm = () => {
             <input
               id="checkbox"
               type="checkbox"
-              className="checkbox-field"
+              className="checkbox-field" 
               name="contactMethod"
               value={values.contactMethod}
               onChange={handleContactMethodInputChange}
             /></label>
         </div>
         <button
-          className="form-field"
+          className="btn-container"
           type="submit">Send Us a Message</button>
       </form>
     </div>
