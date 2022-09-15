@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Trainer = require("../models/trainer");
@@ -23,7 +22,6 @@ module.exports = {
         }
 
         const trainer = new Trainer({
-          _id: new mongoose.Types.ObjectId(),
           firstname,
           lastname,
           age,
