@@ -51,10 +51,10 @@ app.delete("/api/trainer/:trainerID", deleteTrainer);
 
 //ContactUs Routes
 app.post("/api/contactUs", addNewPostOfContact);
-app.get("/api/contactUs/:contucutID", getContactById);
+app.get("/api/contactUs/:contactID", getContactById);
 app.get("/api/allContacts", getAllContactInquiries);
-app.delete("/api/contactUs/:contucutID", deleteContactById);
-app.delete("/api/allContucts", deleteAllContactInquiries); 
+app.delete("/api/contactUs/:contactID", deleteContactById);
+app.delete("/api/allContacts", deleteAllContactInquiries); 
 
 
 app.get('/', (req, res) => {

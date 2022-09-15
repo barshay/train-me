@@ -8,7 +8,7 @@ const contactUsSchema = new mongoose.Schema({
     email: { type: String, required: true},
     messageTitle: { type: String, required: true },
     message: { type: String, required: true},
-    MethodOfContact: {type: String, },
+    contactMethod: {type: String},
     //user
 });
 

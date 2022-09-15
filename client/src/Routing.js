@@ -13,7 +13,7 @@ import Home from './components/Home';
 import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
-import Contact from './views/contact/Contact';
+import Contact from './views/contactUs/ContactUsForm';
 import axios from 'axios';
 
 
@@ -61,7 +61,7 @@ const Routing = () => {
 
         const getContuctUsApiAnswer = async () => {
             try {
-                const contuctUsUrl = 'http://localhost:8080/api/allContucts';
+                const contuctUsUrl = 'http://localhost:8080/api/allContacts';
                 const response = await axios.get(contuctUsUrl);
                 console.log(response)
                 const data = await response.data;

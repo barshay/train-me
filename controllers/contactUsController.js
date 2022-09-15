@@ -29,6 +29,7 @@ const addNewPostOfContact = async (req, res) => {
 
 const getContactById = async (req, res) => {
     try {
+        console.log(req.params);
         const contactId = req.params.contactID;
         const contact = await ContactUs.findOne({ _id: contactId });
         return serverResponse(res, 200, contact);
@@ -39,7 +40,8 @@ const getContactById = async (req, res) => {
 
 const deleteContactById = async (req, res) => {
     try {
-        const contactId = req.params.contactId;
+        console.log(req.params);
+        const contactId = req.params.contactID;
         const contact = await ContactUs.findOneAndDelete({ _id: contactId });
         return serverResponse(res, 200, contact);
     } catch (e) {

@@ -13,6 +13,7 @@ import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
 
+
 export function TrainerSignupForm(props) {
     const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
 
@@ -28,7 +29,7 @@ export function TrainerSignupForm(props) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [prophilePicture, setProphilePicture] = useState('');
     const [gender, setGender] = useState('');
-
+const [isValidForm, setIsValidForm] = useState(false)
     const [mandatoryErrors, setMandatoryErrors] = useState([]);
     const [errors, setErrors] = useState([]);
 
@@ -181,7 +182,7 @@ export function TrainerSignupForm(props) {
         setConfirmPassword('');
         setGender('');
         setProphilePicture('');
-
+        setIsValidForm(true);
 
         const trainerToAddToDB = {
             firstname: firstName,
@@ -206,9 +207,11 @@ export function TrainerSignupForm(props) {
             .catch(err => console.log(err));
     });
 
+
     return (
         <BoxContainer>
             <FormContainer>
+                {isValidForm && <div style={{fontSize: "12px", color: "red"}}>You have successfully registered</div>}
                 <Input
                     type="text"
                     placeholder="First Name"
