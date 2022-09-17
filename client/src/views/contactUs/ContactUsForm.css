@@ -1,19 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
-body {
-    display: flex;
-    min-height: 130vh;
-}
-
 .form-container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     width: 55rem;
     margin: auto;
+    margin-bottom: 6em;
     /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
     padding: 10px;
-    margin-top: 6.5em;
+    /* padding-top: 6.5em; */
+    margin-top: 6em;
+
     /* border-radius: 2%; */
     justify-content: space-around;
 

@@ -138,9 +138,9 @@ const Routing = () => {
         >
             <BrowserRouter>
                 <div className="container-header">
-                    <span>
+                    <span className="container-logo-clock">
                         <img className="logo" src={Logo} alt="logo-pic" />
-                        <span>{clock}</span>
+                        <span className="clock">{clock}</span>
                     </span>
                     <span style={{ marginTop: '1em' }}>
                         <NavLink to="/" className="active-link">Home</NavLink>
