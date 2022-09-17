@@ -214,12 +214,12 @@ export function CustomerSignupForm(props) {
           value={firstName}
           onChange={(e) => { setFirstName(e.target.value) }} />
         {mandatoryErrors[firstName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Name feild is mandatory!
           </p> : ''
         }
         {errors[firstName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Name must be in a range of 2 - 20 characters!
           </p> : ''
         }
@@ -229,12 +229,12 @@ export function CustomerSignupForm(props) {
           value={lastName}
           onChange={(e) => { setLastName(e.target.value) }} />
         {mandatoryErrors[lastName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Last Name feild is mandatory!
           </p> : ''
         }
         {errors[lastName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Last Name must in a range of 2 - 20 characters!
           </p> : ''
         }
@@ -244,12 +244,12 @@ export function CustomerSignupForm(props) {
           value={email}
           onChange={(e) => { setEmail(e.target.value) }} />
         {mandatoryErrors[email] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Email feild is mandatory!
           </p> : ''
         }
         {errors[email] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             This is not a valid email!
           </p> : ''
         }
@@ -261,12 +261,12 @@ export function CustomerSignupForm(props) {
           onChange={(e) => { setPassword(e.target.value) }}
           maxLength={10} />
         {mandatoryErrors[password] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Password feild is mandatory!
           </p> : ''
         }
         {errors[password] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Password length must be in the range of 4 - 10 characters!
           </p> : ''
         }
@@ -277,12 +277,12 @@ export function CustomerSignupForm(props) {
           value={confirmPassword}
           onChange={(e) => { setConfirmPassword(e.target.value) }} />
         {mandatoryErrors[confirmPassword] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Confirm Password feild is mandatory!
           </p> : ''
         }
         {errors[confirmPassword] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Confirm Password must be the same as password!
           </p> : ''
         }
@@ -298,12 +298,12 @@ export function CustomerSignupForm(props) {
           value={age}
           onChange={(e) => { setAge(e.target.value) }} />
         {mandatoryErrors[age] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Age feild is mandatory!
           </p> : ''
         }
         {errors[age] ?
-          <span style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "0.3em", display: "flex", alignItems: "center" }}
+          <span style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "0.3em", display: "flex", alignItems: "center", marginTop: "0" }}
           >You are too young for the courses!
             <video autoPlay loop muted style={{
               position: 'relative',
@@ -326,12 +326,12 @@ export function CustomerSignupForm(props) {
           value={phone}
           onChange={(e) => { setPhone(e.target.value) }} />
         {mandatoryErrors[phone] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             Phone feild is mandatory!
           </p> : ''
         }
         {errors[phone] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "2em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "2em", marginTop: "0" }}>
             Phone number must be in a range of 7 - 12 numbers
           </p> : ''
         }
@@ -346,7 +346,7 @@ export function CustomerSignupForm(props) {
           <option value="female">female</option>
         </select>
         {mandatoryErrors[gender] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em" }}>
+          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
             gender feild is mandatory!
           </p> : ''
         }

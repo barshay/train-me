@@ -24,8 +24,7 @@ const Routing = () => {
 
     const [customersData, setCustomersData] = useState([]);
     const [trainersData, setTrainersData] = useState([]);
-    const [contuctUsData, setContuctUsData] = useState([]);
-
+    const [contuctUsData, setContactUsData] = useState([]);
 
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
@@ -65,7 +64,7 @@ const Routing = () => {
                 const response = await axios.get(contuctUsUrl);
                 console.log(response)
                 const data = await response.data;
-                setContuctUsData(data);
+                setContactUsData(data);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -130,7 +129,7 @@ const Routing = () => {
                 loading,
                 setCustomersData,
                 setTrainersData,
-                setContuctUsData,
+                setContactUsData,
                 customersData,
                 trainersData,
                 contuctUsData,

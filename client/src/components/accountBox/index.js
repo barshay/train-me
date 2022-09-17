@@ -21,6 +21,19 @@ const BoxContainer = styled.div`
   margin-top: 4em;
   margin-bottom: 2em;
   opacity: 0.8;
+
+  @media (max-width: 800px) {
+  /* width: 200px; */
+    display: inline-flex;
+    margin-top: 6em;
+  }
+
+  @media (max-width: 500px) {
+  width: 200px;
+    display: inline-flex;
+    margin-top: 8em;
+      /* max-height: 350px; */
+  }
 `;
 
 const TopContainer = styled.div`
@@ -31,6 +44,13 @@ const TopContainer = styled.div`
   justify-content: flex-end;
   padding: 0 2.8em;
   padding-bottom: 5em;
+
+  @media (max-width: 500px) {
+    display: flex;
+      justify-content: flex-start;
+    width: 100%;
+    height: 200px;
+  }
 `;
 
 const BackDrop = styled(motion.div)`
