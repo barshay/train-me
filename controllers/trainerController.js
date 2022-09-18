@@ -3,11 +3,6 @@ const { allowedUpdates } = require('../constants/allowedUpdates');
 const serverResponse = require('../utils/serverResponse');
 
 
-/**
- * still need to adjustment this page to 
- * our requests names and functionality
- */
-
 const getAllTrainers = async (req, res) => {
     try {
         const allTrainer = await Trainer.find({});
@@ -39,7 +34,7 @@ const getTrainerById = async (req, res) => {
     }
 };
 
-const deleteTrainer = async (req, res) => {
+const deleteTrainerById = async (req, res) => {
     try {
         const trainerId = req.params.trainerID;
         const trainer = await Trainer.findOneAndDelete({ _id: trainerId });
@@ -55,6 +50,6 @@ module.exports = {
     getAllTrainers,
     addNewTrainer,
     getTrainerById,
-    deleteTrainer,
+    deleteTrainerById,
 
 };

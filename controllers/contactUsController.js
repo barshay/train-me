@@ -3,11 +3,6 @@ const { allowedUpdates } = require('../constants/allowedUpdates');
 const serverResponse = require('../utils/serverResponse');
 
 
-/**
- * still need to adjustment this page to 
- * our requests names and functionality
- */
-
 const getAllContactInquiries = async (req, res) => {
     try {
         const allContactUs = await ContactUs.find({});

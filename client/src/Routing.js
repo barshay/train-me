@@ -25,7 +25,7 @@ const Routing = () => {
     const [customersData, setCustomersData] = useState([]);
     const [trainersData, setTrainersData] = useState([]);
     const [contuctUsData, setContactUsData] = useState([]);
-
+    const [adminData ,setAdminData] = useState([]);
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
     // const [isCustomer, setIsCustomer] = useState(true);
@@ -71,9 +71,23 @@ const Routing = () => {
             }
         }
 
+        const getAdminApiAnswer = async () => {
+            try {
+                const contuctUsUrl = 'http://localhost:8080/api/admin';
+                const response = await axios.get(contuctUsUrl);
+                console.log(response)
+                const data = await response.data;
+                setAdminData(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         getTrainerApiAnswer();
         getCustomersApiAnswer();
         getContuctUsApiAnswer();
+        getAdminApiAnswer();
     }, [])
 
 
@@ -130,10 +144,11 @@ const Routing = () => {
                 setCustomersData,
                 setTrainersData,
                 setContactUsData,
+                setAdminData,
                 customersData,
                 trainersData,
                 contuctUsData,
-
+                adminData, 
             }}
         >
             <BrowserRouter>

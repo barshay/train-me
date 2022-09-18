@@ -17,7 +17,7 @@ app.use(cors())
 const {
   addNewCustomer,
   getAllCustomers,
-  deleteCustomer,
+  deleteCustomerById,
   getCustomerById,
 } = require("./controllers/customerController");
 //Trainer API
@@ -25,8 +25,15 @@ const {
   getAllTrainers,
   addNewTrainer,
   getTrainerById,
-  deleteTrainer,
+  deleteTrainerById,
 } = require("./controllers/trainerController");
+//Admin API
+const {
+  addNewPostOfAdmin,
+  // getAdminById,
+  deleteAdminById,
+  getAdmin
+} = require("./controllers/adminController");
 //ContactUs API
 const {
   getAllContactInquiries,
@@ -41,13 +48,19 @@ const {
 app.post("/api/customer", addNewCustomer);
 app.get("/api/customer/:customerID", getCustomerById);
 app.get("/api/customers", getAllCustomers);
-app.delete("/api/customer/:customerID", deleteCustomer);
+app.delete("/api/customer/:customerID", deleteCustomerById);
 
 //Trainer Routes
 app.post("/api/trainer", addNewTrainer);
 app.get("/api/trainer/:trainerID", getTrainerById);
 app.get("/api/trainers", getAllTrainers);
-app.delete("/api/trainer/:trainerID", deleteTrainer);
+app.delete("/api/trainer/:trainerID", deleteTrainerById);
+
+//Admin Routes
+app.post("/api/admin", addNewPostOfAdmin);
+// app.get("/api/admin/:adminID", getAdminById);
+app.delete("/api/admin/:adminID", deleteAdminById);
+app.get("/api/Admin", getAdmin);
 
 //ContactUs Routes
 app.post("/api/contactUs", addNewPostOfContact);

@@ -37,7 +37,7 @@ const getCustomerById = async (req, res) => {
     }
 };
 
-const deleteCustomer = async (req, res) => {
+const deleteCustomerById = async (req, res) => {
     try {
         const customerId = req.params.customerID;
         const customer = await Customer.findOneAndDelete({ _id: customerId });
@@ -52,7 +52,7 @@ const deleteCustomer = async (req, res) => {
 module.exports = {
     addNewCustomer,
     getAllCustomers,
-    deleteCustomer,
+    deleteCustomerById,
     getCustomerById,
 
 };

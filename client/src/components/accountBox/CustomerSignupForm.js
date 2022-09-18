@@ -2,8 +2,10 @@ import React, { useState, useContext } from "react";
 import {
   BoldLink,
   BoldLinkTrainer,
+  BoldLinkAdmin,
   BoxContainer,
   FormContainer,
+  ErrorStyle,
   Input,
   MutedLink,
   SubmitButton,
@@ -14,7 +16,7 @@ import { AccountContext } from "./accountContext";
 import axios from 'axios';
 
 export function CustomerSignupForm(props) {
-  const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
+  const { switchToSignin, switchToTrainerSignup, switchToAdminSignup } = useContext(AccountContext);
 
   const { customersData, setCustomersData } = useContext(MyContext);
 
@@ -25,7 +27,7 @@ export function CustomerSignupForm(props) {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [prophilePicture, setProphilePicture] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [gender, setGender] = useState('');
 
   const [mandatoryErrors, setMandatoryErrors] = useState([]);
@@ -168,7 +170,7 @@ export function CustomerSignupForm(props) {
     isValid = true;
 
 
-    const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, prophilePicture };
+    const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, profilePicture };
     setCustomersData((prev) => [newCustomer, ...prev]);
     console.log(customersData);
     setFirstName('');
@@ -179,7 +181,7 @@ export function CustomerSignupForm(props) {
     setPassword('');
     setConfirmPassword('');
     setGender('');
-    setProphilePicture('');
+    setProfilePicture('');
 
 
     const customerToAddToDB = {
@@ -191,7 +193,7 @@ export function CustomerSignupForm(props) {
       password: password,
       confirmPassword: confirmPassword,
       gender: gender,
-      prophilePicture: prophilePicture
+      profilepic: profilePicture
     };
 
     // console.log(customerToAddToDB);
@@ -214,14 +216,10 @@ export function CustomerSignupForm(props) {
           value={firstName}
           onChange={(e) => { setFirstName(e.target.value) }} />
         {mandatoryErrors[firstName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Name feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
         }
         {errors[firstName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Name must be in a range of 2 - 20 characters!
-          </p> : ''
+          <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
         }
         <Input
           type="text"
@@ -229,14 +227,10 @@ export function CustomerSignupForm(props) {
           value={lastName}
           onChange={(e) => { setLastName(e.target.value) }} />
         {mandatoryErrors[lastName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Last Name feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
         }
         {errors[lastName] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Last Name must in a range of 2 - 20 characters!
-          </p> : ''
+          <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
         }
         <Input
           type="email"
@@ -244,14 +238,10 @@ export function CustomerSignupForm(props) {
           value={email}
           onChange={(e) => { setEmail(e.target.value) }} />
         {mandatoryErrors[email] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Email feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
         }
         {errors[email] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            This is not a valid email!
-          </p> : ''
+          <ErrorStyle>This is not a valid email!</ErrorStyle> : ''
         }
         <Input
           type="password"
@@ -261,14 +251,10 @@ export function CustomerSignupForm(props) {
           onChange={(e) => { setPassword(e.target.value) }}
           maxLength={10} />
         {mandatoryErrors[password] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Password feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Password feild is mandatory!</ErrorStyle> : ''
         }
         {errors[password] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Password length must be in the range of 4 - 10 characters!
-          </p> : ''
+          <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
         }
         <Input
           type="password"
@@ -277,20 +263,16 @@ export function CustomerSignupForm(props) {
           value={confirmPassword}
           onChange={(e) => { setConfirmPassword(e.target.value) }} />
         {mandatoryErrors[confirmPassword] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Confirm Password feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
         }
         {errors[confirmPassword] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Confirm Password must be the same as password!
-          </p> : ''
+          <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
         }
         <Input
           type="text"
-          placeholder="Prophile Picture"
-          value={prophilePicture}
-          onChange={(e) => { setProphilePicture(e.target.value) }} />
+          placeholder="Profile Picture"
+          value={profilePicture}
+          onChange={(e) => { setProfilePicture(e.target.value) }} />
         <Input
           type="number"
           placeholder="age"
@@ -298,9 +280,7 @@ export function CustomerSignupForm(props) {
           value={age}
           onChange={(e) => { setAge(e.target.value) }} />
         {mandatoryErrors[age] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Age feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Age feild is mandatory!</ErrorStyle> : ''
         }
         {errors[age] ?
           <span style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "0.3em", display: "flex", alignItems: "center", marginTop: "0" }}
@@ -326,14 +306,10 @@ export function CustomerSignupForm(props) {
           value={phone}
           onChange={(e) => { setPhone(e.target.value) }} />
         {mandatoryErrors[phone] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Phone feild is mandatory!
-          </p> : ''
+          <ErrorStyle>Phone feild is mandatory! </ErrorStyle> : ''
         }
         {errors[phone] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "2em", marginTop: "0" }}>
-            Phone number must be in a range of 7 - 12 numbers
-          </p> : ''
+          <ErrorStyle style={{ paddingRight: "2em" }}>Phone number must be in a range of 7 - 12 numbers</ErrorStyle> : ''
         }
         <select
           style={{ fontSize: "12px", backgroundColor: "lightgreen", height: "2.7em" }}
@@ -346,12 +322,10 @@ export function CustomerSignupForm(props) {
           <option value="female">female</option>
         </select>
         {mandatoryErrors[gender] ?
-          <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            gender feild is mandatory!
-          </p> : ''
+          <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
         }
       </FormContainer>
-      <Marginer direction="vertical" margin={10} />
+      <Marginer direction="vertical" margin="1em" />
       <SubmitButton
         type="submit"
         onClick={handleSubmitCustomerAdding}>Sign-Up</SubmitButton>
@@ -366,6 +340,10 @@ export function CustomerSignupForm(props) {
         <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
           Sign-up as a Trainer
         </BoldLinkTrainer>
+        <Marginer direction="vertical" margin="0.5em" />
+        <BoldLinkAdmin href="#" onClick={switchToAdminSignup}>
+          Sign-up as an Admin
+        </BoldLinkAdmin>
         <Marginer direction="vertical" margin="0.5em" />
       </MutedLink>
     </BoxContainer>

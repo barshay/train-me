@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
 import { CustomerSignupForm } from "./CustomerSignupForm";
 import { TrainerSignupForm } from "./TrainerSignupForm";
-
+import { AdminSignupForm } from "./AdminSignupForm";
+import { BoldCustomer, BoldHello } from './common';
+import { BoldTrainer } from './common';
+import { BoldAdmin } from './common';
 
 const BoxContainer = styled.div`
   width: 280px;
@@ -105,13 +108,13 @@ const InnerContainer = styled.div`
 const backdropVariants = {
   expanded: {
     width: "233%",
-    height: "1250px",
+    height: "1480px",
     borderRadius: "20%",
     transform: "rotate(60deg)",
   },
   collapsed: {
     width: "160%",
-    height: "550px",
+    height: "520px",
     borderRadius: "50%",
     transform: "rotate(60deg)",
   },
@@ -155,7 +158,14 @@ export function AccountBox(props) {
     }, 450);
   };
 
-  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
+  const switchToAdminSignup = () => {
+    playExpandingAnimation();
+    setTimeout(() => {
+      setActive("signup as an admin");
+    }, 450);
+  };
+
+  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup, switchToAdminSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -178,14 +188,21 @@ export function AccountBox(props) {
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText>Please sign-up as a <b style={{ color: "green", fontSize: "14px" }}>Customer</b> to continue!</SmallText>
+              <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
             </HeaderContainer>
           )}
           {active === "signup as a trainer" && (
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText>Please sign-up as a <b style={{ color: "blue", fontSize: "14px" }}>Trainer</b> to continue!</SmallText>
+              <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
+            </HeaderContainer>
+          )}
+          {active === "signup as an admin" && (
+            <HeaderContainer>
+              <HeaderText>Create</HeaderText>
+              <HeaderText>Account</HeaderText>
+              <SmallText><BoldHello>Hello</BoldHello><BoldAdmin> Admin </BoldAdmin>Please sign-up to continue!</SmallText>
             </HeaderContainer>
           )}
         </TopContainer>
@@ -193,6 +210,7 @@ export function AccountBox(props) {
           {active === "signin" && <LoginForm />}
           {active === "signup as a customer" && <CustomerSignupForm />}
           {active === "signup as a trainer" && <TrainerSignupForm />}
+          {active === "signup as an admin" && <AdminSignupForm />}
         </InnerContainer>
       </BoxContainer>
     </AccountContext.Provider>

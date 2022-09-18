@@ -15,7 +15,7 @@ export const FormContainer = styled.form`
   /* box-shadow: 0px 0px 2.5px rgba(15, 15, 15, 0.19); */
 `;
 
-export const MutedLink = styled.a`
+export const MutedLink = styled.div`
   font-size: 11px;
   color: #4D1900;
   font-weight: 1000;
@@ -23,7 +23,7 @@ export const MutedLink = styled.a`
 `;
 
 export const BoldLink = styled.a`
-  font-size: 11px;
+  font-size: 14px;
   color: rgb(307, 120, 15);
   font-weight: 500;
   text-decoration: none;
@@ -31,7 +31,7 @@ export const BoldLink = styled.a`
 `;
 
 export const BoldLinkCustomer = styled.a`
-  font-size: 11px;
+  font-size: 14px;
   color: green;
   font-weight: 500;
   text-decoration: none;
@@ -39,11 +39,60 @@ export const BoldLinkCustomer = styled.a`
 `;
 
 export const BoldLinkTrainer = styled.a`
-  font-size: 11px;
+  font-size: 14px;
   color: blue;
   font-weight: 500;
   text-decoration: none;
   margin: 0 4px;
+`;
+
+export const BoldLinkAdmin = styled.a`
+  font-size: 14px;
+  color: brown;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 0 4px;
+`;
+
+export const BoldCustomer = styled.span`
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  /* margin: 1 2px; */
+  margin-right: 5px;
+  color: green;
+`;
+
+export const BoldTrainer = styled.span`
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  /* margin: 1 2px; */
+  margin-right: 28px;
+  color: blue;
+`;
+
+export const BoldAdmin = styled.span`
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  /* margin: 1 2px; */
+  margin-right: 5px;
+  margin-right: 32px;
+  color: red;
+`;
+
+export const BoldHello = styled.span`
+    font-size: 16px;
+    font-weight: 700;
+    /* display: inline-flex; */
+`;
+
+export const ErrorStyle = styled.p`
+  font-size: 12px;
+  color: red; 
+  padding-left: 0.3em;
+  margin-top: 0;
 `;
 
 export const Input = styled.input`
@@ -75,7 +124,8 @@ export const Input = styled.input`
 
 export const SubmitButton = styled.button`
   width: 100%;
-  padding: 11px 30%;
+  /* padding: 11px 30%; */
+  margin: 0;
   color: #fff;
   font-size: 15px;
   font-weight: 600;
@@ -92,5 +142,7 @@ export const SubmitButton = styled.button`
 
   &:hover {
     filter: brightness(1.15);
+    color:rgb(42, 86, 189);
+    font-size: large;
   }
 `;
