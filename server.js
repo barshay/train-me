@@ -5,12 +5,10 @@ const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
 
-const trainerRoutes = require("./api/routers/trainer");
-
-require("dotenv").config(); //TODO: Learn why needed
+require("dotenv").config();
 
 app.use(express.json());
-app.use(express.static("client/build")); //TODO: Learn why needed
+// app.use(express.static("client/build"))
 app.use(cors());
 
 //ROUTES

@@ -5,6 +5,7 @@ const {
   signup,
   login,
   getAllTrainers,
+  getTrainerById,
   updateTrainer,
   deleteTrainer,
 } = require("../controllers/trainer");
@@ -12,6 +13,7 @@ const {
 app.post("/signup", signup);
 app.post("/login", login);
 app.get("/", getAllTrainers);
+app.get("/", getTrainerById);
 app.patch("/:trainerId", updateTrainer);
 app.delete("/:trainerId", deleteTrainer);
 
