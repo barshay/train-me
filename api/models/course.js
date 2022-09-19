@@ -6,10 +6,10 @@ const courseSchema = new mongoose.Schema({
   picture: { type: String, required: true },
   lessonTime: { type: Number, required: true },
   cost: { type: Number, required: true },
-  trainer: { type: Schema.Types.ObjectId, ref: "Trainer" },
+  trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer" },
   customer: [
     {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
     },
   ],

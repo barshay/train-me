@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
 
 module.exports = {
   signup: (req, res) => {
-    const { firstname, lastname, profilePic, email, password } = req.body;
+    const { firstName, lastName, profilePic, email, password } = req.body;
 
     Admin.find({ email }).then((Admins) => {
       if (Admins.length >= 1) {
@@ -22,9 +21,8 @@ module.exports = {
         }
 
         const admin = new Admin({
-          _id: new mongoose.Types.ObjectId(),
-          firstname,
-          lastname,
+          firstName,
+          lastName,
           age,
           profilePic,
           gender,

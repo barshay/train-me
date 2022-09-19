@@ -1,7 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-// const serverResponse = require('./utils/serverResponse')
-// const { productAllowedUpdates } = require('./constants/allowedUpdates')
+const adminRoutes = require("./api/routers/admin");
+const contactUsRoutes = require("./api/routers/contactUs");
+const courseRoutes = require("./api/routers/course");
+const customerRoutes = require("./api/routers/customer");
+// const questionRoutes = require("./api/routers/question");
+const trainerRoutes = require("./api/routers/trainer");
+
 const app = express();
 const mongoose = require("mongoose");
 
@@ -14,63 +19,12 @@ app.use(express.json());
 app.use(cors());
 
 //ROUTES
+app.use("/admin", adminRoutes);
+app.use("/contactus", contactUsRoutes);
+app.use("/course", courseRoutes);
+app.use("/customer", customerRoutes);
+// app.use("/question", questionRoutes);
 app.use("/trainer", trainerRoutes);
-/** MODELS + API's */
-//Customer API
-// const {
-//   addNewCustomer,
-//   getAllCustomers,
-//   deleteCustomer,
-//   getCustomerById,
-// } = require("./controllers/customerController");
-// //Trainer API
-// const {
-//   getAllTrainers,
-//   addNewTrainer,
-//   getTrainerById,
-//   deleteTrainer,
-// } = require("./controllers/trainerController");
-// //ContactUs API
-// const {
-//   getAllContactInquiries,
-//   addNewPostOfContact,
-//   getContactById,
-//   deleteContactById,
-//   deleteAllContactInquiries,
-// } = require("./controllers/contactUsController");
-
-// /** ROUTES */
-// //Customer Routes
-// app.post("/api/customer", addNewCustomer);
-// app.get("/api/customer/:customerID", getCustomerById);
-// app.get("/api/customers", getAllCustomers);
-// app.delete("/api/customer/:customerID", deleteCustomer);
-
-// //Trainer Routes
-// app.post("/api/trainer", addNewTrainer);
-// app.get("/api/trainer/:trainerID", getTrainerById);
-// app.get("/api/trainers", getAllTrainers);
-// app.delete("/api/trainer/:trainerID", deleteTrainer);
-
-// //ContactUs Routes
-// app.post("/api/contactUs", addNewPostOfContact);
-// app.get("/api/contactUs/:contucutID", getContactById);
-// app.get("/api/allContacts", getAllContactInquiries);
-// app.delete("/api/contactUs/:contucutID", deleteContactById);
-// app.delete("/api/allContucts", deleteAllContactInquiries);
-
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
-
-// app.get("/api/questions", async (req, res) => {
-//   try {
-//     const allQuestions = await Questions.find({})
-//     return serverResponse(res, 200, allQuestions)
-//   } catch (e) {
-//     return serverResponse(res, 500, { message: "internal error occured" + e })
-//   }
-// })
 
 // app.get("*", (req, res) => {
 //   res.sendFile(__dirname + "/client/build/index.html")
