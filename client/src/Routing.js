@@ -10,6 +10,9 @@ import { useClock } from './customHooks/useClock';
 import './Routing.css';
 import Logo from './images/Logo.png';
 import Home from './components/Home';
+import CustomerPage from './components/customerPage/CostomerPage';
+import TrainerPage from './components/trainerPage/TrainerPage';
+import AdminPage from './components/adminPage/AdminPage';
 import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
@@ -25,7 +28,7 @@ const Routing = () => {
     const [customersData, setCustomersData] = useState([]);
     const [trainersData, setTrainersData] = useState([]);
     const [contuctUsData, setContactUsData] = useState([]);
-    const [adminData ,setAdminData] = useState([]);
+    const [adminData, setAdminData] = useState([]);
     // const [isAdmin, setIsAdmin] = useState(true);
     // const [isTrainer, setIsTrainer] = useState(true);
     // const [isCustomer, setIsCustomer] = useState(true);
@@ -148,7 +151,7 @@ const Routing = () => {
                 customersData,
                 trainersData,
                 contuctUsData,
-                adminData, 
+                adminData,
             }}
         >
             <BrowserRouter>
@@ -157,7 +160,7 @@ const Routing = () => {
                         <img className="logo" src={Logo} alt="logo-pic" />
                         <span className="clock">{clock}</span>
                     </span>
-                    <span style={{ marginTop: '1em' }}>
+                    <span style={{ marginTop: '1em', marginRight: '1em' }}>
                         <NavLink to="/" className="active-link">Home</NavLink>
                         <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
                         <NavLink to="/about" className="active-link">About</NavLink>
@@ -182,6 +185,9 @@ const Routing = () => {
                     />
                     {/* <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} /> */}
+                    <Route path="customer" element={<CustomerPage />} />
+                    <Route path="trainer" element={<TrainerPage />} />
+                    <Route path="admin" element={<AdminPage />} />
                     <Route path="about" element={<About />} />
                     <Route path="questions" element={<CommonQuestions />} />
                     <Route path="contact" element={<Contact />} />

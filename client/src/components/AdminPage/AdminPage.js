@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import './AdminPage.css';
 
 const AdminPage = () => {
   return (
-      <header >AdminPage</header>
+    <header className="page-container">AdminPage</header>
   )
 }
 

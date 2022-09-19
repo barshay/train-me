@@ -12,9 +12,12 @@ import {
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
+import { useNavigate } from 'react-router-dom';
 
 export function LoginForm(props) {
   const { switchToCustomerSignup, switchToTrainerSignup, switchToAdminSignup } = useContext(AccountContext);
+
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +31,7 @@ export function LoginForm(props) {
 
   let isValid = true;
   const handleSubmitLogin = (async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     let errorsConsole = {};
     setErrors([]);
@@ -81,6 +84,30 @@ export function LoginForm(props) {
     setPassword('');
   });
 
+  const handleSubmitCustomerLogin = (e) => {
+    e.preventDefault();
+    handleSubmitLogin();
+    if (isValid) {
+      navigate(`/customer`);
+    } else return;
+  }
+
+  const handleSubmitTrainerLogin = (e) => {
+    e.preventDefault();
+    handleSubmitLogin();
+    if (isValid) {
+      navigate(`/trainer`);
+    } else return;
+  }
+
+  const handleSubmitAdminLogin = (e) => {
+    e.preventDefault();
+    handleSubmitLogin();
+    if (isValid) {
+      navigate(`/admin`);
+    } else return;
+  }
+
   return (
     <BoxContainer>
       <FormContainer>
@@ -109,14 +136,14 @@ export function LoginForm(props) {
           <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
         }
       </FormContainer>
-      <Marginer direction="vertical" margin={10} />
+      <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">Forget your password?</MutedLink>
       <Marginer direction="vertical" margin="1.6em" />
-      <SubmitButton type="submit" onClick={handleSubmitLogin}>Customer login</SubmitButton>
+      <SubmitButton type="submit" onClick={handleSubmitCustomerLogin}>Customer login</SubmitButton>
       <Marginer direction="vertical" margin="0.6em" />
-      <SubmitButton type="submit" onClick={handleSubmitLogin}>Trainer login</SubmitButton>
+      <SubmitButton type="submit" onClick={handleSubmitTrainerLogin}>Trainer login</SubmitButton>
       <Marginer direction="vertical" margin="0.6em" />
-      <SubmitButton type="submit" onClick={handleSubmitLogin}>Admin login</SubmitButton>
+      <SubmitButton type="submit" onClick={handleSubmitAdminLogin}>Admin login</SubmitButton>
       <Marginer direction="vertical" margin="1em" />
       <p style={{
         fontSize: "13px",
