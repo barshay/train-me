@@ -5,6 +5,8 @@ const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
 
+const trainerRoutes = require("./api/routers/trainer");
+
 require("dotenv").config();
 
 app.use(express.json());
