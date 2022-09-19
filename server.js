@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const trainerRoutes = require("./api/routers/trainer");
 // const serverResponse = require('./utils/serverResponse')
 // const { productAllowedUpdates } = require('./constants/allowedUpdates')
 const app = express();
