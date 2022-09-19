@@ -13,7 +13,7 @@ const {
 app.post("/signup", signup);
 app.post("/login", login);
 app.get("/", getAllTrainers);
-app.get("/", getTrainerById);
+app.get("/:trainerId", getTrainerById);
 app.patch("/:trainerId", updateTrainer);
 app.delete("/:trainerId", deleteTrainer);
 
