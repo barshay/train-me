@@ -10,8 +10,6 @@ const trainerRoutes = require("./api/routers/trainer");
 const app = express();
 const mongoose = require("mongoose");
 
-const trainerRoutes = require("./api/routers/trainer");
-
 require("dotenv").config();
 
 app.use(express.json());
