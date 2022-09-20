@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { LoginForm } from "./loginForm";
+import { AdminLogin } from "./AdminLogin";
 import { motion } from "framer-motion";
-import { AccountContext } from "./accountContext";
-import { CustomerSignupForm } from "./CustomerSignupForm";
-import { TrainerSignupForm } from "./TrainerSignupForm";
-import { BoldCustomer, BoldHello } from './common';
-import { BoldTrainer } from './common';
+import { AccountContext } from "../accountContext";
+import { AdminSignupForm } from "./AdminSignupForm";
+import { BoldHello } from '../common';
+import { BoldAdmin } from '../common';
 
 const BoxContainer = styled.div`
   width: 280px;
@@ -124,7 +123,7 @@ const expandingTransition = {
   stiffness: 20,
 };
 
-export function AccountBox(props) {
+export function AdminSignupPage(props) {
   const [isExpanded, setExpanded] = useState(false);
   const [active, setActive] = useState("signin");
 
@@ -142,21 +141,14 @@ export function AccountBox(props) {
     }, 400);
   };
 
-  const switchToCustomerSignup = () => {
+  const switchToAdminSignup = () => {
     playExpandingAnimation();
     setTimeout(() => {
-      setActive("signup as a customer");
+      setActive("signup as an admin");
     }, 450);
   };
 
-  const switchToTrainerSignup = () => {
-    playExpandingAnimation();
-    setTimeout(() => {
-      setActive("signup as a trainer");
-    }, 450);
-  };
-
-  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
+  const contextValue = { switchToSignin, switchToAdminSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -170,30 +162,22 @@ export function AccountBox(props) {
           />
           {active === "signin" && (
             <HeaderContainer>
-              <HeaderText>Welcome</HeaderText>
-              <HeaderText>Back</HeaderText>
+              <HeaderText>Welcome Back</HeaderText>
+              <HeaderText style={{ color: "red" }}> Admin</HeaderText>
               <SmallText>Please sign-in to continue!</SmallText>
             </HeaderContainer>
           )}
-          {active === "signup as a customer" && (
+          {active === "signup as an admin" && (
             <HeaderContainer>
               <HeaderText>Create</HeaderText>
               <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
-            </HeaderContainer>
-          )}
-          {active === "signup as a trainer" && (
-            <HeaderContainer>
-              <HeaderText>Create</HeaderText>
-              <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
+              <SmallText><BoldHello>Hello</BoldHello><BoldAdmin> Admin </BoldAdmin>Please sign-up to continue!</SmallText>
             </HeaderContainer>
           )}
         </TopContainer>
         <InnerContainer>
-          {active === "signin" && <LoginForm />}
-          {active === "signup as a customer" && <CustomerSignupForm />}
-          {active === "signup as a trainer" && <TrainerSignupForm />}
+          {active === "signin" && <AdminLogin />}
+          {active === "signup as an admin" && <AdminSignupForm />}
         </InnerContainer>
       </BoxContainer>
     </AccountContext.Provider>

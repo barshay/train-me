@@ -13,6 +13,7 @@ import Home from './components/Home';
 import CustomerPage from './components/customerPage/CostomerPage';
 import TrainerPage from './components/trainerPage/TrainerPage';
 import AdminPage from './components/adminPage/AdminPage';
+import { AdminSignupPage } from './components/accountBox/adminAccount/AdminSignupPage';
 import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
@@ -188,6 +189,7 @@ const Routing = () => {
                     <Route path="customer" element={<CustomerPage />} />
                     <Route path="trainer" element={<TrainerPage />} />
                     <Route path="admin" element={<AdminPage />} />
+                    <Route path="adminsignup" element={<AdminSignupPage />} />
                     <Route path="about" element={<About />} />
                     <Route path="questions" element={<CommonQuestions />} />
                     <Route path="contact" element={<Contact />} />

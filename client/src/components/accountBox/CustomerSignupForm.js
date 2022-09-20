@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import {
   BoldLink,
   BoldLinkTrainer,
-  BoldLinkAdmin,
   BoxContainer,
   FormContainer,
   ErrorStyle,
@@ -16,7 +15,7 @@ import { AccountContext } from "./accountContext";
 import axios from 'axios';
 
 export function CustomerSignupForm(props) {
-  const { switchToSignin, switchToTrainerSignup, switchToAdminSignup } = useContext(AccountContext);
+  const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
 
   const { customersData, setCustomersData } = useContext(MyContext);
 
@@ -283,22 +282,23 @@ export function CustomerSignupForm(props) {
           <ErrorStyle>Age feild is mandatory!</ErrorStyle> : ''
         }
         {errors[age] ?
-          <span style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "0.3em", display: "flex", alignItems: "center", marginTop: "0" }}
-          >You are too young for the courses!
+          <ErrorStyle style={{ paddingRight: "0.3em", display: "flex", alignItems: "center" }}>
+            You are too young for the courses!
             <video autoPlay loop muted style={{
               position: 'relative',
               width: '20%',
               left: '35%',
               height: '50px',
-              objectFit: 'cover',
+              objectFit: "cover",
               transform: "translate(-240%, -50%)",
+              borderRadius: "50%",
             }}>
               <source src={"https://ak.picdn.net/shutterstock/videos/1069771018/preview/stock-footage-under-sign-warning-symbol-on-transparent-background-with-alpha-channel-animation-of-seamless.webm"}
                 type="video/mp4"
                 alt="Age limit to 16">
               </source>
             </video>
-          </span> :
+          </ErrorStyle> :
           ''}
         <Input
           type="number"
@@ -340,10 +340,6 @@ export function CustomerSignupForm(props) {
         <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
           Sign-up as a Trainer
         </BoldLinkTrainer>
-        <Marginer direction="vertical" margin="0.5em" />
-        <BoldLinkAdmin href="#" onClick={switchToAdminSignup}>
-          Sign-up as an Admin
-        </BoldLinkAdmin>
         <Marginer direction="vertical" margin="0.5em" />
       </MutedLink>
     </BoxContainer>

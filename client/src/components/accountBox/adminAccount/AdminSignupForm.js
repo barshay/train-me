@@ -1,22 +1,20 @@
 import React, { useState, useContext } from "react";
 import {
     BoldLink,
-    BoldLinkTrainer,
-    BoldLinkCustomer,
     BoxContainer,
     FormContainer,
     Input,
     MutedLink,
     ErrorStyle,
     SubmitButton,
-} from "./common";
-import { Marginer } from "../marginer";
-import MyContext from '../../MyContext';
-import { AccountContext } from "./accountContext";
+} from "../common";
+import { Marginer } from "../../marginer";
+import MyContext from '../../../MyContext';
+import { AccountContext } from "../accountContext";
 import axios from 'axios';
 
 export function AdminSignupForm(props) {
-    const { switchToSignin, switchToTrainerSignup, switchToCustomerSignup } = useContext(AccountContext);
+    const { switchToSignin } = useContext(AccountContext);
 
     const { adminData, setAdminData } = useContext(MyContext);
 
@@ -240,14 +238,6 @@ export function AdminSignupForm(props) {
                 <BoldLink href="#" onClick={switchToSignin}>
                     Sign-In
                 </BoldLink>
-                <Marginer direction="vertical" margin="0.5em" />
-                <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
-                    Sign-up as a Trainer
-                </BoldLinkTrainer>
-                <Marginer direction="vertical" margin="0.5em" />
-                <BoldLinkCustomer href="#" onClick={switchToCustomerSignup}>
-                    Sign-up as a Customer
-                </BoldLinkCustomer>
                 <Marginer direction="vertical" margin="0.5em" />
 
             </MutedLink>

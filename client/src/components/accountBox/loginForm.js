@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import {
   BoldLinkTrainer,
   BoldLinkCustomer,
-  BoldLinkAdmin,
   BoxContainer,
   FormContainer,
   ErrorStyle,
@@ -15,7 +14,7 @@ import { AccountContext } from "./accountContext";
 import { useNavigate } from 'react-router-dom';
 
 export function LoginForm(props) {
-  const { switchToCustomerSignup, switchToTrainerSignup, switchToAdminSignup } = useContext(AccountContext);
+  const { switchToCustomerSignup, switchToTrainerSignup } = useContext(AccountContext);
 
   const navigate = useNavigate();
 
@@ -100,13 +99,13 @@ export function LoginForm(props) {
     } else return;
   }
 
-  const handleSubmitAdminLogin = (e) => {
-    e.preventDefault();
-    handleSubmitLogin();
-    if (isValid) {
-      navigate(`/admin`);
-    } else return;
-  }
+  // const handleSubmitAdminLogin = (e) => {
+  //   e.preventDefault();
+  //   handleSubmitLogin();
+  //   if (isValid) {
+  //     navigate(`/admin`);
+  //   } else return;
+  // }
 
   return (
     <BoxContainer>
@@ -143,8 +142,8 @@ export function LoginForm(props) {
       <Marginer direction="vertical" margin="0.6em" />
       <SubmitButton type="submit" onClick={handleSubmitTrainerLogin}>Trainer login</SubmitButton>
       <Marginer direction="vertical" margin="0.6em" />
-      <SubmitButton type="submit" onClick={handleSubmitAdminLogin}>Admin login</SubmitButton>
-      <Marginer direction="vertical" margin="1em" />
+      {/* <SubmitButton type="submit" onClick={handleSubmitAdminLogin}>Admin login</SubmitButton>
+      <Marginer direction="vertical" margin="1em" /> */}
       <p style={{
         fontSize: "13px",
         margin: "0",
@@ -163,9 +162,6 @@ export function LoginForm(props) {
           Sign-up as a Trainer
         </BoldLinkTrainer>
         <Marginer direction="vertical" margin="0.5em" />
-        <BoldLinkAdmin href="#" onClick={switchToAdminSignup}>
-          Sign-up as an Admin
-        </BoldLinkAdmin>
       </MutedLink>
 
     </BoxContainer>
