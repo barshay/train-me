@@ -18,7 +18,7 @@ app.use(cors());
 
 //ROUTES
 app.use("/admin", adminRoutes);
-app.use("/contactus", contactUsRoutes);
+app.use("/contactUs", contactUsRoutes);
 app.use("/course", courseRoutes);
 app.use("/customer", customerRoutes);
 // app.use("/question", questionRoutes);

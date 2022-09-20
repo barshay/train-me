@@ -1,4 +1,7 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
+import { Marginer } from "../../marginer";
+import { AccountContext } from "../accountContext";
 import {
     BoldLinkAdmin,
     BoxContainer,
@@ -8,9 +11,7 @@ import {
     MutedLink,
     SubmitButton,
 } from "../common";
-import { Marginer } from "../../marginer";
-import { AccountContext } from "../accountContext";
-import { useNavigate } from 'react-router-dom';
+
 
 export function AdminLogin(props) {
     const { switchToAdminSignup } = useContext(AccountContext);
@@ -91,8 +92,8 @@ export function AdminLogin(props) {
     }
 
     return (
-        <BoxContainer>
-            <FormContainer>
+        <BoxContainer >
+            <FormContainer >
                 <Input
                     type="email"
                     placeholder="Email"

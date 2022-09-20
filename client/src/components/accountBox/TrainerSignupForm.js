@@ -199,7 +199,7 @@ export function TrainerSignupForm(props) {
         // console.log(customerToAddToDB);
         axios({
             method: 'post',
-            url: "http://localhost:8080/api/trainer",
+            url: "http://localhost:8000/trainer/signup",
             headers: { 'content-type': 'application/json' },
             data: trainerToAddToDB
         })

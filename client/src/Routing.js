@@ -13,7 +13,7 @@ import Home from './components/Home';
 import CustomerPage from './components/customerPage/CostomerPage';
 import TrainerPage from './components/trainerPage/TrainerPage';
 import AdminPage from './components/adminPage/AdminPage';
-import { AdminSignupPage } from './components/accountBox/adminAccount/AdminSignupPage';
+import { AdminAccountPage } from './components/accountBox/adminAccount/AdminAccountPage';
 import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 import CommonQuestions from './views/commonQuestions/CommonQuestions';
@@ -30,15 +30,12 @@ const Routing = () => {
     const [trainersData, setTrainersData] = useState([]);
     const [contuctUsData, setContactUsData] = useState([]);
     const [adminData, setAdminData] = useState([]);
-    // const [isAdmin, setIsAdmin] = useState(true);
-    // const [isTrainer, setIsTrainer] = useState(true);
-    // const [isCustomer, setIsCustomer] = useState(true);
 
-    // get api + set loading - fetch from DB
+    // get api - fetch from DB
     useEffect(() => {
         const getCustomersApiAnswer = async () => {
             try {
-                const customersUrl = 'http://localhost:8080/api/customers';
+                const customersUrl = 'http://localhost:8000/customer';
                 const response = await axios.get(customersUrl);
                 console.log(response)
                 const data = await response.data;
@@ -51,7 +48,7 @@ const Routing = () => {
 
         const getTrainerApiAnswer = async () => {
             try {
-                const trainersUrl = 'http://localhost:8080/api/trainers';
+                const trainersUrl = 'http://localhost:8000/trainer';
                 const response = await axios.get(trainersUrl);
                 console.log(response)
                 const data = await response.data;
@@ -64,7 +61,7 @@ const Routing = () => {
 
         const getContuctUsApiAnswer = async () => {
             try {
-                const contuctUsUrl = 'http://localhost:8080/api/allContacts';
+                const contuctUsUrl = 'http://localhost:8000/contactus';
                 const response = await axios.get(contuctUsUrl);
                 console.log(response)
                 const data = await response.data;
@@ -77,7 +74,7 @@ const Routing = () => {
 
         const getAdminApiAnswer = async () => {
             try {
-                const contuctUsUrl = 'http://localhost:8080/api/admin';
+                const contuctUsUrl = 'http://localhost:8000/admin';
                 const response = await axios.get(contuctUsUrl);
                 console.log(response)
                 const data = await response.data;
@@ -93,53 +90,6 @@ const Routing = () => {
         getContuctUsApiAnswer();
         getAdminApiAnswer();
     }, [])
-
-
-
-
-
-
-    // const categories = productsData
-    //     .map(p => p.category)
-    //     .filter((value, index, array) => array.indexOf(value) === index);
-
-    // const filterProductsByCategory = (category) => {
-    //     if (category === "/") {
-    //         setFilteredProducts(productsData);
-    //         return;
-    //     }
-    //     const filteredItems = productsData.filter((product) => product.category === category);
-    //     setFilteredProducts(filteredItems);
-    // }
-
-    // const addCartItem = (product) => {
-    //     const productInCart = cart.findIndex((item) => item._id === product.id);
-    //     if (productInCart === -1) {
-    //         const newCartItems = { ...product, amount: 1 };
-    //         setCart((prev) => [newCartItems, ...prev]);
-    //     } else {
-    //         const newCartItems = [...cart];
-    //         newCartItems[productInCart].amount++;
-    //         setCart(newCartItems);
-    //     }
-    // };
-
-    // const removeCartItem = (product) => {
-    //     const productInCart = cart.findIndex((item) => item._id === product._id);
-    //     if (productInCart === -1) {
-    //         return;
-    //     }
-    //     if (cart[productInCart].amount === 1) {
-    //         const newCartItems = cart.filter((item) => item._id !== product._id);
-    //         setCart(newCartItems);
-    //         return
-    //     } else {
-    //         const newCartItems = [...cart];
-    //         newCartItems[productInCart].amount--;
-    //         setCart(newCartItems);
-    //     }
-    // };
-
 
     return (
         <MyContext.Provider
@@ -168,9 +118,6 @@ const Routing = () => {
                         <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
                     </span>
                 </div>
-                {/* {isAdmin && <NavLink to="/admin" className="active-link">Admin</NavLink>}
-                {isTrainer && <NavLink to="/trainer" className="active-link">Trainer</NavLink>}
-                {isCustomer && <NavLink to="/customer" className="active-link">Customer</NavLink>} */}
 
                 {/* {
                 isLoggedIn ? ( */}
@@ -184,12 +131,10 @@ const Routing = () => {
                         />
                         }
                     />
-                    {/* <Route path="login" element={<Login />} />
-                    <Route path="register" element={<Register />} /> */}
                     <Route path="customer" element={<CustomerPage />} />
                     <Route path="trainer" element={<TrainerPage />} />
                     <Route path="admin" element={<AdminPage />} />
-                    <Route path="adminsignup" element={<AdminSignupPage />} />
+                    <Route path="adminsignup" element={<AdminAccountPage />} />
                     <Route path="about" element={<About />} />
                     <Route path="questions" element={<CommonQuestions />} />
                     <Route path="contact" element={<Contact />} />

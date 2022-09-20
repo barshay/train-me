@@ -13,7 +13,7 @@ import MyContext from '../../../MyContext';
 import { AccountContext } from "../accountContext";
 import axios from 'axios';
 
-export function AdminSignupForm(props) {
+export function AdminSignup(props) {
     const { switchToSignin } = useContext(AccountContext);
 
     const { adminData, setAdminData } = useContext(MyContext);
@@ -62,11 +62,9 @@ export function AdminSignupForm(props) {
             errorsConsole.lastName = "Last Name must in a range of 2-20 characters!";
         } else if (!lastName) {
             isValid = false;
-            let updatedValue = {};
-            updatedValue = { "lastName": "Last Name feild is mandatory!" };
             setMandatoryErrors(prevState => ({
                 ...prevState,
-                ...updatedValue
+                [lastName]: "Last Name feild is mandatory!"
             }));
             errorsConsole.lastName = "Last Name feild is mandatory!";
         }
@@ -126,6 +124,7 @@ export function AdminSignupForm(props) {
 
         const newAdmin = { firstName, lastName, email, password, confirmPassword, profilePicture };
         setAdminData((prev) => [newAdmin, ...prev]);
+        console.log(adminData.firstName);
         console.log(adminData);
         setFirstName('');
         setLastName('');
@@ -140,13 +139,12 @@ export function AdminSignupForm(props) {
             lastname: lastName,
             email: email,
             password: password,
-            confirmPassword: confirmPassword,
-            prophilePicture: profilePicture
+            profilePicture: profilePicture
         };
         // console.log(adminToAddToDB);
         axios({
             method: 'post',
-            url: "http://localhost:8080/api/admin",
+            url: "http://localhost:8000/admin/signup",
             headers: { 'content-type': 'application/json' },
             data: adminToAddToDB
         })
@@ -159,9 +157,9 @@ export function AdminSignupForm(props) {
     });
 
     return (
-        <BoxContainer>
+        <BoxContainer >
             <FormContainer>
-                {adminExistErr && <ErrorStyle style={{fontSize: "14px"}}>{adminExistErr}</ErrorStyle>}
+                {adminExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{adminExistErr}</ErrorStyle>}
                 <Input
                     type="text"
                     placeholder="First Name"

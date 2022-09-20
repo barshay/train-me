@@ -198,7 +198,7 @@ export function CustomerSignupForm(props) {
     // console.log(customerToAddToDB);
     axios({
       method: 'post',
-      url: "http://localhost:8080/api/customer",
+      url: "http://localhost:8000/customer/signup",
       headers: { 'content-type': 'application/json' },
       data: customerToAddToDB
     })

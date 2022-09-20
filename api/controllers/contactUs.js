@@ -1,5 +1,7 @@
 const ContactUs = require("../models/contactUs");
 const serverResponse = require('../utils/serverResponse');
+// const { allowedUpdates } = require('../../constants/allowedUpdates');
+
 
 module.exports = {
   getAllContactInquiries: async (req, res) => {
@@ -11,7 +13,7 @@ module.exports = {
     }
   },
 
-  addNewPostOfContact: async (req, res) => {
+  PostContact: async (req, res) => {
     try {
       const newPostOfContact = new ContactUs({ ...req.body });
       await newPostOfContact.save();

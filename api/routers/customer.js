@@ -6,7 +6,7 @@ const { signup,
     getAllCustomers,
     getCustomerById,
     updateCustomer,
-    deleteCustomer
+    deleteCustomerById
 } = require("../controllers/customer");
 
 
@@ -15,6 +15,6 @@ app.post("/login", login);
 app.get("/", getAllCustomers);
 app.get("/:customerId", getCustomerById);
 app.patch("/:customerId", updateCustomer);
-app.delete("/:customerId", deleteCustomer);
+app.delete("/:customerId", deleteCustomerById);
 
 module.exports = app;

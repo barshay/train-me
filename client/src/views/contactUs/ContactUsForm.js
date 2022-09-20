@@ -169,20 +169,20 @@ const ContactUsForm = () => {
     setContactMethod('');
 
     const contactToAddToDB = {
-      firstName: firstName,
-      lastName: lastName,
+      firstname: firstName,
+      lastname: lastName,
       email: email,
       phone: phone,
-      messageTitle: messageTitle,
+      messagetitle: messageTitle,
       message: message,
       gender: gender,
-      contactMethod: contactMethod,
+      contactmethod: contactMethod,
     };
     console.log(contactToAddToDB);
 
     axios({
       method: 'post',
-      url: "http://localhost:8080/api/contactUs",
+      url: "http://localhost:8000/contactUs",
       headers: { 'content-type': 'application/json' },
       data: contactToAddToDB
     })
@@ -193,7 +193,7 @@ const ContactUsForm = () => {
   return (
     <div className="form-container">
       <div className="images-container">
-        <img className="imageSize imageSize-m-queries" src="https://thumb.tildacdn.com/tild3565-6466-4861-b364-396363393665/-/resize/916x/-/format/webp/Frame_522-min.jpg"></img>
+        <img className="imageSize imageSize-m-queries" src="https://thumb.tildacdn.com/tild3565-6466-4861-b364-396363393665/-/resize/916x/-/format/webp/Frame_522-min.jpg" alt="workout pic"></img>
       </div>
       <form className="contactUs-form">
         {submitted &&

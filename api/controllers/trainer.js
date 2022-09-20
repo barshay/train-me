@@ -1,16 +1,13 @@
 const Trainer = require("../models/trainer");
 const serverResponse = require("../utils/serverResponse");
+const { allowedUpdates } = require('../../constants/allowedUpdates');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-/**
- * still need to adjustment this page to
- * our requests names and functionality
- */
 
 module.exports = {
   signup: (req, res) => {
-    const { firstName, lastName, age, profilePic, gender, email, password } =
+    const { firstname, lastname, age, profilepic, phone, gender, email, password } =
       req.body;
 
     Trainer.find({ email }).then((trainers) => {
@@ -28,10 +25,11 @@ module.exports = {
         }
 
         const trainer = new Trainer({
-          firstName,
-          lastName,
+          firstname,
+          lastname,
           age,
-          profilePic,
+          phone,
+          profilepic,
           gender,
           email,
           password: hash,
@@ -62,19 +60,36 @@ module.exports = {
     });
   },
 
-  getAllTrainers: (req, res) => {
-    Trainer.find().then((trainers) => {
-      res.status(200).json(trainers);
-    });
+  getAllTrainers: async (req, res) => {
+    try {
+      const allTrainer = await Trainer.find({});
+      return serverResponse(res, 200, allTrainer);
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
   },
 
-  getTrainerById: (req, res) => {
-    const trainerId = req.params.trainerID;
-    Trainer.findById({ _id: trainerId }).then((trainer) => {
-      res.status(200).json(trainer);
-    });
+  getTrainerById: async (req, res) => {
+    try {
+      const trainerId = req.params.trainerID;
+      const trainer = await Trainer.findOne({ _id: trainerId });
+      return serverResponse(res, 200, trainer);
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
   },
 
+  deleteTrainerById: async (req, res) => {
+    try {
+      const trainerId = req.params.trainerID;
+      const trainer = await Trainer.findOneAndDelete({ _id: trainerId });
+      return serverResponse(res, 200, trainer);
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
+  },
+
+  // TODO?
   updateTrainer: (req, res) => {
     const trainerId = req.params.trainerId;
 
@@ -83,11 +98,4 @@ module.exports = {
     });
   },
 
-  deleteTrainer: (req, res) => {
-    const trainerId = req.params.trainerId;
-
-    res.status(200).json({
-      message: "Delete Trainer - ${trainerId}",
-    });
-  },
 };
