@@ -45,6 +45,7 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
 
+
 // mongoose.connect(
 //   `mongodb+srv://barshay:gqdOjE08Iesnq5sq@train-me.fsf7jdu.mongodb.net/?retryWrites=true&w=majority`,
 //   { useNewUrlParser: true, useUnifiedTopology: true },
