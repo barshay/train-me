@@ -18,7 +18,7 @@ app.use(cors());
 
 //ROUTES
 app.use("/admin", adminRoutes);
-app.use("/contactus", contactUsRoutes);
+app.use("/contactUs", contactUsRoutes);
 app.use("/course", courseRoutes);
 app.use("/customer", customerRoutes);
 // app.use("/question", questionRoutes);
@@ -44,6 +44,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/test", {
 mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
+
 
 // mongoose.connect(
 //   `mongodb+srv://barshay:gqdOjE08Iesnq5sq@train-me.fsf7jdu.mongodb.net/?retryWrites=true&w=majority`,

@@ -25,7 +25,7 @@ const About = () => {
             <br />Enjoy!
           </p>
         </div>
-        <button className="go_back_button" onClick={() => navigate(-1)}>Go Back</button>
+        <button className="go_back_button" onClick={() => navigate("/")}>Go Back</button>
       </div>
     </>
   )

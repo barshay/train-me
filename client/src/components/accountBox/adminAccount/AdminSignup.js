@@ -1,45 +1,41 @@
 import React, { useState, useContext } from "react";
 import {
     BoldLink,
-    BoldLinkCustomer,
     BoxContainer,
     FormContainer,
-    ErrorStyle,
     Input,
     MutedLink,
+    ErrorStyle,
     SubmitButton,
-} from "./common";
-import { Marginer } from "../marginer";
-import MyContext from '../../MyContext';
-import { AccountContext } from "./accountContext";
+} from "../common";
+import { Marginer } from "../../marginer";
+import MyContext from '../../../MyContext';
+import { AccountContext } from "../accountContext";
 import axios from 'axios';
 
+export function AdminSignup(props) {
+    const { switchToSignin } = useContext(AccountContext);
 
-export function TrainerSignupForm(props) {
-    const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
-
-    const { trainersData, setTrainersData } = useContext(MyContext);
-
+    const { adminData, setAdminData } = useContext(MyContext);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [age, setAge] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [profilePicture, setProphilePicture] = useState('');
-    const [gender, setGender] = useState('');
-    const [isValidForm, setIsValidForm] = useState(false)
+    const [profilePicture, setProfilePicture] = useState('');
+
     const [mandatoryErrors, setMandatoryErrors] = useState([]);
     const [errors, setErrors] = useState([]);
+    const [adminExistErr, setAdminExistErr] = useState('');
 
     const isValidEmail = (email) => {
         return /\S+@\S+\.\S+/.test(email);
     }
 
+
     let isValid = true;
-    const handleSubmitTrainerAdding = (async (event) => {
+    const handleSubmitAdminAdding = (async (event) => {
         // event.preventDefault();
 
         let errorsConsole = {};
@@ -66,11 +62,9 @@ export function TrainerSignupForm(props) {
             errorsConsole.lastName = "Last Name must in a range of 2-20 characters!";
         } else if (!lastName) {
             isValid = false;
-            let updatedValue = {};
-            updatedValue = { "lastName": "Last Name feild is mandatory!" };
             setMandatoryErrors(prevState => ({
                 ...prevState,
-                ...updatedValue
+                [lastName]: "Last Name feild is mandatory!"
             }));
             errorsConsole.lastName = "Last Name feild is mandatory!";
         }
@@ -88,21 +82,6 @@ export function TrainerSignupForm(props) {
                 [email]: "This is not a valid email!"
             }));
             errorsConsole.email = "This is not a valid email!";
-        };
-        if ((phone && phone.length < 7) || phone.length > 12) {
-            isValid = false;
-            setErrors(prevState => ({
-                ...prevState,
-                [phone]: "Phone numbers must be in a range of 7-12"
-            }));
-            errorsConsole.phone = "Phone numbers must be in a range of 7-12";
-        } else if (!phone) {
-            isValid = false;
-            setMandatoryErrors(prevState => ({
-                ...prevState,
-                [phone]: "Phone feild is mandatory!"
-            }));
-            errorsConsole.phone = "Phone feild is mandatory!";
         };
         if ((password && password.length < 4) || password.length > 10) {
             isValid = false;
@@ -134,33 +113,6 @@ export function TrainerSignupForm(props) {
             }));
             errorsConsole.confirmPassword = "Confirm Password feild is mandatory!";
         };
-        if (age && age < 16) {
-            isValid = false;
-            setErrors(prevState => ({
-                ...prevState,
-                [age]: "You are too young for the courses offered!"
-            }));
-            errorsConsole.age = "You are too young for the courses offered!";
-        } else if (!age) {
-            isValid = false;
-            setMandatoryErrors(prevState => ({
-                ...prevState,
-                [age]: "Age feild is mandatory!"
-            }));
-            errorsConsole.age = "Age feild is mandatory!";
-        };
-        if (gender === "Choose your gender") {
-            console.log(gender);
-            isValid = false;
-            setMandatoryErrors(prevState => ({
-                ...prevState,
-                [gender]: "Gender field is mandatory!"
-            }));
-            setErrors(prevState => ({
-                ...prevState,
-                [gender]: "Gender field is mandatory!"
-            }));
-        }
 
         if (!isValid) {
             console.log('form isn\'t valid!!');
@@ -170,48 +122,44 @@ export function TrainerSignupForm(props) {
         };
         isValid = true;
 
-
-        const newTrainer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, profilePicture };
-        setTrainersData((prev) => [newTrainer, ...prev]);
-        console.log(trainersData);
+        const newAdmin = { firstName, lastName, email, password, confirmPassword, profilePicture };
+        setAdminData((prev) => [newAdmin, ...prev]);
+        console.log(adminData.firstName);
+        console.log(adminData);
         setFirstName('');
         setLastName('');
-        setAge('');
         setEmail('');
-        setPhone('');
         setPassword('');
         setConfirmPassword('');
-        setGender('');
-        setProphilePicture('');
-        setIsValidForm(true);
+        setProfilePicture('');
 
-        const trainerToAddToDB = {
+
+        const adminToAddToDB = {
             firstname: firstName,
             lastname: lastName,
-            age: +age,
             email: email,
-            phone: phone,
             password: password,
-            gender: gender,
-            profilepic: profilePicture
+            profilePicture: profilePicture
         };
-
-        // console.log(customerToAddToDB);
+        // console.log(adminToAddToDB);
         axios({
             method: 'post',
-            url: "http://localhost:8000/trainer/signup",
+            url: "http://localhost:8000/admin/signup",
             headers: { 'content-type': 'application/json' },
-            data: trainerToAddToDB
+            data: adminToAddToDB
         })
-            .then(res => console.log('Posting a New Trainer ', res.data))
-            .catch(err => console.log(err));
+            .then(res => console.log('Posting a New Admin ', res.data))
+            .catch(err => {
+                console.log(err);
+                setAdminExistErr(err.response.data.error);
+                // console.log("errorName" + errorName)
+            });
     });
 
-
     return (
-        <BoxContainer>
+        <BoxContainer >
             <FormContainer>
-                {isValidForm && <div style={{ fontSize: "12px", color: "red" }}>You have successfully registered</div>}
+                {adminExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{adminExistErr}</ErrorStyle>}
                 <Input
                     type="text"
                     placeholder="First Name"
@@ -221,7 +169,7 @@ export function TrainerSignupForm(props) {
                     <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
                 }
                 {errors[firstName] ?
-                    <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
+                    <ErrorStyle> Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
                 }
                 <Input
                     type="text"
@@ -253,7 +201,7 @@ export function TrainerSignupForm(props) {
                     onChange={(e) => { setPassword(e.target.value) }}
                     maxLength={10} />
                 {mandatoryErrors[password] ?
-                    <ErrorStyle>Password feild is mandatory!</ErrorStyle> : ''
+                    <ErrorStyle>Password feild is mandatory! </ErrorStyle> : ''
                 }
                 {errors[password] ?
                     <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
@@ -267,69 +215,20 @@ export function TrainerSignupForm(props) {
                 {mandatoryErrors[confirmPassword] ?
                     <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
                 }
-                {errors[confirmPassword] ? <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
+                {errors[confirmPassword] ?
+                    <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
                 }
                 <Input
                     type="text"
                     placeholder="Profile Picture"
                     value={profilePicture}
-                    onChange={(e) => { setProphilePicture(e.target.value) }} />
-                <Input
-                    type="number"
-                    placeholder="age"
-                    maxlength={2} //why it doesn't work.
-                    value={age}
-                    onChange={(e) => { setAge(e.target.value) }} />
-                {mandatoryErrors[age] ?
-                    <ErrorStyle>Age feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[age] ?
-                    <span style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", paddingRight: "0.3em", display: "flex", alignItems: "center", marginTop: "0" }}
-                    >You are too young for the courses!
-                        <video autoPlay loop muted style={{
-                            position: 'relative',
-                            width: '20%',
-                            left: '35%',
-                            height: '50px',
-                            objectFit: 'cover',
-                            transform: "translate(-240%, -50%)",
-                        }}>
-                            <source src={"https://ak.picdn.net/shutterstock/videos/1069771018/preview/stock-footage-under-sign-warning-symbol-on-transparent-background-with-alpha-channel-animation-of-seamless.webm"}
-                                type="video/mp4"
-                                alt="Age limit to 16">
-                            </source>
-                        </video>
-                    </span> :
-                    ''}
-                <Input
-                    type="number"
-                    placeholder="phone"
-                    value={phone}
-                    onChange={(e) => { setPhone(e.target.value) }} />
-                {mandatoryErrors[phone] ?
-                    <ErrorStyle>Phone feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[phone] ?
-                    <ErrorStyle style={{ paddingRight: "2em" }}>Phone number must be in a range of 7 - 12 numbers</ErrorStyle> : ''
-                }
-                <select
-                    style={{ fontSize: "12px", backgroundColor: "lightblue", height: "2.7em" }}
-                    type="text"
-                    placeholder="Gender"
-                    value={gender}
-                    onChange={(e) => { setGender(e.target.value) }}>
-                    <option>Choose your gender please</option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
-                </select>
-                {mandatoryErrors[gender] ?
-                    <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
-                }
+                    onChange={(e) => { setProfilePicture(e.target.value) }} />
             </FormContainer>
             <Marginer direction="vertical" margin="1em" />
+
             <SubmitButton
                 type="submit"
-                onClick={handleSubmitTrainerAdding}>Sign-Up</SubmitButton>
+                onClick={handleSubmitAdminAdding}>Sign-Up</SubmitButton>
             <Marginer direction="vertical" margin="1em" />
             <MutedLink href="#">
                 Already have an account?
@@ -338,16 +237,8 @@ export function TrainerSignupForm(props) {
                     Sign-In
                 </BoldLink>
                 <Marginer direction="vertical" margin="0.5em" />
-                <BoldLinkCustomer href="#" onClick={switchToCustomerSignup}>
-                    Sign-up as a Customer
-                </BoldLinkCustomer>
-                <Marginer direction="vertical" margin="0.5em" />
+
             </MutedLink>
         </BoxContainer>
     );
 }
-
-
-
-// picture: string(URL) ?
-// age: number , Date format ?

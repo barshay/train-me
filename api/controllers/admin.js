@@ -1,17 +1,29 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Admin = require("../models/admin");
+const { allowedUpdates } = require('../../constants/allowedUpdates');
+const serverResponse = require('../utils/serverResponse');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 
 module.exports = {
-  signup: (req, res) => {
-    const { firstName, lastName, profilePic, email, password } = req.body;
+  signup: async (req, res) => {
+    const { firstname, lastname, profilepic, email, password } = req.body;
 
-    Admin.find({ email }).then((Admins) => {
-      if (Admins.length >= 1) {
-        return res.status(409).json({
-          message: "Email exists",
-        });
-      }
+      const allAdmin = await Admin.find({});
+      if (allAdmin.length > 0) {
+        console.log('admin is: error ');
+        return res.status(422).json({ error: "There is Admin already!" });
+      };
+   
+
+
+
+    //  Admin.find({ email }).then((Admins) => {
+    //   if (Admins.length >= 1) {
+    //     return res.status(409).json({
+    //       message: "There is Admin already!",
+    //     });
+    //   }
 
       bcrypt.hash(password, 10, (error, hash) => {
         if (error) {
@@ -21,11 +33,9 @@ module.exports = {
         }
 
         const admin = new Admin({
-          firstName,
-          lastName,
-          age,
-          profilePic,
-          gender,
+          firstname,
+          lastname,
+          profilepic,
           email,
           password: hash,
         });
@@ -45,12 +55,22 @@ module.exports = {
             });
           });
       });
-    });
-  },
+    },
+  
 
   login: (req, res) => {
     res.status(200).json({
       message: "Welcome Admin",
     });
   },
+
+  getAdmin: async (req, res) => {
+    try {
+      const allAdmin = await Admin.find({});
+      return serverResponse(res, 200, allAdmin);
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
+  },
+
 };

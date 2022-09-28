@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { LoginForm } from "./loginForm";
+import { AdminLogin } from "./AdminLogin";
 import { motion } from "framer-motion";
-import { AccountContext } from "./accountContext";
-import { CustomerSignupForm } from "./CustomerSignupForm";
-import { TrainerSignupForm } from "./TrainerSignupForm";
-import { BoldCustomer, BoldHello } from './common';
-import { BoldTrainer } from './common';
+import { AccountContext } from "../accountContext";
+import { AdminSignup } from "./AdminSignup";
+import { BoldHello } from '../common';
+import { BoldAdmin } from '../common';
+import './AdminAccount.css';
+
 
 const BoxContainer = styled.div`
   width: 280px;
@@ -111,7 +112,7 @@ const backdropVariants = {
     transform: "rotate(60deg)",
   },
   collapsed: {
-    width: "160%",
+    width: "175%",
     height: "520px",
     borderRadius: "50%",
     transform: "rotate(60deg)",
@@ -124,7 +125,7 @@ const expandingTransition = {
   stiffness: 20,
 };
 
-export function AccountBox(props) {
+export function AdminAccountPage(props) {
   const [isExpanded, setExpanded] = useState(false);
   const [active, setActive] = useState("signin");
 
@@ -142,60 +143,47 @@ export function AccountBox(props) {
     }, 400);
   };
 
-  const switchToCustomerSignup = () => {
+  const switchToAdminSignup = () => {
     playExpandingAnimation();
     setTimeout(() => {
-      setActive("signup as a customer");
+      setActive("signup as an admin");
     }, 450);
   };
 
-  const switchToTrainerSignup = () => {
-    playExpandingAnimation();
-    setTimeout(() => {
-      setActive("signup as a trainer");
-    }, 450);
-  };
-
-  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
+  const contextValue = { switchToSignin, switchToAdminSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
-      <BoxContainer>
-        <TopContainer>
-          <BackDrop
-            initial={false}
-            animate={isExpanded ? "expanded" : "collapsed"}
-            variants={backdropVariants}
-            transition={expandingTransition}
-          />
-          {active === "signin" && (
-            <HeaderContainer>
-              <HeaderText>Welcome</HeaderText>
-              <HeaderText>Back</HeaderText>
-              <SmallText>Please sign-in to continue!</SmallText>
-            </HeaderContainer>
-          )}
-          {active === "signup as a customer" && (
-            <HeaderContainer>
-              <HeaderText>Create</HeaderText>
-              <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
-            </HeaderContainer>
-          )}
-          {active === "signup as a trainer" && (
-            <HeaderContainer>
-              <HeaderText>Create</HeaderText>
-              <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
-            </HeaderContainer>
-          )}
-        </TopContainer>
-        <InnerContainer>
-          {active === "signin" && <LoginForm />}
-          {active === "signup as a customer" && <CustomerSignupForm />}
-          {active === "signup as a trainer" && <TrainerSignupForm />}
-        </InnerContainer>
-      </BoxContainer>
+      <div className="adminBox">
+        <BoxContainer>
+          <TopContainer>
+            <BackDrop
+              initial={false}
+              animate={isExpanded ? "expanded" : "collapsed"}
+              variants={backdropVariants}
+              transition={expandingTransition}
+            />
+            {active === "signin" && (
+              <HeaderContainer>
+                <HeaderText>Welcome Back</HeaderText>
+                <HeaderText style={{ color: "red" }}> Admin</HeaderText>
+                <SmallText>Please sign-in to continue!</SmallText>
+              </HeaderContainer>
+            )}
+            {active === "signup as an admin" && (
+              <HeaderContainer>
+                <HeaderText>Create</HeaderText>
+                <HeaderText>Account</HeaderText>
+                <SmallText><BoldHello>Hello</BoldHello><BoldAdmin> Admin </BoldAdmin>Please sign-up to continue!</SmallText>
+              </HeaderContainer>
+            )}
+          </TopContainer>
+          <InnerContainer>
+            {active === "signin" && <AdminLogin />}
+            {active === "signup as an admin" && <AdminSignup />}
+          </InnerContainer>
+        </BoxContainer>
+      </div>
     </AccountContext.Provider>
   );
 }

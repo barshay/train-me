@@ -2,7 +2,7 @@ import React from 'react'
 
 const CommonQuestions = () => {
   return (
-    <div>Common Questions page</div>
+    <div style={{ marginTop: "4em"}}>Common Questions page</div>
   )
 }
 

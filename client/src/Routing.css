@@ -30,13 +30,30 @@ a:active {
 }
 
 .container-header {
-    background-color: rgb(56, 56, 67);
+    background-color: white;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    position: fixed;
+    z-index: 1;
+    opacity: 0.7;
+    width: 100%;
+    top: 0;
 }
 
 .logo {
     margin-left: 1em;
     padding-top: 0.2em;
+    height: 2.8em;
+}
+
+.clock {
+    display: flex;
+    align-items: center;
+    margin-left: 1em;
+    color:rgb(26, 58, 95);
+}
+
+.container-logo-clock{
+    display: flex;
 }

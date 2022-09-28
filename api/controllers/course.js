@@ -1,5 +1,7 @@
 const Course = require("../models/course");
 const serverResponse = require('../utils/serverResponse');
+// const { allowedUpdates } = require('../../constants/allowedUpdates');
+
 
 module.exports = {
     addNewCourse: async (req, res) => {
