@@ -8,7 +8,7 @@ import { TrainerSignupForm } from "./TrainerSignupForm";
 import { BoldCustomer, BoldHello } from './common';
 import { BoldTrainer } from './common';
 
-const BoxContainer = styled.div`
+let BoxContainer = styled.div`
   width: 280px;
   min-height: 550px;
   display: flex;
@@ -101,6 +101,7 @@ const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0.6em;
+  align-items: center;
 `;
 
 const backdropVariants = {
@@ -124,7 +125,7 @@ const expandingTransition = {
   stiffness: 20,
 };
 
-export function AccountBox(props) {
+export function AccountBox() {
   const [isExpanded, setExpanded] = useState(false);
   const [active, setActive] = useState("signin");
 
@@ -156,11 +157,12 @@ export function AccountBox(props) {
     }, 450);
   };
 
+
   const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
 
   return (
     <AccountContext.Provider value={contextValue}>
-      <BoxContainer>
+      <BoxContainer >
         <TopContainer>
           <BackDrop
             initial={false}

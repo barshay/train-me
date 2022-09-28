@@ -4,7 +4,9 @@ import {
     BoxContainer,
     FormContainer,
     Input,
+    FileInput,
     MutedLink,
+    PreviewPicture,
     ErrorStyle,
     SubmitButton,
 } from "../common";
@@ -12,11 +14,20 @@ import { Marginer } from "../../marginer";
 import MyContext from '../../../MyContext';
 import { AccountContext } from "../accountContext";
 import axios from 'axios';
+// import Img from '../../customHooks/Img';
+import { useNavigate } from 'react-router-dom'
+
 
 export function AdminSignup(props) {
     const { switchToSignin } = useContext(AccountContext);
 
     const { adminData, setAdminData } = useContext(MyContext);
+
+    const navigate = useNavigate();
+
+    const [file, setFile] = useState("");
+    const [uploadedImg, setUploadedImg] = useState("");
+
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -29,10 +40,34 @@ export function AdminSignup(props) {
     const [errors, setErrors] = useState([]);
     const [adminExistErr, setAdminExistErr] = useState('');
 
+    const handleProfilePicChange = (e) => {
+            const file = e.target.files[0];
+            console.log(file);
+        if (file) {
+            setFile(file);
+            previewFiles(file);
+        }
+    }
+
+    const previewFiles = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onloadend = () => {
+            setProfilePicture(reader.result);
+            console.log("image: " + reader.result);
+        }
+    }
+
+    // const handleChooseFile = () => {
+    //     setFile('');
+    // }
+
+
+
     const isValidEmail = (email) => {
         return /\S+@\S+\.\S+/.test(email);
     }
-
 
     let isValid = true;
     const handleSubmitAdminAdding = (async (event) => {
@@ -113,6 +148,14 @@ export function AdminSignup(props) {
             }));
             errorsConsole.confirmPassword = "Confirm Password feild is mandatory!";
         };
+        if (!file) {
+            isValid = false;
+            errorsConsole.file = "Profile picture feild is mandatory!";
+            setMandatoryErrors(prevState => ({
+                ...prevState,
+                [file]: "Profile picture feild is mandatory!"
+            }));
+        }
 
         if (!isValid) {
             console.log('form isn\'t valid!!');
@@ -121,11 +164,12 @@ export function AdminSignup(props) {
             return;
         };
         isValid = true;
-
+        console.log("profilePicture is " + profilePicture);
         const newAdmin = { firstName, lastName, email, password, confirmPassword, profilePicture };
-        setAdminData((prev) => [newAdmin, ...prev]);
-        console.log(adminData.firstName);
-        console.log(adminData);
+
+        setAdminData(newAdmin);
+        // console.log(adminData.firstName);
+        // console.log(profilepic);
         setFirstName('');
         setLastName('');
         setEmail('');
@@ -139,106 +183,129 @@ export function AdminSignup(props) {
             lastname: lastName,
             email: email,
             password: password,
-            profilePicture: profilePicture
+            profilepic: profilePicture
         };
-        // console.log(adminToAddToDB);
+        console.log("admin To Add To DB: " + adminToAddToDB);
+
         axios({
             method: 'post',
             url: "http://localhost:8000/admin/signup",
             headers: { 'content-type': 'application/json' },
             data: adminToAddToDB
+        }).then((res) => {
+            console.log('Posting a New Admin ', res.data);
+            const uploadedImg = res.data.cloImageResult.public_id;
+            setUploadedImg(uploadedImg);
+        }).catch((error) => {
+            console.log("message from front")
+            console.log(error)
+            setAdminExistErr(error.response.data.error);
         })
-            .then(res => console.log('Posting a New Admin ', res.data))
-            .catch(err => {
-                console.log(err);
-                setAdminExistErr(err.response.data.error);
-                // console.log("errorName" + errorName)
-            });
     });
 
+    const handleSubmitAdminPage = (e) => {
+        e.preventDefault();
+        handleSubmitAdminAdding();
+        if (isValid) {
+            navigate(`/admin`);
+        } else return;
+    }
+
     return (
-        <BoxContainer >
-            <FormContainer>
-                {adminExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{adminExistErr}</ErrorStyle>}
-                <Input
-                    type="text"
-                    placeholder="First Name"
-                    value={firstName}
-                    onChange={(e) => { setFirstName(e.target.value) }} />
-                {mandatoryErrors[firstName] ?
-                    <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[firstName] ?
-                    <ErrorStyle> Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
-                }
-                <Input
-                    type="text"
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChange={(e) => { setLastName(e.target.value) }} />
-                {mandatoryErrors[lastName] ?
-                    <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[lastName] ?
-                    <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
-                }
-                <Input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value) }} />
-                {mandatoryErrors[email] ?
-                    <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[email] ?
-                    <ErrorStyle>This is not a valid email!</ErrorStyle> : ''
-                }
-                <Input
-                    type="password"
-                    placeholder="Password"
-                    // autocomplete="current-password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value) }}
-                    maxLength={10} />
-                {mandatoryErrors[password] ?
-                    <ErrorStyle>Password feild is mandatory! </ErrorStyle> : ''
-                }
-                {errors[password] ?
-                    <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
-                }
-                <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    // autocomplete="current-password"
-                    value={confirmPassword}
-                    onChange={(e) => { setConfirmPassword(e.target.value) }} />
-                {mandatoryErrors[confirmPassword] ?
-                    <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
-                }
-                {errors[confirmPassword] ?
-                    <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
-                }
-                <Input
-                    type="text"
-                    placeholder="Profile Picture"
-                    value={profilePicture}
-                    onChange={(e) => { setProfilePicture(e.target.value) }} />
-            </FormContainer>
-            <Marginer direction="vertical" margin="1em" />
+        <>
+            {/* {(!profilePicture && uploadedImg !== "") && <Img uploadedImg={uploadedImg}></Img>} */}
+            {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar" className="previewPicture"></PreviewPicture>}
+            {}
+            <BoxContainer >
+                <FormContainer>
+                    {adminExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{adminExistErr}</ErrorStyle>}
+                    <Input
+                        type="text"
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => { setFirstName(e.target.value) }} />
+                    {mandatoryErrors[firstName] ?
+                        <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
+                    }
+                    {errors[firstName] ?
+                        <ErrorStyle> Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
+                    }
+                    <Input
+                        type="text"
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={(e) => { setLastName(e.target.value) }} />
+                    {mandatoryErrors[lastName] ?
+                        <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
+                    }
+                    {errors[lastName] ?
+                        <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
+                    }
+                    <Input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => { setEmail(e.target.value) }} />
+                    {mandatoryErrors[email] ?
+                        <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
+                    }
+                    {errors[email] ?
+                        <ErrorStyle>This is not a valid email!</ErrorStyle> : ''
+                    }
+                    <Input
+                        type="password"
+                        placeholder="Password"
+                        // autocomplete="current-password"
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value) }}
+                        maxLength={10} />
+                    {mandatoryErrors[password] ?
+                        <ErrorStyle>Password feild is mandatory! </ErrorStyle> : ''
+                    }
+                    {errors[password] ?
+                        <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
+                    }
+                    <Input
+                        type="password"
+                        placeholder="Confirm Password"
+                        // autocomplete="current-password"
+                        value={confirmPassword}
+                        onChange={(e) => { setConfirmPassword(e.target.value) }} />
+                    {mandatoryErrors[confirmPassword] ?
+                        <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
+                    }
+                    {errors[confirmPassword] ?
+                        <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
+                    }
+                    <FileInput
+                        type="file"
+                        placeholder="Upload your profile avatar here!"
+                        onChange={e => handleProfilePicChange(e)}
+                        // onClick={handleChooseFile}
+                        required
+                        accept="image/png, image/jpeg, image/jpg, image/jfif"
+                    />
+                    {/* {mandatoryErrors[file] ?
+                        <ErrorStyle>Profile Picture feild is mandatory!</ErrorStyle> : ''
+                    } */}
+                </FormContainer>
+                <Marginer direction="vertical" margin="1em" />
 
-            <SubmitButton
-                type="submit"
-                onClick={handleSubmitAdminAdding}>Sign-Up</SubmitButton>
-            <Marginer direction="vertical" margin="1em" />
-            <MutedLink href="#">
-                Already have an account?
-                <Marginer direction="vertical" margin="0.5em" />
-                <BoldLink href="#" onClick={switchToSignin}>
-                    Sign-In
-                </BoldLink>
-                <Marginer direction="vertical" margin="0.5em" />
+                <SubmitButton
+                    type="submit"
+                    onClick={handleSubmitAdminPage}
+                    >Sign-Up</SubmitButton>
+                <Marginer direction="vertical" margin="1em" />
+                <MutedLink href="#">
+                    Already have an account?
+                    <Marginer direction="vertical" margin="0.5em" />
+                    <BoldLink href="#" onClick={switchToSignin}>
+                        Sign-In
+                    </BoldLink>
+                    <Marginer direction="vertical" margin="0.5em" />
 
-            </MutedLink>
-        </BoxContainer>
+                </MutedLink>
+            </BoxContainer>
+        </>
     );
 }

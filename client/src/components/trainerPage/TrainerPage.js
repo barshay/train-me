@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import './TrainerPage.css';
 
 const TrainerPage = () => {
   return (
-    <div>TrainerPage</div>
+    <div className="trainer-page-container">Trainer Page</div>
   )
 }
 

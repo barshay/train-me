@@ -6,18 +6,28 @@ import {
   FormContainer,
   ErrorStyle,
   Input,
+  FileInput,
   MutedLink,
+  PreviewPicture,
   SubmitButton,
 } from "./common";
 import { Marginer } from "../marginer";
 import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
+import Img from '../../customHooks/Img';
+import { useNavigate } from 'react-router-dom';
 
-export function CustomerSignupForm(props) {
+
+export function CustomerSignupForm() {
   const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
 
   const { customersData, setCustomersData } = useContext(MyContext);
+
+  const navigate = useNavigate();
+
+  const [file, setFile] = useState("");
+  const [uploadedImg, setUploadedImg] = useState("");
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -31,6 +41,26 @@ export function CustomerSignupForm(props) {
 
   const [mandatoryErrors, setMandatoryErrors] = useState([]);
   const [errors, setErrors] = useState([]);
+
+
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      setFile(file);
+      previewFiles(file);
+    }
+  }
+
+  const previewFiles = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      setProfilePicture(reader.result);
+      console.log("image: " + reader.result);
+    }
+  }
 
   const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -159,6 +189,14 @@ export function CustomerSignupForm(props) {
         [gender]: "Gender field is mandatory!"
       }));
     }
+    if (!file) {
+      isValid = false;
+      errorsConsole.file = "Profile picture feild is mandatory!";
+      setMandatoryErrors(prevState => ({
+        ...prevState,
+        [file]: "Profile picture feild is mandatory!"
+      }));
+    }
 
     if (!isValid) {
       console.log('form isn\'t valid!!');
@@ -171,7 +209,7 @@ export function CustomerSignupForm(props) {
 
     const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, profilePicture };
     setCustomersData((prev) => [newCustomer, ...prev]);
-    console.log(customersData);
+    // console.log(customersData);
     setFirstName('');
     setLastName('');
     setAge('');
@@ -190,7 +228,6 @@ export function CustomerSignupForm(props) {
       email: email,
       phone: phone,
       password: password,
-      confirmPassword: confirmPassword,
       gender: gender,
       profilepic: profilePicture
     };
@@ -201,152 +238,173 @@ export function CustomerSignupForm(props) {
       url: "http://localhost:8000/customer/signup",
       headers: { 'content-type': 'application/json' },
       data: customerToAddToDB
-    })
-      .then(res => console.log('Posting a New Customer ', res.data))
-      .catch(err => console.log(err));
+    }).then((res) => {
+      console.log('Posting a New Customer ', res.data);
+      const uploadedImg = res.data.cloImageResult.public_id;
+      setUploadedImg(uploadedImg);
+    }).catch((error) => {
+      console.log("message from front")
+      console.log(error)
+    });
   });
 
+  const handleSubmitCustomerPage = (e) => {
+    e.preventDefault();
+    handleSubmitCustomerAdding();
+    if (isValid) {
+      navigate(`/customer`);
+    } else return;
+  }
+
+
   return (
-    <BoxContainer>
-      <FormContainer>
-        <Input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => { setFirstName(e.target.value) }} />
-        {mandatoryErrors[firstName] ?
-          <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[firstName] ?
-          <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
-        }
-        <Input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => { setLastName(e.target.value) }} />
-        {mandatoryErrors[lastName] ?
-          <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[lastName] ?
-          <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
-        }
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => { setEmail(e.target.value) }} />
-        {mandatoryErrors[email] ?
-          <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[email] ?
-          <ErrorStyle>This is not a valid email!</ErrorStyle> : ''
-        }
-        <Input
-          type="password"
-          placeholder="Password"
-          // autocomplete="current-password"
-          value={password}
-          onChange={(e) => { setPassword(e.target.value) }}
-          maxLength={10} />
-        {mandatoryErrors[password] ?
-          <ErrorStyle>Password feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[password] ?
-          <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
-        }
-        <Input
-          type="password"
-          placeholder="Confirm Password"
-          // autocomplete="current-password"
-          value={confirmPassword}
-          onChange={(e) => { setConfirmPassword(e.target.value) }} />
-        {mandatoryErrors[confirmPassword] ?
-          <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[confirmPassword] ?
-          <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
-        }
-        <Input
-          type="text"
-          placeholder="Profile Picture"
-          value={profilePicture}
-          onChange={(e) => { setProfilePicture(e.target.value) }} />
-        <Input
-          type="number"
-          placeholder="age"
-          maxlength={2} //why it doesn't work.
-          value={age}
-          onChange={(e) => { setAge(e.target.value) }} />
-        {mandatoryErrors[age] ?
-          <ErrorStyle>Age feild is mandatory!</ErrorStyle> : ''
-        }
-        {errors[age] ?
-          <ErrorStyle style={{ paddingRight: "0.3em", display: "flex", alignItems: "center" }}>
-            You are too young for the courses!
-            <video autoPlay loop muted style={{
-              position: 'relative',
-              width: '20%',
-              left: '35%',
-              height: '50px',
-              objectFit: "cover",
-              transform: "translate(-240%, -50%)",
-              borderRadius: "50%",
-            }}>
-              <source src={"https://ak.picdn.net/shutterstock/videos/1069771018/preview/stock-footage-under-sign-warning-symbol-on-transparent-background-with-alpha-channel-animation-of-seamless.webm"}
-                type="video/mp4"
-                alt="Age limit to 16">
-              </source>
-            </video>
-          </ErrorStyle> :
-          ''}
-        <Input
-          type="number"
-          placeholder="phone"
-          value={phone}
-          onChange={(e) => { setPhone(e.target.value) }} />
-        {mandatoryErrors[phone] ?
-          <ErrorStyle>Phone feild is mandatory! </ErrorStyle> : ''
-        }
-        {errors[phone] ?
-          <ErrorStyle style={{ paddingRight: "2em" }}>Phone number must be in a range of 7 - 12 numbers</ErrorStyle> : ''
-        }
-        <select
-          style={{ fontSize: "12px", backgroundColor: "lightgreen", height: "2.7em" }}
-          type="text"
-          placeholder="Gender"
-          value={gender}
-          onChange={(e) => { setGender(e.target.value) }}>
-          <option>Choose your gender please</option>
-          <option value="male">male</option>
-          <option value="female">female</option>
-        </select>
-        {mandatoryErrors[gender] ?
-          <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
-        }
-      </FormContainer>
-      <Marginer direction="vertical" margin="1em" />
-      <SubmitButton
-        type="submit"
-        onClick={handleSubmitCustomerAdding}>Sign-Up</SubmitButton>
-      <Marginer direction="vertical" margin="1em" />
-      <MutedLink href="#">
-        Already have an account?
-        <Marginer direction="vertical" margin="0.5em" />
-        <BoldLink href="#" onClick={switchToSignin}>
-          Sign-In
-        </BoldLink>
-        <Marginer direction="vertical" margin="0.5em" />
-        <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
-          Sign-up as a Trainer
-        </BoldLinkTrainer>
-        <Marginer direction="vertical" margin="0.5em" />
-      </MutedLink>
-    </BoxContainer>
+    <>
+      {/* {(!profilePicture && uploadedImg !== "") && <Img uploadedImg={uploadedImg}></Img>} */}
+      {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar"></PreviewPicture>}
+
+      <BoxContainer>
+        <FormContainer>
+          <Input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => { setFirstName(e.target.value) }} />
+          {mandatoryErrors[firstName] ?
+            <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[firstName] ?
+            <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
+          }
+          <Input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => { setLastName(e.target.value) }} />
+          {mandatoryErrors[lastName] ?
+            <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[lastName] ?
+            <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
+          }
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value) }} />
+          {mandatoryErrors[email] ?
+            <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[email] ?
+            <ErrorStyle>This is not a valid email!</ErrorStyle> : ''
+          }
+          <Input
+            type="password"
+            placeholder="Password"
+            // autocomplete="current-password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value) }}
+            maxLength={10} />
+          {mandatoryErrors[password] ?
+            <ErrorStyle>Password feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[password] ?
+            <ErrorStyle>Password length must be in the range of 4 - 10 characters!</ErrorStyle> : ''
+          }
+          <Input
+            type="password"
+            placeholder="Confirm Password"
+            // autocomplete="current-password"
+            value={confirmPassword}
+            onChange={(e) => { setConfirmPassword(e.target.value) }} />
+          {mandatoryErrors[confirmPassword] ?
+            <ErrorStyle>Confirm Password feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[confirmPassword] ?
+            <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
+          }
+          <Input
+            type="number"
+            placeholder="age"
+            maxlength={2} //why it doesn't work.
+            value={age}
+            onChange={(e) => { setAge(e.target.value) }} />
+          {mandatoryErrors[age] ?
+            <ErrorStyle>Age feild is mandatory!</ErrorStyle> : ''
+          }
+          {errors[age] ?
+            <ErrorStyle style={{ paddingRight: "0.3em", display: "flex", alignItems: "center" }}>
+              You are too young for the courses!
+              <video autoPlay loop muted style={{
+                position: 'relative',
+                width: '20%',
+                left: '35%',
+                height: '50px',
+                objectFit: "cover",
+                transform: "translate(-240%, -50%)",
+                borderRadius: "50%",
+              }}>
+                <source src={"https://ak.picdn.net/shutterstock/videos/1069771018/preview/stock-footage-under-sign-warning-symbol-on-transparent-background-with-alpha-channel-animation-of-seamless.webm"}
+                  type="video/mp4"
+                  alt="Age limit to 16">
+                </source>
+              </video>
+            </ErrorStyle> :
+            ''}
+          <Input
+            type="number"
+            placeholder="phone"
+            value={phone}
+            onChange={(e) => { setPhone(e.target.value) }} />
+          {mandatoryErrors[phone] ?
+            <ErrorStyle>Phone feild is mandatory! </ErrorStyle> : ''
+          }
+          {errors[phone] ?
+            <ErrorStyle style={{ paddingRight: "2em" }}>Phone number must be in a range of 7 - 12 numbers</ErrorStyle> : ''
+          }
+          <select
+            style={{ fontSize: "12px", backgroundColor: "lightgreen", height: "2.7em", marginTop: "0.3em" }}
+            type="text"
+            placeholder="Gender"
+            value={gender}
+            onChange={(e) => { setGender(e.target.value) }}>
+            <option>Choose your gender please</option>
+            <option value="male">male</option>
+            <option value="female">female</option>
+          </select>
+          {mandatoryErrors[gender] ?
+            <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
+          }
+          <FileInput
+            type="file"
+            placeholder="Upload your profile avatar here!"
+            onChange={e => handleProfilePicChange(e)}
+            required
+            accept="image/png, image/jpeg, image/jpg, image/jfif"
+          />
+          {mandatoryErrors[file] ?
+            <ErrorStyle>Profile Picture feild is mandatory!</ErrorStyle> : ''
+          }
+        </FormContainer>
+        <Marginer direction="vertical" margin="1em" />
+        <SubmitButton
+          type="submit"
+          onClick={handleSubmitCustomerPage}>Sign-Up</SubmitButton>
+        <Marginer direction="vertical" margin="1em" />
+        <MutedLink href="#">
+          Already have an account?
+          <Marginer direction="vertical" margin="0.5em" />
+          <BoldLink href="#" onClick={switchToSignin}>
+            Sign-In
+          </BoldLink>
+          <Marginer direction="vertical" margin="0.5em" />
+          <BoldLinkTrainer href="#" onClick={switchToTrainerSignup}>
+            Sign-up as a Trainer
+          </BoldLinkTrainer>
+          <Marginer direction="vertical" margin="0.5em" />
+        </MutedLink>
+      </BoxContainer>
+    </>
   );
 }
 
 
-
-// picture: string(URL) ?
-// age: number , Date format ?
