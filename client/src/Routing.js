@@ -23,8 +23,8 @@ import axios from 'axios';
 
 
 const Routing = () => {
-    const clock = useClock();
-    const [loading, setLoading] = useState(true);
+  const clock = useClock();
+  const [loading, setLoading] = useState(true);
 
     const [customersData, setCustomersData] = useState([]);
     const [trainersData, setTrainersData] = useState([]);
@@ -119,7 +119,7 @@ const Routing = () => {
                     </span>
                 </div>
 
-                {/* {
+        {/* {
                 isLoggedIn ? ( */}
                 <Routes>
                     <Route path="/" element=
@@ -145,4 +145,4 @@ const Routing = () => {
     );
 }
 
-export default Routing
+export default Routing;
