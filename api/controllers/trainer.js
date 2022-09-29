@@ -1,9 +1,12 @@
+//import JWT_KEY from '../../.env';
+
 const Trainer = require("../models/trainer");
 const serverResponse = require("../utils/serverResponse");
 const { allowedUpdates } = require('../../constants/allowedUpdates');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const { JWT_KEY } = process.env;
 
 module.exports = {
   signup: (req, res) => {
@@ -53,11 +56,39 @@ module.exports = {
     });
   },
 
-  login: (req, res) => {
-    //TODO: Add implementation for this function
-    res.status(200).json({
-      message: "Welcome Trainer",
-    });
+  login: async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const trainers = await Trainer.find({email});
+
+      const [trainer] = trainers;
+
+      bcrypt.compare(password, trainer.password, (error, result) => {
+        if (error) {
+          return serverResponse(res, 401, { message: "Auth failed"});
+        }
+
+        if (result) {
+          const token = jwt.sign({
+            id: trainer._id,
+            email: trainer.email
+          },
+          JWT_KEY,
+          {
+            expiresIn: "1H"
+          });
+
+          return serverResponse(res, 200, { 
+            message: "Auth successful",
+            token
+          });
+        }
+        
+        serverResponse(res, 401, { message: "Auth failed"});
+      });
+    } catch (e) {
+      serverResponse(res, 401, { message: "Auth failed"});
+    }
   },
 
   getAllTrainers: async (req, res) => {
