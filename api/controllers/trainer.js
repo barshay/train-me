@@ -1,17 +1,24 @@
-//import JWT_KEY from '../../.env';
-
 const Trainer = require("../models/trainer");
 const serverResponse = require("../utils/serverResponse");
-const { allowedUpdates } = require('../../constants/allowedUpdates');
+const { allowedUpdates } = require("../../constants/allowedUpdates");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { JWT_KEY } = process.env;
+const { DB_USER, DB_PASS, DB_HOST, DB_NAME, PORT } = process.env;
+console.log(DB_USER, DB_PASS, DB_HOST, DB_NAME, PORT);
 
 module.exports = {
   signup: (req, res) => {
-    const { firstname, lastname, age, profilepic, phone, gender, email, password } =
-      req.body;
+    const {
+      firstname,
+      lastname,
+      age,
+      profilepic,
+      phone,
+      gender,
+      email,
+      password,
+    } = req.body;
 
     Trainer.find({ email }).then((trainers) => {
       if (trainers.length >= 1) {
@@ -59,35 +66,37 @@ module.exports = {
   login: async (req, res) => {
     const { email, password } = req.body;
     try {
-      const trainers = await Trainer.find({email});
+      const trainers = await Trainer.find({ email });
 
       const [trainer] = trainers;
 
       bcrypt.compare(password, trainer.password, (error, result) => {
         if (error) {
-          return serverResponse(res, 401, { message: "Auth failed"});
+          return serverResponse(res, 401, { message: "Auth failed" });
         }
-
+        console.log(JWT_KEY);
         if (result) {
-          const token = jwt.sign({
-            id: trainer._id,
-            email: trainer.email
-          },
-          JWT_KEY,
-          {
-            expiresIn: "1H"
-          });
+          const token = jwt.sign(
+            {
+              id: trainer._id,
+              email: trainer.email,
+            },
+            JWT_KEY,
+            {
+              expiresIn: "1H",
+            }
+          );
 
-          return serverResponse(res, 200, { 
+          return serverResponse(res, 200, {
             message: "Auth successful",
-            token
+            token,
           });
         }
-        
-        serverResponse(res, 401, { message: "Auth failed"});
+
+        serverResponse(res, 401, { message: "Auth failed" });
       });
     } catch (e) {
-      serverResponse(res, 401, { message: "Auth failed"});
+      serverResponse(res, 401, { message: "Auth failed" });
     }
   },
 
@@ -96,7 +105,9 @@ module.exports = {
       const allTrainer = await Trainer.find({});
       return serverResponse(res, 200, allTrainer);
     } catch (e) {
-      return serverResponse(res, 500, { message: "internal error occured " + e });
+      return serverResponse(res, 500, {
+        message: "internal error occured " + e,
+      });
     }
   },
 
@@ -106,7 +117,9 @@ module.exports = {
       const trainer = await Trainer.findOne({ _id: trainerId });
       return serverResponse(res, 200, trainer);
     } catch (e) {
-      return serverResponse(res, 500, { message: "internal error occured " + e });
+      return serverResponse(res, 500, {
+        message: "internal error occured " + e,
+      });
     }
   },
 
@@ -116,7 +129,9 @@ module.exports = {
       const trainer = await Trainer.findOneAndDelete({ _id: trainerId });
       return serverResponse(res, 200, trainer);
     } catch (e) {
-      return serverResponse(res, 500, { message: "internal error occured " + e });
+      return serverResponse(res, 500, {
+        message: "internal error occured " + e,
+      });
     }
   },
 
@@ -128,5 +143,4 @@ module.exports = {
       message: "Update Trainer - ${trainerId}",
     });
   },
-
 };
