@@ -10,7 +10,7 @@ import { useClock } from './customHooks/useClock';
 import './Routing.css';
 import Logo from './images/Logo.png';
 import Home from './components/Home';
-import CustomerPage from './components/customerPage/CostomerPage';
+import CustomerPage from './components/customerPage/CustomerPage';
 import TrainerPage from './components/trainerPage/TrainerPage';
 import AdminPage from './components/adminPage/AdminPage';
 import { AdminAccountPage } from './components/accountBox/adminAccount/AdminAccountPage';
@@ -33,44 +33,44 @@ const Routing = () => {
 
     // get api - fetch from DB
     useEffect(() => {
-        const getCustomersApiAnswer = async () => {
-            try {
-                const customersUrl = 'http://localhost:8000/customer';
-                const response = await axios.get(customersUrl);
-                console.log(response)
-                const data = await response.data;
-                setCustomersData(data);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        // const getCustomersApiAnswer = async () => {
+        //     try {
+        //         const customersUrl = 'http://localhost:8000/customer';
+        //         const response = await axios.get(customersUrl);
+        //         console.log(response)
+        //         const data = await response.data;
+        //         setCustomersData(data);
+        //         setLoading(false);
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // }
 
-        const getTrainerApiAnswer = async () => {
-            try {
-                const trainersUrl = 'http://localhost:8000/trainer';
-                const response = await axios.get(trainersUrl);
-                console.log(response)
-                const data = await response.data;
-                setTrainersData(data);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        // const getTrainerApiAnswer = async () => {
+        //     try {
+        //         const trainersUrl = 'http://localhost:8000/trainer';
+        //         const response = await axios.get(trainersUrl);
+        //         console.log(response)
+        //         const data = await response.data;
+        //         setTrainersData(data);
+        //         setLoading(false);
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // }
 
-        const getContuctUsApiAnswer = async () => {
-            try {
-                const contuctUsUrl = 'http://localhost:8000/contactus';
-                const response = await axios.get(contuctUsUrl);
-                console.log(response)
-                const data = await response.data;
-                setContactUsData(data);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        // const getContuctUsApiAnswer = async () => {
+        //     try {
+        //         const contuctUsUrl = 'http://localhost:8000/contactus';
+        //         const response = await axios.get(contuctUsUrl);
+        //         console.log(response)
+        //         const data = await response.data;
+        //         setContactUsData(data);
+        //         setLoading(false);
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // }
 
         const getAdminApiAnswer = async () => {
             try {
@@ -85,9 +85,9 @@ const Routing = () => {
             }
         }
 
-        getTrainerApiAnswer();
-        getCustomersApiAnswer();
-        getContuctUsApiAnswer();
+        // getTrainerApiAnswer();
+        // getCustomersApiAnswer();
+        // getContuctUsApiAnswer();
         getAdminApiAnswer();
     }, [])
 
@@ -111,7 +111,7 @@ const Routing = () => {
                         <img className="logo" src={Logo} alt="logo-pic" />
                         <span className="clock">{clock}</span>
                     </span>
-                    <span style={{ marginTop: '1em', marginRight: '1em' }}>
+                    <span className="container-link">
                         <NavLink to="/" className="active-link">Home</NavLink>
                         <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
                         <NavLink to="/about" className="active-link">About</NavLink>

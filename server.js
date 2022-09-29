@@ -7,14 +7,19 @@ const customerRoutes = require("./api/routers/customer");
 // const questionRoutes = require("./api/routers/question");
 const trainerRoutes = require("./api/routers/trainer");
 
+require("dotenv").config();
 const app = express();
 const mongoose = require("mongoose");
+const cloudinary = require("./cloudinary/cloudinary");
 
-require("dotenv").config();
-
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 // app.use(express.static("client/build"))
 app.use(cors());
+
+
+
 
 //ROUTES
 app.use("/admin", adminRoutes);
@@ -45,6 +50,7 @@ mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
 
+// const { DB_USER, DB_PASS, DB_HOST, DB_NAME, PORT } = process.env;
 
 // mongoose.connect(
 //   `mongodb+srv://barshay:gqdOjE08Iesnq5sq@train-me.fsf7jdu.mongodb.net/?retryWrites=true&w=majority`,

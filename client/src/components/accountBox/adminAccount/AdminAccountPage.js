@@ -10,7 +10,7 @@ import './AdminAccount.css';
 
 
 const BoxContainer = styled.div`
-  width: 280px;
+  width: 350px;
   min-height: 550px;
   display: flex;
   flex-direction: column;
@@ -23,18 +23,15 @@ const BoxContainer = styled.div`
   margin-top: 4em;
   margin-bottom: 2em;
   opacity: 0.8;
-
+  
   @media (max-width: 800px) {
-  /* width: 200px; */
     display: inline-flex;
-    margin-top: 6em;
+    /* padding-top: 6em; */
   }
 
   @media (max-width: 500px) {
-  width: 200px;
+    width: 200px;
     display: inline-flex;
-    margin-top: 8em;
-      /* max-height: 350px; */
   }
 `;
 
@@ -44,12 +41,13 @@ const TopContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0 2.8em;
-  padding-bottom: 5em;
+  padding: 0 1.8em;
+  padding-bottom: 4em;
 
   @media (max-width: 500px) {
     display: flex;
-      justify-content: flex-start;
+    justify-content: flex-start;
+    padding-top: 1em;
     width: 100%;
     height: 200px;
   }
@@ -95,6 +93,10 @@ const SmallText = styled.h5`
   z-index: 10;
   margin: 0;
   margin-top: 7px;
+
+  @media (max-width: 500px) {
+    color: black;
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -102,6 +104,7 @@ const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0.6em;
+  align-items: center;
 `;
 
 const backdropVariants = {
@@ -112,8 +115,8 @@ const backdropVariants = {
     transform: "rotate(60deg)",
   },
   collapsed: {
-    width: "175%",
-    height: "520px",
+    width: "125%",
+    height: "540px",
     borderRadius: "50%",
     transform: "rotate(60deg)",
   },

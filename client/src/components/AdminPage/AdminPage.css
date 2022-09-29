@@ -1,4 +1,35 @@
+.admin-page-container {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin-top: 3em;
+    padding: 3em;
+    /* width: auto; */
+    height: 100vh;
+}
 
-.page-container {
-    margin-top: 6rem;
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    width: 12em;
+}
+
+.label-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+    height: 5em;
+    /* width: 22em; */
+    /* text-align: right; */
+    font-size: 15px;
+}
+
+​ .upload-btn {
+    
+}
+
+.upload-file-validation[type='file'] {
+    /* color: transparent; */
+    /* width: 6.4em; */
 }

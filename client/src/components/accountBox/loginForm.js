@@ -13,7 +13,7 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import { useNavigate } from 'react-router-dom';
 
-export function LoginForm(props) {
+export function LoginForm() {
   const { switchToCustomerSignup, switchToTrainerSignup } = useContext(AccountContext);
 
   const navigate = useNavigate();
@@ -77,8 +77,6 @@ export function LoginForm(props) {
     isValid = true;
     console.log('logged-in!');
 
-
-
     setEmail('');
     setPassword('');
   });
@@ -92,20 +90,13 @@ export function LoginForm(props) {
   }
 
   const handleSubmitTrainerLogin = (e) => {
+    console.log('handle trainer');
     e.preventDefault();
     handleSubmitLogin();
     if (isValid) {
       navigate(`/trainer`);
     } else return;
   }
-
-  // const handleSubmitAdminLogin = (e) => {
-  //   e.preventDefault();
-  //   handleSubmitLogin();
-  //   if (isValid) {
-  //     navigate(`/admin`);
-  //   } else return;
-  // }
 
   return (
     <BoxContainer>
