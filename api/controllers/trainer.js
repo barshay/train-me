@@ -4,8 +4,7 @@ const { allowedUpdates } = require("../../constants/allowedUpdates");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { DB_USER, DB_PASS, DB_HOST, DB_NAME, PORT } = process.env;
-console.log(DB_USER, DB_PASS, DB_HOST, DB_NAME, PORT);
+const { JWT_KEY } = process.env;
 
 module.exports = {
   signup: (req, res) => {
@@ -106,7 +105,7 @@ module.exports = {
       return serverResponse(res, 200, allTrainer);
     } catch (e) {
       return serverResponse(res, 500, {
-        message: "internal error occured " + e,
+        message: "internal error occurred " + e,
       });
     }
   },
@@ -118,7 +117,7 @@ module.exports = {
       return serverResponse(res, 200, trainer);
     } catch (e) {
       return serverResponse(res, 500, {
-        message: "internal error occured " + e,
+        message: "internal error occurred " + e,
       });
     }
   },
@@ -130,7 +129,7 @@ module.exports = {
       return serverResponse(res, 200, trainer);
     } catch (e) {
       return serverResponse(res, 500, {
-        message: "internal error occured " + e,
+        message: "internal error occurred " + e,
       });
     }
   },

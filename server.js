@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const adminRoutes = require("./api/routers/admin");
@@ -9,8 +10,6 @@ const trainerRoutes = require("./api/routers/trainer");
 
 const app = express();
 const mongoose = require("mongoose");
-
-require("dotenv").config();
 
 app.use(express.json());
 // app.use(express.static("client/build"))
@@ -44,7 +43,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/test", {
 mongoose.connection.on("connected", () => {
   console.log("MongoDB Connected!");
 });
-
 
 // mongoose.connect(
 //   `mongodb+srv://barshay:gqdOjE08Iesnq5sq@train-me.fsf7jdu.mongodb.net/?retryWrites=true&w=majority`,
