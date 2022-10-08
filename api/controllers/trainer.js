@@ -64,6 +64,7 @@ module.exports = {
 
   login: async (req, res) => {
     const { email, password } = req.body;
+    //res.header("Access-Control-Allow-Origin", "*");
     try {
       const trainers = await Trainer.find({ email });
 
@@ -75,7 +76,7 @@ module.exports = {
         }
         console.log(JWT_KEY);
         if (result) {
-          const token = jwt.sign(
+          const accessToken = jwt.sign(
             {
               id: trainer._id,
               email: trainer.email,
@@ -88,7 +89,7 @@ module.exports = {
 
           return serverResponse(res, 200, {
             message: "Auth successful",
-            token,
+            accessToken,
           });
         }
 
