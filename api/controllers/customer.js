@@ -11,13 +11,19 @@ module.exports = {
     const { firstname, lastname, age, profilepic, gender, phone, email, password } =
       req.body;
 
+    const allCustomer = await Customer.find({});
+    for (const i in allCustomer) {
+      if (allCustomer[i].email === email) {
+        return res.status(422).json({ error: "This Email is already taken!" });
+      }
+    }
 
     let cloImageResult = '';
     await cloudinary.uploader.upload(profilepic,
       {
         folder: "trainme_customers_avatar",
-        upload_preset: 'unsigned_upload',
-        public_id: `${firstname}_${lastname}_avatar`,
+        upload_preset: 'unsigned_upload_customer',
+        public_id: `${email}_avatar`,
         allowed_formats: ['jpeg, jpg, png, svg, ico, jfif, webp']
       },
       function (error, result) {
@@ -79,11 +85,40 @@ module.exports = {
 
   },
 
-  login: (req, res) => {
-    //TODO: Add implementation for this function
-    res.status(200).json({
-      message: "Welcome Customer",
-    });
+  login: async (req, res) => {
+    const { email, password } = req.body
+    console.log('password: ', password);
+    try {
+      await Customer.findOne({ email })
+        .then(customerUser => {
+          if (!customerUser) {
+            return res.status(422).json({ error: "Invalid email or password" })
+          }
+          bcrypt.compare(password, customerUser.password)
+            .then(doMatch => {
+              if (doMatch) {
+                // res.json({message:"SignIn successfull"})
+                // const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET)
+                // const { _id, name, email, role } = customerUser
+                // res.json({ token, user: { _id, email, name, role } })
+                return res.status(200).json({
+                  message: "Welcome Customer",
+                  name: `${customerUser.firstname} ${customerUser.lastname}`,
+                });
+              } else {
+                return res.status(422).json({ error: "Invalid Email or Password" })
+              }
+            }).catch(err => {
+              console.log(err);
+            })
+        }).
+        catch(err => {
+          console.log(err);
+        })
+
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
   },
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   BoldLinkTrainer,
   BoldLinkCustomer,
@@ -12,9 +12,18 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import MyContext from '../../MyContext';
 
 export function LoginForm() {
   const { switchToCustomerSignup, switchToTrainerSignup } = useContext(AccountContext);
+  const {
+    setLoading,
+    setCustomerName,
+    setTrainerName,
+    customerAvatarHandler,
+    trainerAvatarHandler
+  } = useContext(MyContext);
 
   const navigate = useNavigate();
 
@@ -81,21 +90,83 @@ export function LoginForm() {
     setPassword('');
   });
 
+  // useEffect(() => {
+  //   const getTrainerApiAnswer = async () => {
+  //     try {
+  //       const trainersUrl = 'http://localhost:8000/trainer';
+  //       const response = await axios.get(trainersUrl);
+  //       console.log(response)
+  //       const data = await response.data;
+  //       setTrainersData(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+
+  //   const getCustomersApiAnswer = async () => {
+  //     try {
+  //       const customersUrl = 'http://localhost:8000/customer';
+  //       const response = await axios.get(customersUrl);
+  //       console.log(response);
+  //       const data = await response.data;
+  //       setCustomersData(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+
+  //   getCustomersApiAnswer();
+  //   getTrainerApiAnswer();
+  // }, [])
+
+  const userDetailToValidate = {
+    email: email,
+    password: password,
+  };
+
+  let customerMessage = ''
   const handleSubmitCustomerLogin = (e) => {
     e.preventDefault();
     handleSubmitLogin();
-    if (isValid) {
-      navigate(`/customer`);
-    } else return;
+
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/customer/login",
+      headers: { 'content-type': 'application/json' },
+      data: userDetailToValidate
+    }).then((response) => {
+      customerMessage = response.data.message;
+      console.log(customerMessage);
+      customerAvatarHandler(`trainme_customers_avatar/${email}_avatar`);
+      setCustomerName(response.data.name);
+      customerMessage === 'Welcome Customer' && navigate(`/customer`);
+      setLoading(false);
+    }).catch((error) => {
+      console.log("message from front");
+      console.log(error);
+    });
   }
 
-  const handleSubmitTrainerLogin = (e) => {
-    console.log('handle trainer');
+  let trainerMessage = ''
+  const handleSubmitTrainerLogin = async (e) => {
     e.preventDefault();
     handleSubmitLogin();
-    if (isValid) {
-      navigate(`/trainer`);
-    } else return;
+
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/trainer/login",
+      headers: { 'content-type': 'application/json' },
+      data: userDetailToValidate
+    }).then((response) => {
+      trainerMessage = response.data.message;
+      console.log(trainerMessage);
+      trainerAvatarHandler(`trainme_trainers_avatar/${email}_avatar`);
+      setLoading(false);
+      trainerMessage === 'Welcome Trainer' && navigate(`/trainer`);
+    }).catch((error) => {
+      console.log("message from front");
+      console.log(error);
+    });
   }
 
   return (

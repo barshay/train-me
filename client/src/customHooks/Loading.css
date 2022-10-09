@@ -1,0 +1,40 @@
+.spinner-examples {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 15rem;
+    padding-left: 25rem;
+    grid-gap: 1rem;
+}
+
+.example {
+    display: block;
+    margin-top: 5em;
+    height: 300px;
+    position: relative;
+    letter-spacing: 0.5px;
+}
+
+.spinner::after {
+    content: '';
+    box-sizing: border-box;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: calc(30% - 20px);
+    left: calc(50% - 20px);
+    border-radius: 50%;
+}
+
+.spinner.smooth::after {
+    border-top: 20px solid rgb(220, 12, 140);
+    border-left: 20px solid rgb(62, 56, 56);
+    border-right: 20px solid rgb(62, 56, 56);
+    border-bottom: 20px solid rgb(22, 197, 60);
+    animation: spinner .3s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}

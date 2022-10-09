@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
     BoldLink,
     BoldLinkCustomer,
@@ -15,19 +15,15 @@ import { Marginer } from "../marginer";
 import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
-import Img from '../../customHooks/Img';
 import { useNavigate } from 'react-router-dom';
 
 
-export function TrainerSignupForm(props) {
+export function TrainerSignupForm() {
     const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
 
-    const { trainersData, setTrainersData } = useContext(MyContext);
+    const { setTrainerName, setLoading, trainerAvatarHandler } = useContext(MyContext);
 
     const navigate = useNavigate();
-
-    const [file, setFile] = useState("");
-    const [uploadedImg, setUploadedImg] = useState("");
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -38,15 +34,18 @@ export function TrainerSignupForm(props) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [gender, setGender] = useState('');
-    // const [isValidForm, setIsValidForm] = useState(false)
+
     const [mandatoryErrors, setMandatoryErrors] = useState([]);
     const [errors, setErrors] = useState([]);
+    const [emailExistErr, setEmailExistErr] = useState('');
+
+    let inputFileRef = useRef(null);
 
     const handleProfilePicChange = (e) => {
+        inputFileRef = e.target.value;
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            setFile(file);
             previewFiles(file);
         }
     }
@@ -66,8 +65,7 @@ export function TrainerSignupForm(props) {
     }
 
     let isValid = true;
-    const handleSubmitTrainerAdding = (async (event) => {
-        // event.preventDefault();
+    const handleSubmitTrainerAdding = (async () => {
 
         let errorsConsole = {};
         setErrors([]);
@@ -78,6 +76,7 @@ export function TrainerSignupForm(props) {
                 [firstName]: "this is redundant" // I need better way to show the error.
             }));
             isValid = false;
+            errorsConsole.firstName = "First Name must be in a range of 2-20 characters!";
             console.log("errors" + errors.firstName);
         } else if (!firstName) {
             setMandatoryErrors(prev => [...prev, 'Name feild is mandatory!']);
@@ -90,7 +89,7 @@ export function TrainerSignupForm(props) {
                 ...prevState,
                 [lastName]: "Last Name must be in a range of 2-20 characters!"
             }));
-            errorsConsole.lastName = "Last Name must in a range of 2-20 characters!";
+            errorsConsole.lastName = "Last Name must be in a range of 2-20 characters!";
         } else if (!lastName) {
             isValid = false;
             let updatedValue = {};
@@ -200,12 +199,12 @@ export function TrainerSignupForm(props) {
                 [gender]: "Gender field is mandatory!"
             }));
         }
-        if (!file) {
+        if (!profilePicture) {
             isValid = false;
-            errorsConsole.file = "Profile picture feild is mandatory!";
+            errorsConsole.profilePicture = "Profile picture feild is mandatory!";
             setMandatoryErrors(prevState => ({
                 ...prevState,
-                [file]: "Profile picture feild is mandatory!"
+                [profilePicture]: "Profile picture feild is mandatory!"
             }));
         }
 
@@ -216,22 +215,6 @@ export function TrainerSignupForm(props) {
             return;
         };
         isValid = true;
-
-
-        const newTrainer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, profilePicture };
-        setTrainersData((prev) => [newTrainer, ...prev]);
-        // console.log(trainersData);
-        setFirstName('');
-        setLastName('');
-        setAge('');
-        setEmail('');
-        setPhone('');
-        setPassword('');
-        setConfirmPassword('');
-        setGender('');
-        setProfilePicture('');
-
-        // setIsValidForm(true);
 
         const trainerToAddToDB = {
             firstname: firstName,
@@ -245,6 +228,9 @@ export function TrainerSignupForm(props) {
         };
         // console.log(trainerToAddToDB);
 
+        setTrainerName(firstName + " " + lastName);
+        setProfilePicture('');
+
         axios({
             method: 'post',
             url: "http://localhost:8000/trainer/signup",
@@ -253,29 +239,36 @@ export function TrainerSignupForm(props) {
         }).then((res) => {
             console.log('Posting a New Trainer ', res.data);
             const uploadedImg = res.data.cloImageResult.public_id;
-            setUploadedImg(uploadedImg);
+            trainerAvatarHandler(uploadedImg);
+            setLoading(false);
+            if (isValid) {
+                navigate(`/trainer`);
+            } else return;
         }).catch((error) => {
             console.log("message from front")
             console.log(error)
+            setEmailExistErr(error.response.data.error);
+            if (error.response.data.error === 'This Email is already taken!') {
+                setEmail('');
+            }
         });
     });
 
-    const handleSubmitTrainerPage = (e) => {
-        e.preventDefault();
-        handleSubmitTrainerAdding();
-        if (isValid) {
-            navigate(`/trainer`);
-        } else return;
-    }
+    /**
+       👇️ Reset the input value of the file after sending, 
+       to avoid errors when uploading the file a second time
+    */
+    const resetFileInput = () => {
+        inputFileRef.current.value = null;
+    };
 
     return (
         <>
-            {/* {(!profilePicture && uploadedImg !== "") && <Img uploadedImg={uploadedImg}></Img>} */}
-            {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar"></PreviewPicture>}
+            {profilePicture && <PreviewPicture src={profilePicture} alt="trainer-avatar"></PreviewPicture>}
 
             <BoxContainer>
                 <FormContainer>
-                    {/* {isValidForm && <div style={{ fontSize: "12px", color: "red" }}>You have successfully registered</div>} */}
+                    {emailExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{emailExistErr} choose another one please</ErrorStyle>}
                     <Input
                         type="text"
                         placeholder="First Name"
@@ -302,7 +295,7 @@ export function TrainerSignupForm(props) {
                         type="email"
                         placeholder="Email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value) }} />
+                        onChange={(e) => { setEmail(e.target.value); setEmailExistErr('') }} />
                     {mandatoryErrors[email] ?
                         <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
                     }
@@ -385,21 +378,24 @@ export function TrainerSignupForm(props) {
                     {mandatoryErrors[gender] ?
                         <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
                     }
+                    <Marginer direction="vertical" margin="0.5em" />
+                    <span style={{ fontSize: '14px', textDecoration: 'underLine', color: 'gray' }}>Choose your Avatar here</span>
                     <FileInput
+                        ref={inputFileRef}
                         type="file"
                         placeholder="Upload your profile avatar here!"
                         onChange={e => handleProfilePicChange(e)}
                         required
                         accept="image/png, image/jpeg, image/jpg, image/jfif"
                     />
-                    {mandatoryErrors[file] ?
+                    {mandatoryErrors[profilePicture] ?
                         <ErrorStyle>Profile Picture feild is mandatory!</ErrorStyle> : ''
                     }
                 </FormContainer>
                 <Marginer direction="vertical" margin="1em" />
                 <SubmitButton
                     type="submit"
-                    onClick={handleSubmitTrainerPage}>Sign-Up</SubmitButton>
+                    onClick={() => {handleSubmitTrainerAdding(); resetFileInput()}}>Sign-Up</SubmitButton>
                 <Marginer direction="vertical" margin="1em" />
                 <MutedLink href="#">
                     Already have an account?
@@ -408,7 +404,8 @@ export function TrainerSignupForm(props) {
                         Sign-In
                     </BoldLink>
                     <Marginer direction="vertical" margin="0.5em" />
-                    <BoldLinkCustomer href="#" onClick={switchToCustomerSignup}>
+                    <BoldLinkCustomer href="#"
+                        onClick={switchToCustomerSignup}>
                         Sign-up as a Customer
                     </BoldLinkCustomer>
                     <Marginer direction="vertical" margin="0.5em" />
@@ -418,7 +415,3 @@ export function TrainerSignupForm(props) {
     );
 }
 
-
-
-// picture: string(URL) ?
-// age: number , Date format ?

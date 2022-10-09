@@ -8,7 +8,27 @@ import { TrainerSignupForm } from "./TrainerSignupForm";
 import { BoldCustomer, BoldHello } from './common';
 import { BoldTrainer } from './common';
 
-let BoxContainer = styled.div`
+const AccountPageContainer = styled.div`
+ min-height: 120vh;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /* justify-content: center; */
+    /* padding-top: 1em; */
+    margin-top: 3em;
+    padding-right: 1.5em;
+    background-image: url("https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+
+    background-repeat: no-repeat;
+    /* background-image: url("https://media.istockphoto.com/photos/personal-trainer-guiding-woman-doing-barbell-squats-at-gym-picture-id616121640?k=20&m=616121640&s=612x612&w=0&h=uu26D6gUs5w3JEXGbX9tCc3YcxCMlMOA13ane0or2Nc="); */
+
+`
+
+const BoxContainer = styled.div`
   width: 280px;
   min-height: 550px;
   display: flex;
@@ -39,7 +59,7 @@ let BoxContainer = styled.div`
 
 const TopContainer = styled.div`
   width: 100%;
-  height: 250px;
+  height: 235px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -162,42 +182,44 @@ export function AccountBox() {
 
   return (
     <AccountContext.Provider value={contextValue}>
-      <BoxContainer >
-        <TopContainer>
-          <BackDrop
-            initial={false}
-            animate={isExpanded ? "expanded" : "collapsed"}
-            variants={backdropVariants}
-            transition={expandingTransition}
-          />
-          {active === "signin" && (
-            <HeaderContainer>
-              <HeaderText>Welcome</HeaderText>
-              <HeaderText>Back</HeaderText>
-              <SmallText>Please sign-in to continue!</SmallText>
-            </HeaderContainer>
-          )}
-          {active === "signup as a customer" && (
-            <HeaderContainer>
-              <HeaderText>Create</HeaderText>
-              <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
-            </HeaderContainer>
-          )}
-          {active === "signup as a trainer" && (
-            <HeaderContainer>
-              <HeaderText>Create</HeaderText>
-              <HeaderText>Account</HeaderText>
-              <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
-            </HeaderContainer>
-          )}
-        </TopContainer>
-        <InnerContainer>
-          {active === "signin" && <LoginForm />}
-          {active === "signup as a customer" && <CustomerSignupForm />}
-          {active === "signup as a trainer" && <TrainerSignupForm />}
-        </InnerContainer>
-      </BoxContainer>
+      <AccountPageContainer>
+        <BoxContainer >
+          <TopContainer>
+            <BackDrop
+              initial={false}
+              animate={isExpanded ? "expanded" : "collapsed"}
+              variants={backdropVariants}
+              transition={expandingTransition}
+            />
+            {active === "signin" && (
+              <HeaderContainer>
+                <HeaderText>Welcome</HeaderText>
+                <HeaderText>Back</HeaderText>
+                <SmallText>Please sign-in to continue!</SmallText>
+              </HeaderContainer>
+            )}
+            {active === "signup as a customer" && (
+              <HeaderContainer>
+                <HeaderText>Create</HeaderText>
+                <HeaderText>Account</HeaderText>
+                <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
+              </HeaderContainer>
+            )}
+            {active === "signup as a trainer" && (
+              <HeaderContainer>
+                <HeaderText>Create</HeaderText>
+                <HeaderText>Account</HeaderText>
+                <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
+              </HeaderContainer>
+            )}
+          </TopContainer>
+          <InnerContainer>
+            {active === "signin" && <LoginForm />}
+            {active === "signup as a customer" && <CustomerSignupForm />}
+            {active === "signup as a trainer" && <TrainerSignupForm />}
+          </InnerContainer>
+        </BoxContainer>
+      </AccountPageContainer>
     </AccountContext.Provider>
   );
 }

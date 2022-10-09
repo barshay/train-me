@@ -11,10 +11,13 @@ import {
     MutedLink,
     SubmitButton,
 } from "../common";
+import axios from 'axios';
+import MyContext from '../../../MyContext';
 
 
 export function AdminLogin(props) {
     const { switchToAdminSignup } = useContext(AccountContext);
+    const { adminAvatarHandler, setAdminName } = useContext(MyContext);
 
     const navigate = useNavigate();
 
@@ -77,20 +80,37 @@ export function AdminLogin(props) {
         isValid = true;
         console.log('logged-in!');
 
-
-
         setEmail('');
         setPassword('');
     });
 
+    const userDetailToValidate = {
+        email: email,
+        password: password,
+    };
+
+    let message = '';
     const handleSubmitAdminLogin = (e) => {
         e.preventDefault();
         handleSubmitLogin();
-        if (isValid) {
-            navigate(`/admin`);
-        } else return;
-    }
 
+        axios({
+            method: 'post',
+            url: "http://localhost:8000/admin/login",
+            headers: { 'content-type': 'application/json' },
+            data: userDetailToValidate
+        }).then((response) => {
+            message = response.data.message;
+            console.log(message);
+            adminAvatarHandler(`trainme_admin_avatar/${email}_avatar`);
+            setAdminName(response.data.name);
+            message === 'Welcome Admin' && navigate(`/admin`);
+        }).catch((error) => {
+            console.log("message from front");
+            console.log(error);
+        });
+
+    }
     return (
         <BoxContainer >
             <FormContainer >
@@ -132,7 +152,7 @@ export function AdminLogin(props) {
                 textDecoration: "none"
             }}>Don't have an account?{" "}
             </p>
-            <MutedLink>                
+            <MutedLink>
                 <Marginer direction="vertical" margin="0.5em" />
                 <BoldLinkAdmin href="#" onClick={switchToAdminSignup}>
                     Sign-up

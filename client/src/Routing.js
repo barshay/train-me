@@ -16,9 +16,10 @@ import AdminPage from './components/adminPage/AdminPage';
 import { AdminAccountPage } from './components/accountBox/adminAccount/AdminAccountPage';
 import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
-import CommonQuestions from './views/commonQuestions/CommonQuestions';
+// import CommonQuestions from './views/commonQuestions/CommonQuestions';
 import Contact from './views/contactUs/ContactUsForm';
 import axios from 'axios';
+import { AccountBox } from './components/accountBox/index';
 
 
 
@@ -28,8 +29,13 @@ const Routing = () => {
 
     const [customersData, setCustomersData] = useState([]);
     const [trainersData, setTrainersData] = useState([]);
-    const [contuctUsData, setContactUsData] = useState([]);
-    const [adminData, setAdminData] = useState([]);
+    const [contactUsData, setContactUsData] = useState([]);
+    const [adminName, setAdminName] = useState('');
+    const [adminAvatar, setAdminAvatar] = useState('');
+    const [customerAvatar, setCustomerAvatar] = useState('');
+    const [trainerAvatar, setTrainerAvatar] = useState('');
+    const [customerName, setCustomerName] = useState('');
+    const [trainerName, setTrainerName] = useState('');
 
     // get api - fetch from DB
     useEffect(() => {
@@ -72,37 +78,68 @@ const Routing = () => {
         //     }
         // }
 
-        const getAdminApiAnswer = async () => {
-            try {
-                const contuctUsUrl = 'http://localhost:8000/admin';
-                const response = await axios.get(contuctUsUrl);
-                console.log(response)
-                const data = await response.data;
-                setAdminData(data);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        // const getAdminApiAnswer = async () => {
+        //     try {
+        //         const adminUrl = 'http://localhost:8000/admin';
+        //         const response = await axios.get(adminUrl);
+        //         console.log(response);
+        //         const data = await response.data;
+        //         setAdminData(data);
+        //         setLoading(false);
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // }
 
         // getTrainerApiAnswer();
         // getCustomersApiAnswer();
         // getContuctUsApiAnswer();
-        getAdminApiAnswer();
+        // getAdminApiAnswer();        
     }, [])
+
+    const adminAvatarHandler = (publicId) => {
+        setAdminAvatar(publicId);
+    }
+
+    const customerAvatarHandler = (publicId) => {
+        setCustomerAvatar(publicId);
+    }
+
+    const trainerAvatarHandler = (publicId) => {
+        setTrainerAvatar(publicId);
+    }
+
+    // useEffect(() => {
+    //     console.log("Admin Avatar: ", adminAvatar);
+    // }, [adminAvatar])
+
+    const providerValues = {
+        loading,
+        setLoading,
+        setCustomersData,
+        setTrainersData,
+        setContactUsData,
+        customersData,
+        trainersData,
+        contactUsData,
+        adminAvatarHandler,
+        adminAvatar,
+        customerAvatarHandler,
+        customerAvatar,
+        trainerAvatarHandler,
+        trainerAvatar,
+        setAdminName,
+        adminName,
+        setCustomerName,
+        customerName,
+        setTrainerName,
+        trainerName
+    }
 
     return (
         <MyContext.Provider
             value={{
-                loading,
-                setCustomersData,
-                setTrainersData,
-                setContactUsData,
-                setAdminData,
-                customersData,
-                trainersData,
-                contuctUsData,
-                adminData,
+                ...providerValues
             }}
         >
             <BrowserRouter>
@@ -113,30 +150,24 @@ const Routing = () => {
                     </span>
                     <span className="container-link">
                         <NavLink to="/" className="active-link">Home</NavLink>
+                        <NavLink to="/account" className="active-link">Account</NavLink>
                         <NavLink to="/contact" className="active-link">Contact-Us</NavLink>
                         <NavLink to="/about" className="active-link">About</NavLink>
-                        <NavLink to="/questions" className="active-link">Common-Questions</NavLink>
+                        {/* <NavLink to="/questions" className="active-link">Common-Questions</NavLink> */}
                     </span>
                 </div>
 
                 {/* {
                 isLoggedIn ? ( */}
                 <Routes>
-                    <Route path="/" element=
-                        {<Home
-                        // addCartItem={addCartItem}
-                        // removeCartItem={removeCartItem}
-                        // cart={cart}
-                        // loading={loading}
-                        />
-                        }
-                    />
-                    <Route path="customer" element={<CustomerPage />} />
-                    <Route path="trainer" element={<TrainerPage />} />
-                    <Route path="admin" element={<AdminPage />} />
-                    <Route path="adminsignup" element={<AdminAccountPage />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="customer" element={<CustomerPage loading={loading} customerAvatar={customerAvatar} />} />
+                    <Route path="trainer" element={<TrainerPage loading={loading} trainerAvatar={trainerAvatar} />} />
+                    <Route path="admin" element={<AdminPage loading={loading} setLoading={setLoading} adminAvatar={adminAvatar} />} />
+                    <Route path="account" element={<AccountBox />} />
+                    <Route path="adminaccount" element={<AdminAccountPage />} />
                     <Route path="about" element={<About />} />
-                    <Route path="questions" element={<CommonQuestions />} />
+                    {/* <Route path="questions" element={<CommonQuestions />} /> */}
                     <Route path="contact" element={<Contact />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>

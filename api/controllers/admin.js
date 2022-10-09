@@ -20,8 +20,8 @@ module.exports = {
     await cloudinary.uploader.upload(profilepic,
       {
         folder: "trainme_admin_avatar",
-        upload_preset: 'unsigned_upload',
-        public_id: `${firstname}_${lastname}_avatar`,
+        upload_preset: 'unsigned_upload_admin',
+        public_id: `${email}_avatar`,
         allowed_formats: ['jpeg, jpg, png, svg, ico, jfif, webp']
       },
       function (error, result) {
@@ -60,30 +60,44 @@ module.exports = {
       } catch (error) {
         return serverResponse(res, 500, { message: "internal error occured" + error })
       }
-      // admin
-      //   .save()
-      //   .then((res) => {
-      //     console.log("result:  " + res);
-      //     res.status(200).json({
-      //       // resultUrl: resultUrl,
-      //       message: "Admin created",
-      //     });
-      //   })
-      //   .catch((error) => {
-      //     res.status(500).json({
-      //       error,
-      //     });
-      //   });
     });
 
   },
 
-
   login: (req, res) => {
-    //TODO 
-    res.status(200).json({
-      message: "Welcome Admin",
-    });
+    const { email, password } = req.body
+    console.log('password: ', password);
+    try {
+       Admin.findOne({ email })
+        .then(adminUser => {
+          if (!adminUser) {
+            return res.status(422).json({ error: "Invalid email or password" })
+          }
+          bcrypt.compare(password, adminUser.password)
+            .then(doMatch => {
+              if (doMatch) {
+                // res.json({message:"SignIn successfull"})
+                // const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET)
+                // const { _id, name, email, role } = savedUser
+                // res.json({ token, user: { _id, email, name, role } })
+                return res.status(200).json({
+                  message: "Welcome Admin",
+                  name: `${adminUser.firstname} ${adminUser.lastname}`,
+                });
+              } else {
+                return res.status(422).json({ error: "Invalid Email or Password" })
+              }
+            }).catch(err => {
+              console.log(err);
+            })
+        }).
+        catch(err => {
+          console.log(err);
+        })
+
+    } catch (e) {
+      return serverResponse(res, 500, { message: "internal error occured " + e });
+    }
   },
 
   getAdmin: async (req, res) => {
@@ -94,30 +108,5 @@ module.exports = {
       return serverResponse(res, 500, { message: "internal error occured " + e });
     }
   },
-
-  // uploadAdminImage: async (req, res) => {
-  //   console.log("from Admin controller, 92: ", req.body);
-  //   const { image } = req.body;
-
-  //   const uploadedImage = await cloudinary.uploader.upload(image,
-  //     {
-  //       upload_preset: 'unsigned_upload',
-  //       public_id: /** `${firstname, lastname}avatar` */`avatar`,
-  //       allowed_formats: ['jpeg, jpg, png, svg, ico, jfif, webp']
-  //     },
-  //     function (error, result) {
-  //       if (error) {
-  //         console.log(error);
-  //       }
-  //       console.log('check', result);
-  //     }
-  //   );
-
-  //   try {
-  //     res.status(200).json(uploadedImage);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // },
 
 };

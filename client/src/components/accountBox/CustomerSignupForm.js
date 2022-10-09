@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
   BoldLink,
   BoldLinkTrainer,
@@ -15,19 +15,14 @@ import { Marginer } from "../marginer";
 import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
-import Img from '../../customHooks/Img';
 import { useNavigate } from 'react-router-dom';
 
 
 export function CustomerSignupForm() {
   const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
-
-  const { customersData, setCustomersData } = useContext(MyContext);
-
+  const { setCustomerName, customerAvatarHandler, setLoading, loading } = useContext(MyContext);
+  setLoading(false);
   const navigate = useNavigate();
-
-  const [file, setFile] = useState("");
-  const [uploadedImg, setUploadedImg] = useState("");
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -41,13 +36,15 @@ export function CustomerSignupForm() {
 
   const [mandatoryErrors, setMandatoryErrors] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [emailExistErr, setEmailExistErr] = useState('');
 
+  let inputFileRef = useRef(null);
 
   const handleProfilePicChange = (e) => {
+    inputFileRef = e.target.value;
     const file = e.target.files[0];
     console.log(file);
     if (file) {
-      setFile(file);
       previewFiles(file);
     }
   }
@@ -67,18 +64,21 @@ export function CustomerSignupForm() {
   }
 
   let isValid = true;
-  const handleSubmitCustomerAdding = (async (event) => {
-    // event.preventDefault();
+  const handleSubmitCustomerAdding = (async () => {
+    // event.preventDefault(); //Get error when it run, I have 2 function on the onClick, check... 
 
     let errorsConsole = {};
     setErrors([]);
     setMandatoryErrors([]);
+    setEmailExistErr('');
+
     if ((firstName && firstName.length < 2) || firstName.length > 20) {
       setErrors(prevState => ({
         ...prevState,
         [firstName]: "this is redundant" // I need better way to show the error.
       }));
       isValid = false;
+      errorsConsole.firstName = "First Name must be in a range of 2-20 characters!";
       console.log("errors" + errors.firstName);
     } else if (!firstName) {
       setMandatoryErrors(prev => [...prev, 'Name feild is mandatory!']);
@@ -91,7 +91,7 @@ export function CustomerSignupForm() {
         ...prevState,
         [lastName]: "Last Name must be in a range of 2-20 characters!"
       }));
-      errorsConsole.lastName = "Last Name must in a range of 2-20 characters!";
+      errorsConsole.lastName = "Last Name must be in a range of 2-20 characters!";
     } else if (!lastName) {
       isValid = false;
       let updatedValue = {};
@@ -189,12 +189,12 @@ export function CustomerSignupForm() {
         [gender]: "Gender field is mandatory!"
       }));
     }
-    if (!file) {
+    if (!profilePicture) {
       isValid = false;
-      errorsConsole.file = "Profile picture feild is mandatory!";
+      errorsConsole.profilePicture = "Profile picture feild is mandatory!";
       setMandatoryErrors(prevState => ({
         ...prevState,
-        [file]: "Profile picture feild is mandatory!"
+        [profilePicture]: "Profile picture feild is mandatory!"
       }));
     }
 
@@ -206,21 +206,6 @@ export function CustomerSignupForm() {
     };
     isValid = true;
 
-
-    const newCustomer = { firstName, lastName, age, email, phone, password, confirmPassword, gender, profilePicture };
-    setCustomersData((prev) => [newCustomer, ...prev]);
-    // console.log(customersData);
-    setFirstName('');
-    setLastName('');
-    setAge('');
-    setEmail('');
-    setPhone('');
-    setPassword('');
-    setConfirmPassword('');
-    setGender('');
-    setProfilePicture('');
-
-
     const customerToAddToDB = {
       firstname: firstName,
       lastname: lastName,
@@ -231,8 +216,12 @@ export function CustomerSignupForm() {
       gender: gender,
       profilepic: profilePicture
     };
-
     // console.log(customerToAddToDB);
+
+    setCustomerName(firstName + " " + lastName);
+    setProfilePicture('');
+    setLoading(true);
+
     axios({
       method: 'post',
       url: "http://localhost:8000/customer/signup",
@@ -241,29 +230,37 @@ export function CustomerSignupForm() {
     }).then((res) => {
       console.log('Posting a New Customer ', res.data);
       const uploadedImg = res.data.cloImageResult.public_id;
-      setUploadedImg(uploadedImg);
+      customerAvatarHandler(uploadedImg);
+      if (isValid) {
+        navigate(`/customer`);
+      } else return;
     }).catch((error) => {
-      console.log("message from front")
-      console.log(error)
+      console.log(error);
+      setEmailExistErr(error.response.data.error);
+      if (error.response.data.error === 'This Email is already taken!') {
+        setEmail('');
+      }
     });
   });
 
-  const handleSubmitCustomerPage = (e) => {
-    e.preventDefault();
-    handleSubmitCustomerAdding();
-    if (isValid) {
-      navigate(`/customer`);
-    } else return;
-  }
-
+  /**
+       👇️ Reset the input value of the file after sending, 
+       to avoid errors when uploading the file a second time
+    */
+  const resetFileInput = () => {
+    inputFileRef.current.value = null;
+  };
 
   return (
     <>
-      {/* {(!profilePicture && uploadedImg !== "") && <Img uploadedImg={uploadedImg}></Img>} */}
-      {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar"></PreviewPicture>}
+      {loading &&
+        <section className="smooth spinner" >{ }</section>
+      }
+      {profilePicture && <PreviewPicture src={profilePicture} alt="customer-avatar"></PreviewPicture>}
 
       <BoxContainer>
         <FormContainer>
+          {emailExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{emailExistErr} choose another one please</ErrorStyle>}
           <Input
             type="text"
             placeholder="First Name"
@@ -290,7 +287,7 @@ export function CustomerSignupForm() {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => { setEmail(e.target.value) }} />
+            onChange={(e) => { setEmail(e.target.value); setEmailExistErr('') }} />
           {mandatoryErrors[email] ?
             <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
           }
@@ -374,21 +371,24 @@ export function CustomerSignupForm() {
           {mandatoryErrors[gender] ?
             <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
           }
+          <Marginer direction="vertical" margin="0.5em" />
+          <span style={{fontSize: '14px', textDecoration: 'underLine', color: 'gray'}}>Choose your Avatar here</span>
           <FileInput
+            ref={inputFileRef}
             type="file"
             placeholder="Upload your profile avatar here!"
             onChange={e => handleProfilePicChange(e)}
             required
             accept="image/png, image/jpeg, image/jpg, image/jfif"
           />
-          {mandatoryErrors[file] ?
+          {mandatoryErrors[profilePicture] ?
             <ErrorStyle>Profile Picture feild is mandatory!</ErrorStyle> : ''
           }
         </FormContainer>
         <Marginer direction="vertical" margin="1em" />
         <SubmitButton
           type="submit"
-          onClick={handleSubmitCustomerPage}>Sign-Up</SubmitButton>
+          onClick={() => { handleSubmitCustomerAdding(); resetFileInput() }}>Sign-Up</SubmitButton>
         <Marginer direction="vertical" margin="1em" />
         <MutedLink href="#">
           Already have an account?

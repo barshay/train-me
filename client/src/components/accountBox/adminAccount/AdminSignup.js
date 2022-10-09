@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
     BoldLink,
     BoxContainer,
@@ -14,20 +14,13 @@ import { Marginer } from "../../marginer";
 import MyContext from '../../../MyContext';
 import { AccountContext } from "../accountContext";
 import axios from 'axios';
-// import Img from '../../customHooks/Img';
 import { useNavigate } from 'react-router-dom'
 
-
-export function AdminSignup(props) {
+export function AdminSignup() {
     const { switchToSignin } = useContext(AccountContext);
-
-    const { adminData, setAdminData } = useContext(MyContext);
+    const { adminAvatarHandler, setAdminName, setLoading } = useContext(MyContext);
 
     const navigate = useNavigate();
-
-    const [file, setFile] = useState("");
-    const [uploadedImg, setUploadedImg] = useState("");
-
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -40,11 +33,13 @@ export function AdminSignup(props) {
     const [errors, setErrors] = useState([]);
     const [adminExistErr, setAdminExistErr] = useState('');
 
+    let inputFileRef = useRef(null);
+
     const handleProfilePicChange = (e) => {
-            const file = e.target.files[0];
-            console.log(file);
+        inputFileRef = e.target.value;
+        const file = e.target.files[0];
+        console.log(file);
         if (file) {
-            setFile(file);
             previewFiles(file);
         }
     }
@@ -59,19 +54,12 @@ export function AdminSignup(props) {
         }
     }
 
-    // const handleChooseFile = () => {
-    //     setFile('');
-    // }
-
-
-
     const isValidEmail = (email) => {
         return /\S+@\S+\.\S+/.test(email);
     }
 
     let isValid = true;
-    const handleSubmitAdminAdding = (async (event) => {
-        // event.preventDefault();
+    const handleSubmitAdminAdding = (async () => {
 
         let errorsConsole = {};
         setErrors([]);
@@ -81,6 +69,7 @@ export function AdminSignup(props) {
                 ...prevState,
                 [firstName]: "this is redundant" // I need better way to show the error.
             }));
+            errorsConsole.firstName = "First Name must be in a range of 2-20 characters!";
             isValid = false;
             console.log("errors" + errors.firstName);
         } else if (!firstName) {
@@ -94,7 +83,7 @@ export function AdminSignup(props) {
                 ...prevState,
                 [lastName]: "Last Name must be in a range of 2-20 characters!"
             }));
-            errorsConsole.lastName = "Last Name must in a range of 2-20 characters!";
+            errorsConsole.lastName = "Last Name must be in a range of 2-20 characters!";
         } else if (!lastName) {
             isValid = false;
             setMandatoryErrors(prevState => ({
@@ -148,12 +137,12 @@ export function AdminSignup(props) {
             }));
             errorsConsole.confirmPassword = "Confirm Password feild is mandatory!";
         };
-        if (!file) {
+        if (!profilePicture) {
             isValid = false;
-            errorsConsole.file = "Profile picture feild is mandatory!";
+            errorsConsole.profilePicture = "Profile picture feild is mandatory!";
             setMandatoryErrors(prevState => ({
                 ...prevState,
-                [file]: "Profile picture feild is mandatory!"
+                [profilePicture]: "Profile picture feild is mandatory!"
             }));
         }
 
@@ -164,19 +153,6 @@ export function AdminSignup(props) {
             return;
         };
         isValid = true;
-        console.log("profilePicture is " + profilePicture);
-        const newAdmin = { firstName, lastName, email, password, confirmPassword, profilePicture };
-
-        setAdminData(newAdmin);
-        // console.log(adminData.firstName);
-        // console.log(profilepic);
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setProfilePicture('');
-
 
         const adminToAddToDB = {
             firstname: firstName,
@@ -187,6 +163,14 @@ export function AdminSignup(props) {
         };
         console.log("admin To Add To DB: " + adminToAddToDB);
 
+        setAdminName(firstName + " " + lastName);
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setProfilePicture('');
+
         axios({
             method: 'post',
             url: "http://localhost:8000/admin/signup",
@@ -195,27 +179,31 @@ export function AdminSignup(props) {
         }).then((res) => {
             console.log('Posting a New Admin ', res.data);
             const uploadedImg = res.data.cloImageResult.public_id;
-            setUploadedImg(uploadedImg);
+            console.log("uploadedImg: ", uploadedImg);
+            adminAvatarHandler(uploadedImg);
+            setLoading(false);
+            if (isValid) {
+                console.log("admin error ", adminExistErr);
+                navigate(`/admin`);
+            } else return;
         }).catch((error) => {
-            console.log("message from front")
-            console.log(error)
             setAdminExistErr(error.response.data.error);
         })
+
     });
 
-    const handleSubmitAdminPage = (e) => {
-        e.preventDefault();
-        handleSubmitAdminAdding();
-        if (isValid) {
-            navigate(`/admin`);
-        } else return;
-    }
+    /**
+       👇️ Reset the input value of the file after sending, 
+       to avoid errors when uploading the file a second time
+    */
+    const resetFileInput = () => {
+        inputFileRef.current.value = null;
+    };
 
     return (
         <>
-            {/* {(!profilePicture && uploadedImg !== "") && <Img uploadedImg={uploadedImg}></Img>} */}
-            {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar" className="previewPicture"></PreviewPicture>}
-            {}
+            {profilePicture && <PreviewPicture src={profilePicture} alt="admin-avatar"></PreviewPicture>}
+            { }
             <BoxContainer >
                 <FormContainer>
                     {adminExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{adminExistErr}</ErrorStyle>}
@@ -245,7 +233,7 @@ export function AdminSignup(props) {
                         type="email"
                         placeholder="Email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value) }} />
+                        onChange={(e) => { setEmail(e.target.value)}} />
                     {mandatoryErrors[email] ?
                         <ErrorStyle>Email feild is mandatory!</ErrorStyle> : ''
                     }
@@ -277,24 +265,25 @@ export function AdminSignup(props) {
                     {errors[confirmPassword] ?
                         <ErrorStyle>Confirm Password must be the same as password!</ErrorStyle> : ''
                     }
+                    <Marginer direction="vertical" margin="0.5em" />
+                    <span style={{ fontSize: '14px', textDecoration: 'underLine', color: 'gray' }}>Choose your Avatar here</span>
                     <FileInput
+                        ref={inputFileRef}
                         type="file"
                         placeholder="Upload your profile avatar here!"
                         onChange={e => handleProfilePicChange(e)}
-                        // onClick={handleChooseFile}
                         required
                         accept="image/png, image/jpeg, image/jpg, image/jfif"
                     />
-                    {/* {mandatoryErrors[file] ?
+                    {mandatoryErrors[profilePicture] ?
                         <ErrorStyle>Profile Picture feild is mandatory!</ErrorStyle> : ''
-                    } */}
+                    }
                 </FormContainer>
                 <Marginer direction="vertical" margin="1em" />
-
                 <SubmitButton
                     type="submit"
-                    onClick={handleSubmitAdminPage}
-                    >Sign-Up</SubmitButton>
+                    onClick={() => {handleSubmitAdminAdding(); resetFileInput()}}
+                >Sign-Up</SubmitButton>
                 <Marginer direction="vertical" margin="1em" />
                 <MutedLink href="#">
                     Already have an account?

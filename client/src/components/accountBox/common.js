@@ -101,11 +101,11 @@ export const FileInput = styled.input`
   height: 32px;
   outline: none;
   /* border: 1px solid rgba(200, 200, 200, 2); */
-  padding: 0px 5px;
+  /* padding: 0px 5px; */
   border-bottom: 1.4px solid transparent;
   /* transition: all 200ms ease-in-out; */
   font-size: 12px;
-  margin-top: 0.8em;
+  /* margin-top: 0.8em; */
 
   &:not(:last-of-type) {
     border-bottom: 1.5px solid rgba(200, 200, 200, 0.4);
@@ -186,4 +186,5 @@ export const PreviewPicture = styled.img`
     width: 8em;
     height: 8em;
     border-radius: 20%;
+    /* padding: 1em; */
 `

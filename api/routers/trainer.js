@@ -16,5 +16,4 @@ app.get("/", getAllTrainers);
 app.get("/:trainerId", getTrainerById);
 app.patch("/:trainerId", updateTrainer);
 app.delete("/:trainerId", deleteTrainerById);
-
 module.exports = app;
