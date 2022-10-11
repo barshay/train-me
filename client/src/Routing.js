@@ -65,10 +65,10 @@ const Routing = () => {
         //     }
         // }
 
-        // const getContuctUsApiAnswer = async () => {
+        // const getContactUsApiAnswer = async () => {
         //     try {
-        //         const contuctUsUrl = 'http://localhost:8000/contactus';
-        //         const response = await axios.get(contuctUsUrl);
+        //         const contactUsUrl = 'http://localhost:8000/getAllContactInquiries';
+        //         const response = await axios.get(contactUsUrl);
         //         console.log(response)
         //         const data = await response.data;
         //         setContactUsData(data);

@@ -5,14 +5,13 @@ import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
 
 const CustomerPage = ({ loading, customerAvatar }) => {
-
   const { customerName } = useContext(MyContext);
 
   return (
     <>
-      {/* {loading &&
+      {loading &&
         <section className="smooth spinner" >{ }</section>
-      } */}
+      }
       <div className="customer-page-container">
         {customerName && <p>Welcome {customerName}</p>}
         {/* <Img customerAvatar={customerAvatar}></Img> */}

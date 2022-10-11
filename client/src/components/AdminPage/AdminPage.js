@@ -3,6 +3,7 @@ import './AdminPage.css';
 import '../../customHooks/Loading.css';
 import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
+import { Marginer } from '../marginer';
 import axios from 'axios';
 
 
@@ -19,49 +20,50 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   } = useContext(MyContext);
 
   useEffect(() => {
-    const getCustomersApiAnswer = async () => {
-      try {
-        const customersUrl = 'http://localhost:8000/customer';
-        const response = await axios.get(customersUrl);
-        console.log(response)
-        const data = await response.data;
-        setCustomersData(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // const getCustomersApiAnswer = async () => {
+    //   try {
+    //     const customersUrl = 'http://localhost:8000/customer';
+    //     const response = await axios.get(customersUrl);
+    //     console.log(response)
+    //     const data = await response.data;
+    //     setCustomersData(data);
+    //     // setLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
-    const getTrainerApiAnswer = async () => {
-      try {
-        const trainersUrl = 'http://localhost:8000/trainer';
-        const response = await axios.get(trainersUrl);
-        console.log(response)
-        const data = await response.data;
-        setTrainersData(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // const getTrainerApiAnswer = async () => {
+    //   try {
+    //     const trainersUrl = 'http://localhost:8000/trainer';
+    //     const response = await axios.get(trainersUrl);
+    //     console.log(response)
+    //     const data = await response.data;
+    //     setTrainersData(data);
+    //     // setLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
-    const getContuctUsApiAnswer = async () => {
-      try {
-        const contuctUsUrl = 'http://localhost:8000/contactus';
-        const response = await axios.get(contuctUsUrl);
-        console.log(response)
-        const data = await response.data;
-        setContactUsData(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    
 
-    getTrainerApiAnswer();
-    getCustomersApiAnswer();
-    getContuctUsApiAnswer();
+    // getTrainerApiAnswer();
+    // getCustomersApiAnswer();
   }, [])
+
+  const getContactUsApiAnswer = async () => {
+    try {
+      const contactUsUrl = 'http://localhost:8000/contactUs';
+      const response = await axios.get(contactUsUrl);
+      console.log(response)
+      const data = await response.data;
+      setContactUsData(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   return (
@@ -70,14 +72,39 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
         <section className="smooth spinner" >{ }</section>
       }
       <div className="admin-page-container">
-        {adminName && <p>Welcome {adminName}</p>}
+        <div className="admin-actions-container">
+          {adminName &&
+            <div style={{ display: "flex" }}>
+              <div style={{ display: "block" }}>
+                <span style={{ color: "red" }}>Welcome</span><div style={{ overflow: "scroll" }}>{adminName}</div>
+              </div>
+              {adminAvatar &&
+                <Img adminAvatar={adminAvatar} alt="admin avatar"></Img>
+              }
+            </div>}
 
-        {/* <Img adminAvatar={adminAvatar}></Img> */}
-        
-          {adminAvatar && <div style={{ display: "flex", justifyContent: "center" }}>
-            <Img adminAvatar={adminAvatar} alt="admin avatar"></Img>
-          </div>}
+          <button style={{ fontSize: "0.8em" }} onClick={() => getContactUsApiAnswer()}>Receive all contact messages</button>
+        </div>
+
+        <div className="allContactUs-container">
+          {contactUsData &&
+            contactUsData.map((item, index) =>
+              <div key={index} className="contactUs-container">
+                <div className="contact-titles">First Name: <span className="items">{item.firstname}</span></div>
+                <div className="contact-titles">Last Name: <span className="items">{item.lastname}</span></div>
+                <div className="contact-titles">Email: <span className="items">{item.email}</span></div>
+                <div className="contact-titles">Phone: <span className="items">{item.phone}</span></div>
+                <div className="contact-titles">Message Title: <span className="items">{item.messagetitle}</span></div>
+                <div className="contact-titles">Message: <span className="items">{item.message}</span></div>
+                <div className="contact-titles">Gender: <span className="items">{item.gender}</span></div>
+                <div className="contact-titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
+                <Marginer direction="vertical" margin="0.5em" />
+              </div>
+            )
+          }
+        </div>
       </div>
+
     </>
   )
 }

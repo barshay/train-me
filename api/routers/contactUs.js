@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 
-const { getAllContactInquiries,
+const { 
+    getAllContactInquiries,
     PostContact,
     getContactById,
     deleteContactById,

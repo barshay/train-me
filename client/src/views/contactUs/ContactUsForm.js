@@ -106,13 +106,13 @@ const ContactUsForm = () => {
       errorsConsole.messageTitle = "Message Title feild is mandatory!";
     };
 
-    if ((message && message.length < 10) || message.length > 50) {
+    if ((message && message.length < 10) || message.length > 100) {
       isValid = false;
       setErrors(prevState => ({
         ...prevState,
-        [message]: "Message must be in a range of 10-50"
+        [message]: "Message must be in a range of 10-100"
       }));
-      errorsConsole.message = "Message must be in a range of 10-50";
+      errorsConsole.message = "Message must be in a range of 100-50";
     } else if (!message) {
       isValid = false;
       setMandatoryErrors(prevState => ({
@@ -298,7 +298,7 @@ const ContactUsForm = () => {
         }
         {errors[message] ?
           <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Message must be in a range of 10-50 characters!
+            Message must be in a range of 10-100 characters!
           </p> : ''
         }
 
