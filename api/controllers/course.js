@@ -25,8 +25,8 @@ module.exports = {
     getCourseById: async (req, res) => {
         try {
             console.log(req.params);
-            const courseId = req.params.courseID;
-            const course = await Course.findOne({ _id: courseId });
+            const courseID = req.params.courseId;
+            const course = await Course.findOne({ _id: courseID });
             return serverResponse(res, 200, course);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });
@@ -36,8 +36,8 @@ module.exports = {
     deleteCourseById: async (req, res) => {
         try {
             console.log(req.params);
-            const courseId = req.params.courseID;
-            const course = await Course.findOneAndDelete({ _id: courseId });
+            const courseID = req.params.courseId;
+            const course = await Course.findOneAndDelete({ _id: courseID });
             return serverResponse(res, 200, course);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });

@@ -308,9 +308,9 @@ const ContactUsForm = () => {
           placeholder="Gender"
           value={gender}
           onChange={(e) => { setGender(e.target.value) }}>
-          <option>Choose your gender please</option>
-          <option value="male">male</option>
-          <option value="female">female</option>
+          <option>Choose your Gender please</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
         </select>
         {mandatoryErrors[gender] ?
           <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
@@ -325,8 +325,8 @@ const ContactUsForm = () => {
           value={contactMethod}
           onChange={(e) => { setContactMethod(e.target.value) }}>
           <option>Choose your Preferred contact method please</option>
-          <option value="email">email</option>
-          <option value="phone">phone</option>
+          <option value="email">Email</option>
+          <option value="phone">Phone</option>
         </select>
         {mandatoryErrors[contactMethod] ?
           <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>

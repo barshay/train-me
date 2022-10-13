@@ -11,8 +11,8 @@ const {
 
 app.post("/", PostContact);
 app.get("/", getAllContactInquiries);
-app.get("/:inquiryId", getContactById);
-app.delete("/:inquiryId", deleteContactById);
+app.get("/:contactId", getContactById);
+app.delete("/:contactId", deleteContactById);
 app.delete("/", deleteAllContactInquiries);
 
 module.exports = app;

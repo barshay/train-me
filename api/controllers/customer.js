@@ -133,8 +133,8 @@ module.exports = {
 
   getCustomerById: async (req, res) => {
     try {
-      const customerId = req.params.customerID;
-      const customer = await Customer.findOne({ _id: customerId });
+      const customerID = req.params.customerId;
+      const customer = await Customer.findOne({ _id: customerID });
       return serverResponse(res, 200, customer);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -143,8 +143,8 @@ module.exports = {
 
   deleteCustomerById: async (req, res) => {
     try {
-      const customerId = req.params.customerID;
-      const customer = await Customer.findOneAndDelete({ _id: customerId });
+      const customerID = req.params.customerId;
+      const customer = await Customer.findOneAndDelete({ _id: customerID });
       return serverResponse(res, 200, customer);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -153,7 +153,7 @@ module.exports = {
 
   // TODO?
   updateCustomer: (req, res) => {
-    const customerId = req.params.customerId;
+    const customerID = req.params.customerId;
 
     res.status(200).json({
       message: "Update Customer - ${customerId}",

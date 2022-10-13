@@ -114,8 +114,8 @@ module.exports = {
 
   getTrainerById: async (req, res) => {
     try {
-      const trainerId = req.params.trainerID;
-      const trainer = await Trainer.findOne({ _id: trainerId });
+      const trainerID = req.params.trainerId;
+      const trainer = await Trainer.findOne({ _id: trainerID });
       return serverResponse(res, 200, trainer);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -124,8 +124,8 @@ module.exports = {
 
   deleteTrainerById: async (req, res) => {
     try {
-      const trainerId = req.params.trainerID;
-      const trainer = await Trainer.findOneAndDelete({ _id: trainerId });
+      const trainerID = req.params.trainerId;
+      const trainer = await Trainer.findOneAndDelete({ _id: trainerID });
       return serverResponse(res, 200, trainer);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
@@ -134,7 +134,7 @@ module.exports = {
 
   // TODO?
   updateTrainer: (req, res) => {
-    const trainerId = req.params.trainerId;
+    const trainerID = req.params.trainerId;
 
     res.status(200).json({
       message: "Update Trainer - ${trainerId}",

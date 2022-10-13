@@ -26,8 +26,8 @@ module.exports = {
   getContactById: async (req, res) => {
     try {
       console.log(req.params);
-      const contactId = req.params.contactID;
-      const contact = await ContactUs.findOne({ _id: contactId });
+      const contactID = req.params.contactId;
+      const contact = await ContactUs.findOne({ _id: contactID });
       return serverResponse(res, 200, contact);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occurred " + e });
@@ -37,8 +37,8 @@ module.exports = {
   deleteContactById: async (req, res) => {
     try {
       console.log(req.params);
-      const contactId = req.params.contactID;
-      const contact = await ContactUs.findOneAndDelete({ _id: contactId });
+      const contactID = req.params.contactId;
+      const contact = await ContactUs.findOneAndDelete({ _id: contactID });
       return serverResponse(res, 200, contact);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occurred " + e });

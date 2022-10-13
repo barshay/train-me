@@ -58,18 +58,18 @@ const Img = ({ adminAvatar, customerAvatar, trainerAvatar }) => {
     <>
       {adminAvatar &&
         <AdvancedImage
-          style={{ width: "6em", height: "6em", borderRadius: "20%" }}
+          style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
           cldImg={adminImage}
         // plugins={[lazyload(), placeholder({ mode: 'predominant-color' })]}
         />}
       {customerAvatar &&
         <AdvancedImage
-          style={{ width: "6em", height: "6em", borderRadius: "20%" }}
+        style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
           cldImg={customerImage}
         />}
       {trainerAvatar &&
         <AdvancedImage
-          style={{ width: "6em", height: "6em", borderRadius: "20%" }}
+        style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
           cldImg={trainerImage}
         />}
     </>

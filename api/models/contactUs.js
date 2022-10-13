@@ -13,7 +13,11 @@ const contactUsSchema = new mongoose.Schema({
     enum: ['male', 'female'],
     required: true
   },
-  createdat: { type: Date, default: Date.now() },
+  createdat: {
+    type: String,
+    default: new Intl.DateTimeFormat('he-IL',
+      { dateStyle: 'full', timeStyle: 'long' }).format(Date.now())
+  },
   //user
 });
 
