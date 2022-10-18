@@ -4,7 +4,7 @@ const { allowedUpdates } = require("../../constants/allowedUpdates");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { JWT_KEY } = process.env;
+const { ACCESS_TOKEN_SECRET } = process.env;
 
 module.exports = {
   signup: (req, res) => {
@@ -63,9 +63,8 @@ module.exports = {
   },
 
   login: async (req, res) => {
-    const { email, password } = req.body;
-    //res.header("Access-Control-Allow-Origin", "*");
     try {
+      const { email, password } = req.body || {};
       const trainers = await Trainer.find({ email });
 
       const [trainer] = trainers;
@@ -74,16 +73,16 @@ module.exports = {
         if (error) {
           return serverResponse(res, 401, { message: "Auth failed" });
         }
-        console.log(JWT_KEY);
+        // console.log(JWT_KEY);
         if (result) {
           const accessToken = jwt.sign(
             {
-              id: trainer._id,
+              sub: trainer._id,
               email: trainer.email,
             },
-            JWT_KEY,
+            ACCESS_TOKEN_SECRET,
             {
-              expiresIn: "1H",
+              expiresIn: "1h",
             }
           );
 
