@@ -8,7 +8,7 @@ module.exports = {
         try {
             const newCourse = new Course({ ...req.body });
             await newCourse.save();
-            return serverResponse(res, 200, newCourse);
+            return serverResponse(res, 201, newCourse);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });
         }

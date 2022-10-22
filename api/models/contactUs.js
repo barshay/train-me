@@ -18,7 +18,6 @@ const contactUsSchema = new mongoose.Schema({
     default: new Intl.DateTimeFormat('he-IL',
       { dateStyle: 'full', timeStyle: 'long' }).format(Date.now())
   },
-  //user
 });
 
 const ContactUs = mongoose.model("Contacts", contactUsSchema);

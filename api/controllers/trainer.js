@@ -58,13 +58,22 @@ module.exports = {
       });
       // console.log("trainer is: " + trainer);
 
-      try {
-        trainer.save();
-        console.log("Trainer created");
-        return serverResponse(res, 200, { cloImageResult });
-      } catch (error) {
-        return serverResponse(res, 500, { message: "internal error occured" + error })
-      }
+      trainer
+        .save()
+        .then((result) => {
+          // console.log(result);
+          console.log("Trainer created");
+          // result.status(200).json({result}),
+          res.status(201).json({
+            cloImageResult,
+            result
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            message: "internal error occured" + error
+          });
+        });
     });
   },
 
@@ -73,11 +82,11 @@ module.exports = {
     console.log('password: ', password);
     try {
       await Trainer.findOne({ email })
-        .then(savedPassword => {
-          if (!savedPassword) {
+        .then(trainerUser => {
+          if (!trainerUser) {
             return res.status(422).json({ error: "Invalid email or password" })
           }
-          bcrypt.compare(password, savedPassword.password)
+          bcrypt.compare(password, trainerUser.password)
             .then(doMatch => {
               if (doMatch) {
                 // res.json({message:"SignIn successfull"})
@@ -86,6 +95,8 @@ module.exports = {
                 // res.json({ token, user: { _id, email, name, role } })
                 return res.status(200).json({
                   message: "Welcome Trainer",
+                  name: `${trainerUser.firstname} ${trainerUser.lastname}`,
+                  trainerUser
                 });
               } else {
                 return res.status(422).json({ error: "Invalid Email or Password" })

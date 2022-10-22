@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 export function TrainerSignupForm() {
     const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
 
-    const { setTrainerName, setLoading, trainerAvatarHandler } = useContext(MyContext);
+    const { setTrainerName, setLoading, trainerAvatarHandler, setTrainerID } = useContext(MyContext);
 
     const navigate = useNavigate();
 
@@ -70,24 +70,24 @@ export function TrainerSignupForm() {
         let errorsConsole = {};
         setErrors([]);
         setMandatoryErrors([]);
-        if ((firstName && firstName.length < 2) || firstName.length > 20) {
+        if ((firstName && firstName.length < 2) || firstName.length > 10) {
             setErrors(prevState => ({
                 ...prevState,
                 [firstName]: "this is redundant" // I need better way to show the error.
             }));
             isValid = false;
-            errorsConsole.firstName = "First Name must be in a range of 2-20 characters!";
+            errorsConsole.firstName = "First Name must be in a range of 2-10 characters!";
             console.log("errors" + errors.firstName);
         } else if (!firstName) {
             setMandatoryErrors(prev => [...prev, 'Name feild is mandatory!']);
             isValid = false;
             errorsConsole.firstName = "Name feild is mandatory!";
         }
-        if ((lastName && lastName.length < 2) || lastName.length > 20) {
+        if ((lastName && lastName.length < 2) || lastName.length > 10) {
             isValid = false;
             setErrors(prevState => ({
                 ...prevState,
-                [lastName]: "Last Name must be in a range of 2-20 characters!"
+                [lastName]: "Last Name must be in a range of 2-10 characters!"
             }));
             errorsConsole.lastName = "Last Name must be in a range of 2-20 characters!";
         } else if (!lastName) {
@@ -230,6 +230,7 @@ export function TrainerSignupForm() {
 
         setTrainerName(firstName + " " + lastName);
         setProfilePicture('');
+        // setLoading(true);
 
         axios({
             method: 'post',
@@ -240,6 +241,7 @@ export function TrainerSignupForm() {
             console.log('Posting a New Trainer ', res.data);
             const uploadedImg = res.data.cloImageResult.public_id;
             trainerAvatarHandler(uploadedImg);
+            setTrainerID(res.data.result._id);
             setLoading(false);
             if (isValid) {
                 navigate(`/trainer`);
@@ -278,7 +280,7 @@ export function TrainerSignupForm() {
                         <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
                     }
                     {errors[firstName] ?
-                        <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
+                        <ErrorStyle>Name must be in a range of 2 - 10 characters!</ErrorStyle> : ''
                     }
                     <Input
                         type="text"
@@ -289,7 +291,7 @@ export function TrainerSignupForm() {
                         <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
                     }
                     {errors[lastName] ?
-                        <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
+                        <ErrorStyle>Last Name must in a range of 2 - 10 characters!</ErrorStyle> : ''
                     }
                     <Input
                         type="email"
@@ -395,7 +397,7 @@ export function TrainerSignupForm() {
                 <Marginer direction="vertical" margin="1em" />
                 <SubmitButton
                     type="submit"
-                    onClick={() => {handleSubmitTrainerAdding(); resetFileInput()}}>Sign-Up</SubmitButton>
+                    onClick={() => { handleSubmitTrainerAdding(); resetFileInput() }}>Sign-Up</SubmitButton>
                 <Marginer direction="vertical" margin="1em" />
                 <MutedLink href="#">
                     Already have an account?

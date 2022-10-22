@@ -14,7 +14,6 @@ import {
 import axios from 'axios';
 import MyContext from '../../../MyContext';
 
-
 export function AdminLogin() {
     const { switchToAdminSignup } = useContext(AccountContext);
     const { adminAvatarHandler, setAdminName } = useContext(MyContext);

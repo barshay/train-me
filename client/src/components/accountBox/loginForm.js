@@ -22,7 +22,8 @@ export function LoginForm() {
     setCustomerName,
     setTrainerName,
     customerAvatarHandler,
-    trainerAvatarHandler
+    trainerAvatarHandler,
+    setTrainerID
   } = useContext(MyContext);
 
   const navigate = useNavigate();
@@ -90,35 +91,6 @@ export function LoginForm() {
     setPassword('');
   });
 
-  // useEffect(() => {
-  //   const getTrainerApiAnswer = async () => {
-  //     try {
-  //       const trainersUrl = 'http://localhost:8000/trainer';
-  //       const response = await axios.get(trainersUrl);
-  //       console.log(response)
-  //       const data = await response.data;
-  //       setTrainersData(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-
-  //   const getCustomersApiAnswer = async () => {
-  //     try {
-  //       const customersUrl = 'http://localhost:8000/customer';
-  //       const response = await axios.get(customersUrl);
-  //       console.log(response);
-  //       const data = await response.data;
-  //       setCustomersData(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-
-  //   getCustomersApiAnswer();
-  //   getTrainerApiAnswer();
-  // }, [])
-
   const userDetailToValidate = {
     email: email,
     password: password,
@@ -135,6 +107,7 @@ export function LoginForm() {
       headers: { 'content-type': 'application/json' },
       data: userDetailToValidate
     }).then((response) => {
+      console.log(response);
       customerMessage = response.data.message;
       console.log(customerMessage);
       customerAvatarHandler(`trainme_customers_avatar/${email}_avatar`);
@@ -158,10 +131,13 @@ export function LoginForm() {
       headers: { 'content-type': 'application/json' },
       data: userDetailToValidate
     }).then((response) => {
+      console.log(response);
       trainerMessage = response.data.message;
       console.log(trainerMessage);
+      setTrainerID(response.data.trainerUser._id);
       trainerAvatarHandler(`trainme_trainers_avatar/${email}_avatar`);
       setLoading(false);
+      setTrainerName(response.data.name);
       trainerMessage === 'Welcome Trainer' && navigate(`/trainer`);
     }).catch((error) => {
       console.log("message from front");

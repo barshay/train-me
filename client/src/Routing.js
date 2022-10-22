@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import MyContext from './MyContext';
 import {
     BrowserRouter,
@@ -18,84 +18,24 @@ import About from './views/about/About';
 import NotFound from './views/notFound/NotFound';
 // import CommonQuestions from './views/commonQuestions/CommonQuestions';
 import Contact from './views/contactUs/ContactUsForm';
-import axios from 'axios';
 import { AccountBox } from './components/accountBox/index';
-
 
 
 const Routing = () => {
     const clock = useClock();
     const [loading, setLoading] = useState(true);
 
-    const [customersData, setCustomersData] = useState([]);
-    const [trainersData, setTrainersData] = useState([]);
-    const [contactUsData, setContactUsData] = useState([]);
     const [adminName, setAdminName] = useState('');
     const [adminAvatar, setAdminAvatar] = useState('');
+    const [coursesData, setCoursesData] = useState([]);
+    const [contactUsData, setContactUsData] = useState([]);
+    const [customersData, setCustomersData] = useState([]);
     const [customerAvatar, setCustomerAvatar] = useState('');
-    const [trainerAvatar, setTrainerAvatar] = useState('');
     const [customerName, setCustomerName] = useState('');
+    const [trainersData, setTrainersData] = useState([]);
+    const [trainerAvatar, setTrainerAvatar] = useState('');
     const [trainerName, setTrainerName] = useState('');
-
-    // get api - fetch from DB
-    useEffect(() => {
-        // const getCustomersApiAnswer = async () => {
-        //     try {
-        //         const customersUrl = 'http://localhost:8000/customer';
-        //         const response = await axios.get(customersUrl);
-        //         console.log(response)
-        //         const data = await response.data;
-        //         setCustomersData(data);
-        //         setLoading(false);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
-
-        // const getTrainerApiAnswer = async () => {
-        //     try {
-        //         const trainersUrl = 'http://localhost:8000/trainer';
-        //         const response = await axios.get(trainersUrl);
-        //         console.log(response)
-        //         const data = await response.data;
-        //         setTrainersData(data);
-        //         setLoading(false);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
-
-        // const getContactUsApiAnswer = async () => {
-        //     try {
-        //         const contactUsUrl = 'http://localhost:8000/getAllContactInquiries';
-        //         const response = await axios.get(contactUsUrl);
-        //         console.log(response)
-        //         const data = await response.data;
-        //         setContactUsData(data);
-        //         setLoading(false);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
-
-        // const getAdminApiAnswer = async () => {
-        //     try {
-        //         const adminUrl = 'http://localhost:8000/admin';
-        //         const response = await axios.get(adminUrl);
-        //         console.log(response);
-        //         const data = await response.data;
-        //         setAdminData(data);
-        //         setLoading(false);
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
-
-        // getTrainerApiAnswer();
-        // getCustomersApiAnswer();
-        // getContuctUsApiAnswer();
-        // getAdminApiAnswer();        
-    }, [])
+    const [trainerID, setTrainerID] = useState('');
 
     const adminAvatarHandler = (publicId) => {
         setAdminAvatar(publicId);
@@ -108,10 +48,6 @@ const Routing = () => {
     const trainerAvatarHandler = (publicId) => {
         setTrainerAvatar(publicId);
     }
-
-    // useEffect(() => {
-    //     console.log("Admin Avatar: ", adminAvatar);
-    // }, [adminAvatar])
 
     const providerValues = {
         loading,
@@ -133,7 +69,11 @@ const Routing = () => {
         setCustomerName,
         customerName,
         setTrainerName,
-        trainerName
+        trainerName,
+        setTrainerID,
+        trainerID,
+        setCoursesData,
+        coursesData
     }
 
     return (

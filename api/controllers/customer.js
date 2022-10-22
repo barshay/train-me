@@ -56,15 +56,15 @@ module.exports = {
         email: email,
         password: hash,
       });
-      // console.log("customer is: " + customer);
 
       customer
         .save()
         .then((result) => {
           // console.log(result);
-          //   console.log("Customer created");
-          res.status(200).json({
-            cloImageResult
+            console.log("Customer created");
+          res.status(201).json({
+            cloImageResult,
+            result
           });
         })
         .catch((error) => {
@@ -72,17 +72,7 @@ module.exports = {
             error,
           });
         });
-
-      // try {
-      //   customer.save();
-      //   console.log("Customer created");
-      //   return serverResponse(res, 200, { cloImageResult });
-      // } catch (error) {
-      //   return serverResponse(res, 500, { message: "internal error occured" + error })
-      // }
-
     });
-
   },
 
   login: async (req, res) => {
@@ -120,7 +110,6 @@ module.exports = {
       return serverResponse(res, 500, { message: "internal error occured " + e });
     }
   },
-
 
   getAllCustomers: async (req, res) => {
     try {

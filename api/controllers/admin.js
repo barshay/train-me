@@ -56,7 +56,7 @@ module.exports = {
       try {
         admin.save();
         console.log("Admin created");
-        return serverResponse(res, 200, { cloImageResult });
+        return serverResponse(res, 201, { cloImageResult });
       } catch (error) {
         return serverResponse(res, 500, { message: "internal error occured" + error })
       }

@@ -72,26 +72,26 @@ export function CustomerSignupForm() {
     setMandatoryErrors([]);
     setEmailExistErr('');
 
-    if ((firstName && firstName.length < 2) || firstName.length > 20) {
+    if ((firstName && firstName.length < 2) || firstName.length > 10) {
       setErrors(prevState => ({
         ...prevState,
         [firstName]: "this is redundant" // I need better way to show the error.
       }));
       isValid = false;
-      errorsConsole.firstName = "First Name must be in a range of 2-20 characters!";
+      errorsConsole.firstName = "First Name must be in a range of 2-10 characters!";
       console.log("errors" + errors.firstName);
     } else if (!firstName) {
       setMandatoryErrors(prev => [...prev, 'Name feild is mandatory!']);
       isValid = false;
       errorsConsole.firstName = "Name feild is mandatory!";
     }
-    if ((lastName && lastName.length < 2) || lastName.length > 20) {
+    if ((lastName && lastName.length < 2) || lastName.length > 10) {
       isValid = false;
       setErrors(prevState => ({
         ...prevState,
         [lastName]: "Last Name must be in a range of 2-20 characters!"
       }));
-      errorsConsole.lastName = "Last Name must be in a range of 2-20 characters!";
+      errorsConsole.lastName = "Last Name must be in a range of 2-10 characters!";
     } else if (!lastName) {
       isValid = false;
       let updatedValue = {};
@@ -270,7 +270,7 @@ export function CustomerSignupForm() {
             <ErrorStyle>Name feild is mandatory!</ErrorStyle> : ''
           }
           {errors[firstName] ?
-            <ErrorStyle>Name must be in a range of 2 - 20 characters!</ErrorStyle> : ''
+            <ErrorStyle>Name must be in a range of 2 - 10 characters!</ErrorStyle> : ''
           }
           <Input
             type="text"
@@ -281,7 +281,7 @@ export function CustomerSignupForm() {
             <ErrorStyle>Last Name feild is mandatory!</ErrorStyle> : ''
           }
           {errors[lastName] ?
-            <ErrorStyle>Last Name must in a range of 2 - 20 characters!</ErrorStyle> : ''
+            <ErrorStyle>Last Name must in a range of 2 - 10 characters!</ErrorStyle> : ''
           }
           <Input
             type="email"

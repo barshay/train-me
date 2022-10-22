@@ -5,13 +5,14 @@ const courseSchema = new mongoose.Schema({
   category: { type: String, required: true },
   description: { type: String, required: true },
   picture: { type: String, required: true },
-  lessonTime: { type: Number, required: true },
+  lessontime: { type: Number, required: true },
   cost: { type: Number, required: true },
   trainer: { type: mongoose.Schema.Types.ObjectId, ref: "Trainer" },
-  customer: [
+  customers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
+      default: ''
     },
   ],
   // location: {}

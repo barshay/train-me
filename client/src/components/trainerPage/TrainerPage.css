@@ -1,9 +1,166 @@
 .trainer-page-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 2em;
     margin-top: 3em;
-    padding: 3em;
+    padding-top: 2em;
+
     /* width: auto; */
-    height: 100vh;
+    /* height: 100vh; */
+}
+
+.trainer-actions-container {
+    display: block;
+    align-content: center;
+    padding: 0 1em 0 1em;
+    border-left: 1.8px dashed rgb(97, 133, 210);
+    height: 20em;
+}
+
+.trainer-image-home-container {
+    background-image: url("https://static.wixstatic.com/media/4103a2_aaf38e85cafe4be199c1c95da18d5e24~mv2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-top: -8em;
+    /* opacity: 0.7; */
+    width: 72em;
+    height: 80vh;
+    /* border-radius: 2em; */
+    margin-right: 2em;
+}
+
+.trainer-actions-btn {
+    font-size: 0.8em;
+    border-radius: 50em;
+    background-color: rgb(52, 73, 146);
+    color: whitesmoke;
+    width: 12em;
+}
+
+.trainer-actions-btn:hover {
+    background-color: whitesmoke;
+    color: blue;
+    cursor: pointer;
+    transition: all 300ms linear;
+}
+
+.popup-container {
+    width: 55rem;
+    height: 80vh;
+    /* background-color: rgba(0, 0, 0, 0.75); */
+
+    /* background-color: white; */
+    /* opacity: 0.5; */
+    display: flex;
+    justify-content: center;
+    margin-left: 2em;
+}
+
+.postCourse-popup {
+    width: 30em;
+    height: 18em;
+    /* opacity: none; */
+    background-color: rgb(120, 167, 255);
+    z-index: 2;
+    position: relative;
+    top: 8vh;
+    left: calc(17% - 8rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1em;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.popup-labels {
+    height: 10em;
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    justify-content: center;
+}
+
+.popupForm-field {
+    width: 15em;
+    margin: 3px 0 3px 0;
+    /* padding: 15px; */
+    /* font-size: 16px; */
+    margin: 0.8em;
+    /* border: none; */
+    border-radius: 16px;
+    font-family: "Roboto", sans-serif;
+    background-color: rgb(232, 238, 240);
+    display: flex;
+    /* flex-wrap: wrap; */
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    padding: 0px 20px;
+
+}
+
+.btn-popup {
+    background: rgb(52, 73, 146);
+    color: white;
+    cursor: pointer;
+    margin: 10px 0 10px 0;
+    width: 12em;
+    height: 2.7em;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    font-family: sans-serif;
+}
+
+.btn-popup:hover {
+    background-color: rgb(232, 238, 240);
+    color: rgb(52, 73, 146);
+    font-weight: bold;
+    border-radius: 0px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.file-field {
+    height: 32px;
+    outline: none;
+    border-bottom: 1.4px solid transparent;
+    font-size: 14px;
+    margin-top: 1.5em;
+    margin-left: 1.5em;
+}
+
+.error-span {
+    font-size: 12px;
+    color: red;
+    display: inline-flex;
+    width: 14em;
+}
+
+.close-postCourse-btn {
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid rgb(185, 121, 121);
+    background-color: rgb(48, 44, 44);
+    opacity: 1;
+    height: 2em;
+    width: 2em;
+}
+
+.close-postCourse-btn:before {
+    content: "✖";
+    cursor: pointer;
+    color: white;
+    opacity: 0.8;
+}
+
+.close-postCourse-btn:hover {
+    background-color: red;
+}
+
+.success-posting {
+    margin-top: -2em;
+    color:rgb(52, 73, 146);
+    text-decoration: underLine;
+    text-decoration-color: rgb(226, 188, 142);
 }

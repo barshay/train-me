@@ -6,53 +6,47 @@ import MyContext from '../../MyContext';
 import { Marginer } from '../marginer';
 import axios from 'axios';
 
-
 const AdminPage = ({ loading, setLoading, adminAvatar }) => {
+  const [contactCardExist, setContactCardExist] = useState(true);
+  const [customerCardExist, setCustomerCardExist] = useState(true);
+  const [trainerCardExist, setTrainerCardExist] = useState(true);
+  const [coursesCardExist, setCoursesCardExist] = useState(true);
 
-  const [card, setCard] = useState(true);
+  const [contactUsEmpty, setContactUsEmpty] = useState(false);
+  const [customersCardEmpty, setCustomersCardEmpty] = useState(false);
+  const [trainersCardEmpty, setTrainersCardEmpty] = useState(false);
+  const [coursesCardEmpty, setCoursesCardEmpty] = useState(false);
+  const [contactMessageFlag, setContactMessageFlag] = useState(false);
+  const [customerMessageFlag, setCustomerMessageFlag] = useState(false);
+  const [trainerMessageFlag, setTrainerMessageFlag] = useState(false);
+  const [coursesMessageFlag, setCoursesMessageFlag] = useState(false);
 
   const {
     adminName,
-    setCustomersData,
     customersData,
-    setTrainersData,
+    setCustomersData,
     trainersData,
+    setTrainersData,
     contactUsData,
     setContactUsData,
+    coursesData,
+    setCoursesData
   } = useContext(MyContext);
 
   useEffect(() => {
-    // const getCustomersApiAnswer = async () => {
-    //   try {
-    //     const customersUrl = 'http://localhost:8000/customer';
-    //     const response = await axios.get(customersUrl);
-    //     console.log(response)
-    //     const data = await response.data;
-    //     setCustomersData(data);
-    //     // setLoading(false);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+    contactUsData.length > 0 && setContactCardExist(false);
+    (contactUsData.length === 0 && contactMessageFlag) && setContactUsEmpty(true);
 
-    // const getTrainerApiAnswer = async () => {
-    //   try {
-    //     const trainersUrl = 'http://localhost:8000/trainer';
-    //     const response = await axios.get(trainersUrl);
-    //     console.log(response)
-    //     const data = await response.data;
-    //     setTrainersData(data);
-    //     // setLoading(false);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
+    customersData.length > 0 && setCustomerCardExist(false);
+    (customersData.length === 0 && customerMessageFlag) && setCustomersCardEmpty(true);
 
+    trainersData.length > 0 && setTrainerCardExist(false);
+    (trainersData.length === 0 && trainerMessageFlag) && setTrainersCardEmpty(true);
 
+    coursesData.length > 0 && setCoursesCardExist(false);
+    (coursesData.length === 0 && coursesMessageFlag) && setCoursesCardEmpty(true);
 
-    // getTrainerApiAnswer();
-    // getCustomersApiAnswer();
-  }, [])
+  }, [contactUsData, customersData, trainersData, coursesData])
 
   const getContactUsApiAnswer = async () => {
     try {
@@ -61,25 +55,45 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log(response);
       const data = await response.data;
       setContactUsData(data);
+      setContactCardExist(true);
+      setContactMessageFlag(true);
+
+      setCustomersData([]);
+      setCustomerCardExist(true);
+      setCustomersCardEmpty(false);
+      setCustomerMessageFlag(false);
+
+      setTrainersData([]);
+      setTrainersCardEmpty(false);
+      setTrainerCardExist(true);
+      setTrainerMessageFlag(false);
+
+      setCoursesData([]);
+      setCoursesCardExist(true);
+      setCoursesCardEmpty(false);
+      setCoursesMessageFlag(false);
+
       setLoading(false);
-      setCard(false);
     } catch (error) {
       console.log(error);
     }
   }
 
-  const closeHandler = () => {
-    setCard(true);
+  const closeContactPageHandler = () => {
+    setContactCardExist(true);
+    setContactUsData([]);
+    setContactMessageFlag(false);
   }
 
   const deleteAllContactHandler = async () => {
     try {
-      const contactUsUrl = 'http://localhost:8000/contactUs/';
+      const contactUsUrl = 'http://localhost:8000/contactUs';
       const response = await axios.delete(contactUsUrl);
       console.log(response);
       const data = await response.data;
       setContactUsData(data);
-      setCard(true);
+      setContactUsEmpty(true);
+      setContactCardExist(true);
     } catch (error) {
       console.log(error);
     }
@@ -90,13 +104,144 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log(id);
       const contactUsUrl = `http://localhost:8000/contactUs/${id}`;
       const response = await axios.delete(contactUsUrl);
-      getContactUsApiAnswer();
       console.log(response);
-      const data = await response.data;
-      // setContactUsData(data);
+      getContactUsApiAnswer();
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const getTrainersApiAnswer = async () => {
+    try {
+      const allTrainersUrl = 'http://localhost:8000/trainer';
+      const response = await axios.get(allTrainersUrl);
+      console.log(response);
+      const data = await response.data;
+      setTrainersData(data);
+      setTrainerMessageFlag(true);
+      setTrainerCardExist(true);
+
+      setContactUsData([]);
+      setContactCardExist(true);
+      setContactUsEmpty(false);
+      setContactMessageFlag(false);
+
+      setCustomersData([]);
+      setCustomerCardExist(true);
+      setCustomersCardEmpty(false);
+      setCustomerMessageFlag(false);
+
+      setCoursesData([]);
+      setCoursesCardExist(true);
+      setCoursesCardEmpty(false);
+      setCoursesMessageFlag(false);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const closeTrainerPageHandler = () => {
+    setTrainerCardExist(true);
+    setTrainersData([]);
+    setTrainerMessageFlag(false);
+  }
+
+  const deleteTrainerById = async (id) => {
+    try {
+      console.log(id);
+      const contactUsUrl = `http://localhost:8000/trainer/${id}`;
+      const response = await axios.delete(contactUsUrl);
+      console.log(response);
+      getTrainersApiAnswer();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getCustomersApiAnswer = async () => {
+    try {
+      const allCustomersUrl = "http://localhost:8000/customer";
+      const response = await axios.get(allCustomersUrl);
+      console.log(response);
+      const data = await response.data;
+      setCustomersData(data);
+      setCustomerCardExist(true);
+      setCustomerMessageFlag(true);
+
+      setContactUsData([])
+      setContactCardExist(true);
+      setContactUsEmpty(false);
+      setContactMessageFlag(false);
+
+      setTrainersData([]);
+      setTrainerCardExist(true);
+      setTrainersCardEmpty(false);
+      setTrainerMessageFlag(false);
+
+      setCoursesData([]);
+      setCoursesCardExist(true);
+      setCoursesCardEmpty(false);
+      setCoursesMessageFlag(false);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const closeCustomerPageHandler = () => {
+    setCustomerCardExist(true);
+    setCustomersData([]);
+    setCustomerMessageFlag(false);
+  }
+
+  const deleteCustomerById = async (id) => {
+    try {
+      console.log(id);
+      const contactUsUrl = `http://localhost:8000/customer/${id}`;
+      const response = await axios.delete(contactUsUrl);
+      console.log(response);
+      getCustomersApiAnswer();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getCoursesApiAnswer = async () => {
+    try {
+      const allCoursesUrl = 'http://localhost:8000/course';
+      const response = await axios.get(allCoursesUrl);
+      console.log(response);
+      const data = await response.data;
+      setCoursesData(data);
+
+      setContactUsData([])
+      setContactCardExist(true);
+      setContactUsEmpty(false);
+      setContactMessageFlag(false);
+
+      setTrainersData([]);
+      setTrainerCardExist(true);
+      setTrainersCardEmpty(false);
+      setTrainerMessageFlag(false);
+
+      setCustomersData([]);
+      setCustomerCardExist(true);
+      setCustomersCardEmpty(false);
+      setCustomerMessageFlag(false);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const closeCoursesPageHandler = () => {
+    setCoursesCardExist(true);
+    setCoursesData([]);
+    setCoursesMessageFlag(false);
   }
 
   return (
@@ -109,40 +254,164 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           {adminName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
-                <span style={{ color: "red", fontSize: "14px" }}>Welcome</span><div style={{ overflow: "scroll" ,display: "table-caption"}}>{adminName}</div>
+                <span style={{ color: "red", fontSize: "14px" }}>Welcome</span>
+                <div style={{ overflow: "scroll", display: "table-caption" }}>{adminName}</div>
               </div>
               {adminAvatar &&
                 <Img adminAvatar={adminAvatar} alt="Admin avatar"></Img>
               }
             </div>}
+          <Marginer direction="vertical" margin="1em" />
 
-          <button className="actions-btn" onClick={() => getContactUsApiAnswer()}
-          >Receive all contact messages</button>
+          <div style={{ width: "12em" }}>
+            <button className="actions-btn" onClick={() => getContactUsApiAnswer()}>
+              Contact Us messages
+            </button>
+            {/* </div>
+          <div > */}
+            <button className="actions-btn" onClick={() => getCustomersApiAnswer()}>
+              List of Customers
+            </button>
+            {/* </div>
+          <div > */}
+            <button className="actions-btn" onClick={() => getTrainersApiAnswer()}>
+              List of Trainers
+            </button>
+            {/* </div>
+          <div> */}
+            <button className="actions-btn" onClick={() => getCoursesApiAnswer()}>
+              List of Courses
+            </button>
+          </div>
         </div>
-        
-        <div className="allContactUs-container">
-          {!card &&
+
+        <div
+          className={
+            `${(contactUsData.length > 0
+              || customersData.length > 0
+              || trainersData.length > 0
+              || coursesData.length > 0) ? "allCards-container" : 'admin-image-home-container'}`
+          }
+        >
+          {contactUsEmpty && <div className="cardEmpty-message">There are not Contact messages!</div>}
+          {!contactCardExist &&
             contactUsData.map((item) =>
-              <div key={item._id} className="contactUs-container">
-                <div className="contact-titles">First Name: <span className="items">{item.firstname}</span></div>
-                <div className="contact-titles">Last Name: <span className="items">{item.lastname}</span></div>
-                <div className="contact-titles">Email: <span className="items">{item.email}</span></div>
-                <div className="contact-titles">Phone: <span className="items">{item.phone}</span></div>
-                <div className="contact-titles">Message Title: <span className="items">{item.messagetitle}</span></div>
-                <div className="contact-titles">Message: <span className="items">{item.message}</span></div>
-                <div className="contact-titles">Gender: <span className="items">{item.gender}</span></div>
-                <div className="contact-titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
-                <div className="contact-titles">Date Created: <span className="items">{item.createdat}</span></div>
+              <div key={item._id} className="card-container">
+                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                <div className="titles">Message Title: <span className="items">{item.messagetitle}</span></div>
+                <div className="titles">Message: <span className="items">{item.message}</span></div>
+                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
+                <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
                 <Marginer direction="vertical" margin="0.5em" />
                 <button onClick={() => { deleteContactById(item._id) }} className="item-btn">Remove Item</button>
               </div>
             )
           }
+
+          {customersCardEmpty && <div className="cardEmpty-message">There are not Customers!</div>}
+          {!customerCardExist &&
+            customersData.map((item) =>
+              <div key={item._id} className="card-container">
+                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
+                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                <div className="titles">Profile Pic: <span className="items">{item.profilepic}</span></div>
+                <Marginer direction="vertical" margin="0.5em" />
+                <button onClick={() => { deleteCustomerById(item._id) }} className="item-btn">Remove Customer</button>
+              </div>
+            )
+          }
+
+          {trainersCardEmpty && <div className="cardEmpty-message">There are not Trainers!</div>}
+          {!trainerCardExist &&
+            trainersData.map((item) =>
+              <div key={item._id} className="card-container">
+                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
+                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                <div className="titles">Profile Pic: <span className="items">{item.profilepic}</span></div>
+                <Marginer direction="vertical" margin="0.5em" />
+                <button onClick={() => { deleteTrainerById(item._id) }} className="item-btn">Remove Trainer</button>
+              </div>
+            )
+          }
+
+          {coursesCardEmpty && <div className="cardEmpty-message">There are not Courses!</div>}
+          {!coursesCardExist &&
+            coursesData.map((item) =>
+              <div key={item._id} className="card-container">
+                <div className="titles">Name: <span className="items">{item.name}</span></div>
+                <div className="titles">Category: <span className="items">{item.category}</span></div>
+                <div className="titles">Description: <span className="items">{item.description}</span></div>
+                <div className="titles">Lesson Time: <span className="numeric-items" >{item.lessontime} Minutes</span></div>
+                <div className="titles">Cost: <span className="numeric-items">{item.cost}</span></div>
+                <div className="titles">Trainer: <span className="items">{item.trainer}</span></div>
+                <div className="titles">Customers:
+                  {item.customers.length === 0 ?
+                    <span className="numeric-items" style={{ marginLeft: "0.5em" }}>{item.customers.length}</span> :
+                    [
+                      <div className="numeric-items" >Amount: {item.customers.length}</div>,
+                      item.customers.map((customer, index) =>
+                        <div style={{ height: "0.7em", display: "flex" }}>
+                          <span key={index} className="items lineHeight">{customer}</span>
+                        </div>
+                      )
+                    ]
+                  }
+                </div>
+                <Marginer direction="vertical" margin="0.5em" />
+                {/* <button onClick={() => { deleteCourseById(item._id) }} className="item-btn">Remove Course</button> */}
+              </div>
+            )
+          }
         </div>
-        {!card &&
-          <div style={{display: "block", flexDirection: "row"}}>
-            <button onClick={closeHandler} className="close-card-btn"></button>
-            <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete all</button>
+
+        {(!contactCardExist) &&
+          <div style={{ display: "block", flexDirection: "row" }}>
+            <button onClick={closeContactPageHandler} className="close-card-btn"></button>
+            <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete All</button>
+            <p className="amount-container">Contact Amount:
+              <span className="amount-item">{contactUsData.length}</span>
+            </p>
+          </div>
+        }
+
+        {(!customerCardExist) &&
+          <div >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button onClick={closeCustomerPageHandler} className="close-card-btn users-close-btn"></button>
+            </div>
+            <p className="amount-container">Customers Amount:
+              <span className="amount-item">{customersData.length}</span>
+            </p>
+          </div>
+        }
+
+        {(!trainerCardExist) &&
+          <div>
+            <button onClick={closeTrainerPageHandler} className="close-card-btn users-close-btn"></button>
+            <p className="amount-container">Trainers Amount:
+              <span className="amount-item">{trainersData.length}</span>
+            </p>
+          </div>
+        }
+
+        {(!coursesCardExist) &&
+          <div>
+            <button onClick={closeCoursesPageHandler} className="close-card-btn users-close-btn"></button>
+            <p className="amount-container">Courses Amount:
+              <span className="amount-item">{coursesData.length}</span>
+            </p>
           </div>
         }
       </div>

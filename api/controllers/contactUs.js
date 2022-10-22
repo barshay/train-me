@@ -17,7 +17,7 @@ module.exports = {
     try {
       const newPostOfContact = new ContactUs({ ...req.body });
       await newPostOfContact.save();
-      return serverResponse(res, 200, newPostOfContact);
+      return serverResponse(res, 201, newPostOfContact);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occurred " + e });
     }
