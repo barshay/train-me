@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     enum: ['male', 'female'],
     required: true
   },
-  role: { type: String, required: true, default: 'customer' },
+  role: { type: String, required: true },
   // customerCourses: [
   //     { type: Schema.Types.ObjectId, ref: 'Course', default: 'Not yet registered for course' }
   // ],
