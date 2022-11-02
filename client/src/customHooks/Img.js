@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './Img.css';
 import { AdvancedImage } from '@cloudinary/react';
 import { Cloudinary } from "@cloudinary/url-gen";
 // import { Transformation } from "@cloudinary/url-gen";
@@ -58,18 +59,18 @@ const Img = ({ adminAvatar, customerAvatar, trainerAvatar }) => {
     <>
       {adminAvatar &&
         <AdvancedImage
-          style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
+          className="c-image"
           cldImg={adminImage}
         // plugins={[lazyload(), placeholder({ mode: 'predominant-color' })]}
         />}
       {customerAvatar &&
         <AdvancedImage
-        style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
+          className="c-image"
           cldImg={customerImage}
         />}
       {trainerAvatar &&
         <AdvancedImage
-        style={{ width: "6em", height: "6em", borderRadius: "20%", marginLeft: "1em" }}
+          className="c-image"
           cldImg={trainerImage}
         />}
     </>

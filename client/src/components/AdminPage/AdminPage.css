@@ -1,4 +1,5 @@
 .admin-page-container {
+    /* overflow: hidden; */
     display: flex;
     justify-content: center;
     gap: 1em;
@@ -86,7 +87,7 @@
 
 .numeric-items {
     font-size: 14px;
-    color: rgb(51, 69, 152);
+    color: #334598;
 }
 
 .lineHeight {
@@ -106,6 +107,11 @@
     color: black;
     cursor: pointer;
     transition: all 300ms linear;
+}
+
+.actions-btn:focus {
+    background-color: white;
+    color: black;
 }
 
 .close-card-btn {
@@ -191,7 +197,14 @@
     padding-left: 0.2em;
 }
 
+.close-message {
+    height: 1em;
+}
 
+.close-message:hover {
+    color: red;
+    cursor: pointer;
+}
 
 /* .top-to-btm {
     position: relative;

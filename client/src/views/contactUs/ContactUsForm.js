@@ -125,14 +125,15 @@ const ContactUsForm = () => {
     if (gender === "") {
       console.log(gender);
       isValid = false;
-      setMandatoryErrors(prevState => ({
+      setMandatoryErrors(prevState => ({    
         ...prevState,
         [gender]: "Gender field is mandatory!"
       }));
-      setErrors(prevState => ({
-        ...prevState,
-        [gender]: "Gender field is mandatory!"
-      }));
+      // setErrors(prevState => ({
+      //   ...prevState,
+      //   [gender]: "Gender field is mandatory!"
+      // }));
+      errorsConsole.gender = "Gender feild is mandatory!";
     }
 
     if (contactMethod === "") {
@@ -141,10 +142,10 @@ const ContactUsForm = () => {
         ...prevState,
         [contactMethod]: "contactMethod field is mandatory!"
       }));
-      setErrors(prevState => ({
-        ...prevState,
-        [contactMethod]: "contactMethod field is mandatory!"
-      }));
+      // setErrors(prevState => ({
+      //   ...prevState,
+      //   [contactMethod]: "contactMethod field is mandatory!"
+      // }));
     }
 
     if (!isValid) {
@@ -189,7 +190,8 @@ const ContactUsForm = () => {
       .then(res => console.log('Posting a New Contact ', res.data))
       .catch(err => console.log(err));
 
-  })
+  });
+
   return (
     <div className="form-container">
       <div className="images-container">

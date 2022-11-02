@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 .register {
   /* background-color: #282c34; */
   min-height: 120vh;

@@ -4,13 +4,22 @@ import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
 import { Marginer } from '../marginer';
 import axios from 'axios';
+import { FileInput, PreviewPicture } from './styledHelper';
+import UpdateModal from './UpdateModal';
 
 const TrainerPage = ({ trainerAvatar }) => {
   const { trainerName, trainerID } = useContext(MyContext);
+
   const [mandatoryErrors, setMandatoryErrors] = useState([]);
   const [errors, setErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
+  const [showTrainerHomePage, setShowTrainerHomePage] = useState(true);
+  const [postCoursePage, setPostCoursePage] = useState(false);
+  const [myCoursesPage, setMyCoursesPage] = useState(false);
+  const [filteredCoursesArr, setFilteredCoursesArr] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [toggleFiltered, setToggleFiltered] = useState(false);
+  const [isDataExist, setIsDataExist] = useState(false);
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -33,14 +42,11 @@ const TrainerPage = ({ trainerAvatar }) => {
   const previewFiles = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-
     reader.onloadend = () => {
       setPicture(reader.result);
       console.log("image: " + reader.result);
     }
   }
-
-
 
   let isValid = true;
   const handleSubmitCourseAdding = (e) => {
@@ -48,16 +54,17 @@ const TrainerPage = ({ trainerAvatar }) => {
     let errorsConsole = {};
     setErrors([]);
     setMandatoryErrors([]);
+    console.log(e.target.value);
     if ((name && name.length < 2) || name.length > 20) {
+      isValid = false;
       setErrors(prevState => ({
         ...prevState,
         [name]: "this is redundant" // I need better way to show the error.
       }));
-      isValid = false;
       errorsConsole.name = "Name must be in a range of 2-20 characters!";
       console.log("errors" + errors.name);
     } else if (!name) {
-      setMandatoryErrors(prev => [...prev, 'Name feild is mandatory!']);
+      setMandatoryErrors(prevState => ({ ...prevState, [name]: 'Name feild is mandatory!' }));
       isValid = false;
       errorsConsole.name = "Name feild is mandatory!";
     }
@@ -70,12 +77,7 @@ const TrainerPage = ({ trainerAvatar }) => {
       errorsConsole.lastName = "category must be in a range of 2-10 characters!";
     } else if (!category) {
       isValid = false;
-      let updatedValue = {};
-      updatedValue = { "category": "category feild is mandatory!" };
-      setMandatoryErrors(prevState => ({
-        ...prevState,
-        ...updatedValue
-      }));
+      setMandatoryErrors(prevState => ({ ...prevState, [category]: 'category feild is mandatory!' }));
       errorsConsole.category = "category feild is mandatory!";
     }
     if ((description && description.length < 10) || description.length > 60) {
@@ -124,8 +126,6 @@ const TrainerPage = ({ trainerAvatar }) => {
         [cost]: "price must be in a range of 0-150!"
       }));
       errorsConsole.cost = "price must be lower than 150!"
-      console.log("cost first if", cost);
-
     }
     else if (!cost) {
       console.log("cost ", cost);
@@ -152,7 +152,8 @@ const TrainerPage = ({ trainerAvatar }) => {
       picture,
       lessontime: lessonTime,
       cost,
-      trainer: trainerID
+      trainer: trainerID,
+      date: Date.now(),
     };
 
     setName('');
@@ -171,28 +172,159 @@ const TrainerPage = ({ trainerAvatar }) => {
     }).then((res) => {
       console.log('Posting a New Course ', res.data);
       setSubmitted(true);
-
-      const uploadedImg = res.data.cloImageResult;
+      resetFileInput(e);
+      // const uploadedImg = res.data.cloImageResult;
     }).catch((error) => {
       console.log(error);
     });
   };
 
   const handleCoursePopup = () => {
-    setShowPopup(false);
+    setPostCoursePage(true);
+    setShowTrainerHomePage(false);
+    setMyCoursesPage(false);
+    setIsDataExist(false);
   }
 
   const closePostCourseHandler = () => {
-    setShowPopup(true);
+    setShowTrainerHomePage(true);
+    setSubmitted(false);
+    setPostCoursePage(false);
+    setPicture('');
+    setName('');
+    setCategory('');
+    setDescription('');
+    setPicture('');
+    setLessonTime('');
+    setCost('');
+    setErrors([]);
+    setMandatoryErrors([]);
+  }
+
+  /**
+       👇️ Reset the input value of the file after sending, 
+       to avoid errors when uploading the file a second time
+    */
+  const resetFileInput = (e) => {
+    e.preventDefault();
+    inputFileRef.current.value = null;
+  };
+
+  let filteredCoursesByTrainerId = {};
+  let filteredArr = [];
+  const getAllCoursesHandle = async () => {
+    
+    if (isDataExist) {
+      console.log("return");
+      return;
+    };
+
+    // console.log(trainerID);
+    // axios({
+    //   method: 'post',
+    //   url: "http://localhost:8000/course/courseById",
+    //   headers: { 'content-type': 'application/json' },
+    //   data: trainerID
+    // }).then((res) => {
+    //   console.log(res.data);
+
+    // })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+
+    // axios.get('http://localhost:8000/course', {
+    //   params: {
+    //     ID: trainerID
+    //   }
+    // })
+    //   .then(function (response) {
+    //     console.log(response.data);
+    //   })
+    //   .catch(function (err) {
+    //     console.log(err);
+    //   })
+
+    try {
+      const allTrainersUrl = 'http://localhost:8000/course';
+      const response = await axios.get(allTrainersUrl);
+      console.log(response);
+      const data = await response.data;
+
+      for (const i in data) {
+        if (data[i].trainer === trainerID) {
+          // console.log(trainerID);
+          filteredCoursesByTrainerId[i] = data[i];
+          filteredArr.push(filteredCoursesByTrainerId[i]);
+        }
+      }
+      setIsDataExist(true)
+      setFilteredCoursesArr(filteredArr);
+      // console.log(filteredCoursesByTrainerId);
+      // console.log(filteredArr);
+      // console.log(filteredCoursesArr);
+      setPostCoursePage(false);
+      setShowTrainerHomePage(false);
+      setMyCoursesPage(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const closeCoursesPage = () => {
+    setShowTrainerHomePage(true);
+    setMyCoursesPage(false);
+    setToggleFiltered(false);
+    setFilteredCourses([]);
+    setIsDataExist(false);
+  }
+
+  const filteredCoursesByExistingCustomer = () => {
+    const filtered = [];
+    // getAllCoursesHandle();
+    // console.log("im in");
+    console.log(filteredCoursesArr);
+    for (const i in filteredCoursesArr) {
+      if (filteredCoursesArr[i].customers.length > 0) {
+        filtered.push(filteredCoursesArr[i]);
+        setToggleFiltered(true);
+      }
+    }
+    setFilteredCourses(filtered);
+    console.log(filteredCourses);
+  }
+
+  const unfilteredCourse = () => {
+    setToggleFiltered(false);
+    setFilteredCourses([]);
+  }
+
+  const removeCourseHandler = async (id) => {
+    try {
+      const deleteCourseUrl = `http://localhost:8000/course/${id}`;
+      const response = await axios.delete(deleteCourseUrl);
+      console.log(response);
+      // const data = await response.data;
+      setIsDataExist(false);
+      getAllCoursesHandle();
+      if (toggleFiltered) {
+        filteredCoursesByExistingCustomer();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <>
       <div className="trainer-page-container">
-        {showPopup && <div className="trainer-image-home-container"></div>}
-        {!showPopup &&
+        {showTrainerHomePage && <div className="trainer-image-home-container"></div>}
+        {postCoursePage &&
           <div className="popup-container">
-            <button className="close-postCourse-btn" onClick={() => { closePostCourseHandler(); setSubmitted(false); }}>{ }</button>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", marginRight: "0.3em" }}>
+              <button className="close-postCourse-btn" onClick={() => { closePostCourseHandler(); }}>{ }</button>
+              {picture && <PreviewPicture src={picture} alt="course-image"></PreviewPicture>}
+            </div>
             <form className="postCourse-popup">
               <div style={{ display: "flex", flexDirection: "row", marginBottom: "2.5em" }}>
                 <div className="popup-labels">
@@ -251,7 +383,7 @@ const TrainerPage = ({ trainerAvatar }) => {
                   <input
                     className="popupForm-field"
                     type="number"
-                    placeholder="Lesson Time"
+                    placeholder="Lesson Time (minutes)"
                     value={lessonTime}
                     onChange={(e) => { setLessonTime(e.target.value) }} />
                   {mandatoryErrors[lessonTime] ?
@@ -282,12 +414,16 @@ const TrainerPage = ({ trainerAvatar }) => {
                     </span> : ''
                   }
                   {/* <span style={{ fontSize: '12px', textDecoration: 'underLine', color: 'gray' }}>Upload your picture here:</span> */}
-                  <input
+
+                  <FileInput
+                    ref={inputFileRef}
                     className="file-field "
                     type="file"
                     placeholder="Picture"
-                    value={picture}
-                    onChange={(e) => { setPicture(e.target.value) }} />
+                    onChange={(e) => { handlePictureChange(e) }}
+                    required
+                    accept="image/png, image/jpeg, image/jpg, image/jfif"
+                  />
                   {mandatoryErrors[picture] ?
                     <span className="error-span">
                       Picture feild is mandatory!
@@ -302,31 +438,137 @@ const TrainerPage = ({ trainerAvatar }) => {
               }
               <button
                 className="btn-popup"
-                type="submit" onClick={(handleSubmitCourseAdding)}>
+                type="submit"
+                onClick={(e) => { handleSubmitCourseAdding(e) }}>
                 Upload course
               </button>
             </form>
           </div>
         }
 
+        {
+          (myCoursesPage && filteredCoursesArr.length === 0) &&
+          <div className="message-emptyArr">
+            There are not Courses yet!
+          </div>
+        }
+        {
+          (filteredCoursesArr.length > 0 && myCoursesPage) &&
+          <div className="my-courses-form" >
+            <div className="courses-buttons-div">
+              <button className="close-postCourse-btn" onClick={() => { closeCoursesPage(); }}>{ }</button>
+              <div className="filteredButtons-container">
+                {
+                  !toggleFiltered
+                    ?
+                    <button className="filteredButtons" onClick={() => { filteredCoursesByExistingCustomer() }}>Courses with Customers</button>
+                    :
+                    <button className="filteredButtons" onClick={() => { unfilteredCourse() }}>Unfiltered Courses</button>
+                }
+              </div>
+              <div className="coursesAmount-container">
+                Courses Amount
+                <span style={{ color: "blue", fontSize: "30px", width: "1em" }}>
+                  {filteredCourses.length > 0 ? filteredCourses.length : filteredCoursesArr.length}
+                </span>
+              </div>
+            </div>
+            <div className="allCoursesCards-container scroller">
+              {
+                filteredCourses.length > 0 ?
+                  filteredCourses.map((course) =>
+                    [
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div className="courseCard-container" key={course._id}>
+                          <div className="course-title">Name: <span className="item">{course.name}</span></div>
+                          <div className="course-title">Category: <span className="item">{course.category}</span></div>
+                          <div className="course-title">Description: <span className="item">{course.description}</span></div>
+                          <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
+                          <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
+                          <div className="course-title">Customers:
+                            {course.customers < 1
+                              ?
+                              <span className="numeric-items">{course.customers.length}</span>
+                              :
+                              [
+                                <div className="numeric-items" >Amount: {course.customers.length}
+                                  <div style={{ color: "#334598" }}>Customer/s ID:</div>
+                                </div>,
+                                <span>
+                                  {course.customers.map((customer, index) =>
+                                    <div style={{ height: "0.7em", display: "flex" }}>
+                                      <span key={index} className="customers-line">{customer}</span>
+                                    </div>
+                                  )}
+                                </span>
+                              ]
+                            }
+                          </div>
+                        </div>
+                        <div className="card-actions">
+                          {<UpdateModal courseId={course._id} />}
+                          {/* <button className="" onClick={() => { updateCourseHandler(course._id) }}>Update</button> */}
+                          <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
+                        </div>
+                      </div>
+                    ]
+                  ) :
+                  filteredCoursesArr.map((course) =>
+                    [
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div className="courseCard-container" key={course._id}>
+                          <div className="course-title">Name: <span className="item">{course.name}</span></div>
+                          <div className="course-title">Category: <span className="item">{course.category}</span></div>
+                          <div className="course-title">Description: <span className="item">{course.description}</span></div>
+                          <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
+                          <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
+                          <div className="course-title">Customers:
+                            {course.customers < 1 ?
+                              <span className="numeric-items">{course.customers.length}</span> :
+                              [<div className="numeric-items" >Amount: {course.customers.length}
+                                <div style={{ color: "#334598" }}>Customer/s ID:</div>
+                              </div>,
+                              <span>
+                                {course.customers.map((customer, index) =>
+                                  <div style={{ height: "0.7em", display: "flex" }}>
+                                    <span key={index} className="customers-line">{customer}</span>
+                                  </div>
+                                )}
+                              </span>]}
+                          </div>
+                        </div>
+                        <div className="card-actions">
+                          <UpdateModal />
+                          {/* <button className="" onClick={() => { updateCourseHandler(course._id) }}>Update</button> */}
+                          <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
+                        </div>
+                      </div>
+                    ]
+                  )
+              }
+            </div>
+          </div>
+        }
 
         <div className="trainer-actions-container">
           {trainerName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
                 <span style={{ color: "blue", fontSize: "14px" }}>Welcome</span>
-                <div style={{ overflow: "scroll", display: "table-caption" }}>{trainerName}</div>
+                <div style={{ overflow: "hidden", display: "table-caption" }}>{trainerName}</div>
               </div>
               {trainerAvatar &&
                 <Img trainerAvatar={trainerAvatar} alt="Trainer avatar"></Img>
               }
             </div>}
           <Marginer direction="vertical" margin="1em" />
-          <div style={{ marginLeft: "2em" }}>
-            <button className="trainer-actions-btn" onClick={() => handleCoursePopup()} >
+          <div style={{ marginLeft: "1em" }}>
+            <button className="trainer-actions-btn" onClick={() => { handleCoursePopup() }} >
               Add a new Course
             </button>
-            {/* <p>{trainerID}</p> */}
+            <button className="trainer-actions-btn" onClick={() => { getAllCoursesHandle() }} >
+              My Courses
+            </button>
           </div>
         </div>
       </div>

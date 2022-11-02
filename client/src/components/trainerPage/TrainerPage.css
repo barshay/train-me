@@ -1,20 +1,29 @@
 .trainer-page-container {
+    /* overflow: hidden; */
     display: flex;
-    justify-content: flex-end;
-    gap: 2em;
+    justify-content: center;
+    /* gap: 2em; */
     margin-top: 3em;
     padding-top: 2em;
+}
 
-    /* width: auto; */
-    /* height: 100vh; */
+@media screen and (min-width: 1500px) {
+    .trainer-page-container {
+        justify-content: flex-end;
+    }
+
+    .popup-container {
+        margin-right: 5em;
+    }
 }
 
 .trainer-actions-container {
     display: block;
+    width: 17em;
     align-content: center;
     padding: 0 1em 0 1em;
     border-left: 1.8px dashed rgb(97, 133, 210);
-    height: 20em;
+    height: 15em;
 }
 
 .trainer-image-home-container {
@@ -23,7 +32,7 @@
     background-repeat: no-repeat;
     margin-top: -8em;
     /* opacity: 0.7; */
-    width: 72em;
+    width: 62em;
     height: 80vh;
     /* border-radius: 2em; */
     margin-right: 2em;
@@ -44,13 +53,14 @@
     transition: all 300ms linear;
 }
 
-.popup-container {
-    width: 55rem;
-    height: 80vh;
-    /* background-color: rgba(0, 0, 0, 0.75); */
+.trainer-actions-btn:focus {
+    background-color: whitesmoke;
+    color: blue;
+}
 
-    /* background-color: white; */
-    /* opacity: 0.5; */
+.popup-container {
+    width: 62em;
+    height: 80vh;
     display: flex;
     justify-content: center;
     margin-left: 2em;
@@ -87,7 +97,7 @@
     /* padding: 15px; */
     /* font-size: 16px; */
     margin: 0.8em;
-    /* border: none; */
+    border: none;
     border-radius: 16px;
     font-family: "Roboto", sans-serif;
     background-color: rgb(232, 238, 240);
@@ -96,8 +106,29 @@
     border-top-right-radius: 25px;
     border-bottom-left-radius: 25px;
     padding: 0px 20px;
-
+    caret-color: rgb(19, 251, 251);
 }
+
+.popupForm-field:focus {
+    background-color: rgb(120, 167, 255);
+    color: white;
+}
+
+.popupForm-field:focus::-webkit-input-placeholder {
+    color: white;
+}
+
+.popupForm-field:hover::-webkit-input-placeholder {
+    color: rgb(237, 119, 23);
+    font-weight: bold;
+    font-family: Geneva, Verdana, sans-serif;
+}
+
+.popupForm-field:hover {
+    background-color: rgb(52, 73, 146);
+    color: white;
+}
+
 
 .btn-popup {
     background: rgb(52, 73, 146);
@@ -121,6 +152,12 @@
     border-bottom-left-radius: 25px;
 }
 
+.btn-popup:focus {
+    background-color: rgb(120, 167, 255);
+    color: black;
+    font-weight: bold;
+}
+
 .file-field {
     height: 32px;
     outline: none;
@@ -135,6 +172,50 @@
     color: red;
     display: inline-flex;
     width: 14em;
+    /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+}
+
+.courses-buttons-div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2em;
+    padding-left: 1em;
+}
+
+.filteredButtons-container {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-right: 0.5em;
+}
+
+.filteredButtons {
+    margin-right: 0.2em;
+    background-color: rgb(155, 155, 198);
+    border: 2px solid rgb(120, 167, 255);
+    /* border-radius: 2em; */
+}
+
+.filteredButtons:hover {
+    background-color: rgb(52, 73, 146);
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    color: white;
+}
+
+.coursesAmount-container {
+    display: flex;
+    font-size: 15px;
+    font-family: 'Franklin Gothic Medium';
+    /* font-weight: bold; */
+    align-items: flex-end;
+    margin-right: 1em;
+    padding-left: 0.3em;
+    width: 6em;
+    border-top: 1px dashed blue;
+    /* border-bottom: 1px dotted blue; */
+    border-bottom: 1px dashed blue
 }
 
 .close-postCourse-btn {
@@ -160,7 +241,120 @@
 
 .success-posting {
     margin-top: -2em;
-    color:rgb(52, 73, 146);
+    color: rgb(52, 73, 146);
     text-decoration: underLine;
     text-decoration-color: rgb(226, 188, 142);
+}
+
+.message-emptyArr {
+    width: 42.5em;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 2em;
+    font-size: 30px;
+    color: blueviolet;
+}
+
+.my-courses-form {
+    display: flex;
+    flex-direction: column;
+    width: 64.5em;
+
+}
+
+.allCoursesCards-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.5em;
+    justify-content: center;
+    padding-left: 3.3em;
+    justify-content: flex-start;
+    height: 25em;
+    overflow: auto;
+}
+
+@media screen and (min-width: 1300px) {
+    .allCoursesCards-container {
+        height: 35em;
+    }
+}
+
+.allCoursesCards-container::-webkit-scrollbar {
+    height: 20px;
+    width: 6px;
+    margin-left: 0.2em;
+}
+
+.allCoursesCards-container::-webkit-scrollbar-thumb:hover {
+    background: #054572;
+    -webkit-border-radius: 1ex;
+}
+
+.courseCard-container {
+    display: flex;
+    flex-direction: column;
+    width: 15em;
+    height: 17em;
+    overflow: auto;
+    margin: 0 0.4em 0 0;
+    padding-left: 0.1em;
+    /* border: 1px dashed black; */
+    /* border-left: 1px solid black; */
+    border-style: solid;
+    border-image:
+        linear-gradient(to bottom,
+            rgb(52, 73, 146),
+            rgba(0, 0, 0, 0)) 1 100%;
+    background: linear-gradient(-215deg, whitesmoke 0%, #adafbc 51%, #777b92 90%);
+
+}
+
+.course-title {
+    color: rgb(136, 116, 116);
+    padding: 0 0.3em 0 0.3em;
+    border-bottom: 1px dotted rgb(200, 90, 90);
+    /* line-height: 1.3em; */
+}
+
+.course-title .item {
+    word-wrap: break-word;
+    display: inline-block;
+    max-width: calc(100% - 4px);
+    color: rgb(70, 68, 68);
+    /* text-decoration: underLine; */
+    font-size: 12px;
+    /* line-height: 1em; */
+}
+
+.numeric-items {
+    font-size: 14px;
+    color: #334598;
+}
+
+.customers-line {
+    font-size: 12px;
+    color: rgb(14, 109, 14);
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0 0.4em 2em 0em;
+    padding-bottom: 0.2em;
+    border-style: solid;
+    border-image:
+        linear-gradient(to top,
+            rgb(73, 90, 151),
+            rgba(0, 0, 0, 0)) 1 10%;
+}
+
+.card-btn {
+    color: white;
+    background-color: rgb(52, 73, 146);
+    border-radius: 2em;
+}
+
+.card-btn:hover {
+    background-color: red;
+
 }

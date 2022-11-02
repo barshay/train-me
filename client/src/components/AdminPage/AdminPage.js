@@ -216,6 +216,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log(response);
       const data = await response.data;
       setCoursesData(data);
+      setCoursesCardExist(true);
+      setCoursesMessageFlag(true);
 
       setContactUsData([])
       setContactCardExist(true);
@@ -242,6 +244,17 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     setCoursesCardExist(true);
     setCoursesData([]);
     setCoursesMessageFlag(false);
+  }
+
+  const closeMessageHandler = () => {
+    setCoursesMessageFlag(false);
+    setCoursesCardEmpty(false);
+    setContactMessageFlag(false);
+    setContactUsEmpty(false);
+    setCustomersCardEmpty(false);
+    setCustomerMessageFlag(false);
+    setTrainersCardEmpty(false);
+    setTrainerMessageFlag(false);
   }
 
   return (
@@ -287,13 +300,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
         <div
           className={
-            `${(contactUsData.length > 0
-              || customersData.length > 0
-              || trainersData.length > 0
-              || coursesData.length > 0) ? "allCards-container" : 'admin-image-home-container'}`
+            `${((contactUsData.length > 0 || contactMessageFlag)
+              || (customersData.length > 0 || customerMessageFlag)
+              || (trainersData.length > 0 || trainerMessageFlag)
+              || coursesData.length > 0 || coursesMessageFlag) ? "allCards-container" : 'admin-image-home-container'}`
           }
         >
-          {contactUsEmpty && <div className="cardEmpty-message">There are not Contact messages!</div>}
+          {contactUsEmpty &&
+            [<div className="cardEmpty-message">There are not Contact messages!</div>,
+            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+          }
           {!contactCardExist &&
             contactUsData.map((item) =>
               <div key={item._id} className="card-container">
@@ -312,7 +328,10 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             )
           }
 
-          {customersCardEmpty && <div className="cardEmpty-message">There are not Customers!</div>}
+          {customersCardEmpty &&
+            [<div className="cardEmpty-message">There are not Customers!</div>,
+            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+          }
           {!customerCardExist &&
             customersData.map((item) =>
               <div key={item._id} className="card-container">
@@ -329,7 +348,10 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             )
           }
 
-          {trainersCardEmpty && <div className="cardEmpty-message">There are not Trainers!</div>}
+          {trainersCardEmpty &&
+            [<div className="cardEmpty-message">There are not Trainers!</div>,
+            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+          }
           {!trainerCardExist &&
             trainersData.map((item) =>
               <div key={item._id} className="card-container">
@@ -346,7 +368,10 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             )
           }
 
-          {coursesCardEmpty && <div className="cardEmpty-message">There are not Courses!</div>}
+          {coursesCardEmpty &&
+            [<div className="cardEmpty-message">There are not Courses!</div>,
+            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+          }
           {!coursesCardExist &&
             coursesData.map((item) =>
               <div key={item._id} className="card-container">
@@ -355,12 +380,19 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                 <div className="titles">Description: <span className="items">{item.description}</span></div>
                 <div className="titles">Lesson Time: <span className="numeric-items" >{item.lessontime} Minutes</span></div>
                 <div className="titles">Cost: <span className="numeric-items">{item.cost}</span></div>
-                <div className="titles">Trainer: <span className="items">{item.trainer}</span></div>
+                <div className="titles">Trainer:
+                  <span className="items">
+                    <div style={{ color: "#334598", fontSize: "14px", paddingBottom: "0.5em", paddingTop: "0.3em" }}>trainer ID:</div>
+                    {item.trainer}
+                  </span>
+                </div>
                 <div className="titles">Customers:
                   {item.customers.length === 0 ?
-                    <span className="numeric-items" style={{ marginLeft: "0.5em" }}>{item.customers.length}</span> :
+                    <div className="numeric-items" >Amount: {item.customers.length} </div> :
                     [
-                      <div className="numeric-items" >Amount: {item.customers.length}</div>,
+                      <div className="numeric-items" >Amount: {item.customers.length}
+                        <div style={{ color: "#334598" }}>Customer/s ID:</div>
+                      </div>,
                       item.customers.map((customer, index) =>
                         <div style={{ height: "0.7em", display: "flex" }}>
                           <span key={index} className="items lineHeight">{customer}</span>
