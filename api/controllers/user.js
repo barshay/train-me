@@ -1,82 +1,120 @@
 const User = require("../models/user");
 // const { allowedUpdates } = require('../../constants/allowedUpdates');
-const serverResponse = require('../utils/serverResponse');
+const serverResponse = require("../utils/serverResponse");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const jwtDecode = require("jwt-decode");
 const cloudinary = require("../../cloudinary/cloudinary");
 
-const {
-    // createToken,
-    hashPassword,
-    // verifyPassword
-} = require('./util');
+const { createToken, hashPassword, verifyPassword } = require("../utils/utils");
 
 module.exports = {
-    signup: async (req, res) => {
-        try {
-            const { firstName, lastName, age, email, phoneNumber, profilePic, gender } = req.body;
+  signup: async (req, res) => {
+    try {
+      const {
+        firstName,
+        lastName,
+        age,
+        email,
+        phoneNumber,
+        profilePic,
+        gender,
+      } = req.body;
+      const hashedPassword = await hashPassword(req.body.password);
 
-            const hashedPassword = await hashPassword(
-                req.body.password
-            );
+      let role = "";
 
-            let role = '';
+      if (["customer", "trainer"].includes(req.body.role)) {
+        role = req.body.role;
+      }
 
-            if (['customer', 'trainer'].includes(req.body.role)) {
-                role = req.body.role;
-            }
+      let cloImageResult = "";
+      //   await cloudinary.uploader.upload(
+      //     profilePic,
+      //     {
+      //       folder: "trainme_user_avatar",
+      //       upload_preset: "unsigned_upload_user",
+      //       public_id: `${email}_avatar`,
+      //       allowed_formats: ["jpeg, jpg, png, svg, ico, jfif, webp"],
+      //     },
+      //     function (error, result) {
+      //       if (error) {
+      //         console.log("error from cloudinary");
+      //         console.log(error);
+      //       } else {
+      //         cloImageResult = result;
+      //         // console.log("result.public_id : " + result.public_id)
+      //         console.log("No Error from cloudinary");
+      //       }
+      //     }
+      //   );
 
-            let cloImageResult = '';
-            await cloudinary.uploader.upload(profilePic,
-                {
-                    folder: "trainme_user_avatar",
-                    upload_preset: 'unsigned_upload_user',
-                    public_id: `${email}_avatar`,
-                    allowed_formats: ['jpeg, jpg, png, svg, ico, jfif, webp']
-                },
-                function (error, result) {
-                    if (error) {
-                        console.log("error from cloudinary");
-                        console.log(error);
-                    } else {
-                        cloImageResult = result;
-                        // console.log("result.public_id : " + result.public_id)
-                        console.log("No Error from cloudinary");
-                    }
-                }
-            );
+      const userData = {
+        email: email.toLowerCase(),
+        firstName,
+        lastName,
+        age,
+        phoneNumber,
+        profilePic: cloImageResult.secure_url,
+        gender,
+        password: hashedPassword,
+        role,
+      };
 
-            const userData = {
-                email: email.toLowerCase(),
-                firstName,
-                lastName,
-                age,
-                phoneNumber,
-                profilePic: cloImageResult.secure_url,
-                gender,
-                password: hashedPassword,
-                role
-            };
+      const existingEmail = await User.findOne({
+        email: userData.email,
+      }).lean();
 
-            const existingEmail = await User.findOne({
-                email: userData.email
-            }).lean();
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
 
-            if (existingEmail) {
-                return res
-                    .status(400)
-                    .json({ message: 'Email already exists' });
-            }
+      const newUser = new User(userData);
+      const savedUser = await newUser.save();
+      console.log("test");
+      if (savedUser) {
+        const token = createToken(savedUser);
+        const decodedToken = jwtDecode(token);
+        const expiresAt = decodedToken.exp;
 
-            const newUser = new User(userData);
-            const savedUser = await newUser.save();
+        const {
+          firstName,
+          lastName,
+          email,
+          role,
+          age,
+          phoneNumber,
+          profilePic,
+          gender,
+        } = savedUser;
 
-                admin.save();
-                console.log("Admin created");
-                return serverResponse(res, 201, { cloImageResult });
+        const userInfo = {
+          firstName,
+          lastName,
+          email,
+          role,
+          age,
+          phoneNumber,
+          profilePic,
+          gender,
+        };
 
-        } catch (err) {
-            return serverResponse(res, 500, { message: "internal error occured" + error })
-        }
-    },
+        return res.status(200).json({
+          message: "User created!",
+          token,
+          userInfo,
+          expiresAt,
+        });
+      } else {
+        console.log("else");
+        return res.status(400).json({
+          message: "There was a problem creating your account",
+        });
+      }
+    } catch (err) {
+      return res.status(400).json({
+        message: "There was a problem creating your account",
+      });
+    }
+  },
 };
