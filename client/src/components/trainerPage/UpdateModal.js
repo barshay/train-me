@@ -106,9 +106,9 @@ const UpdateModal = ({courseId}) => {
         isValid = true;
 
         const updatedCourseToAddToDB = {
-            picture: updatedPicture,
             lessontime: updatedLessonTime,
-            cost: updatedCost
+            cost: updatedCost,
+            picture: updatedPicture,
         };
 
         setUpdatedPicture('');

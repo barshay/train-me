@@ -214,7 +214,7 @@ export function CustomerSignupForm() {
       phone: phone,
       password: password,
       gender: gender,
-      profilepic: profilePicture
+      pictureToDB: profilePicture
     };
     // console.log(customerToAddToDB);
 

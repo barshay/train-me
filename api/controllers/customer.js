@@ -8,7 +8,7 @@ const cloudinary = require("../../cloudinary/cloudinary");
 
 module.exports = {
   signup: async (req, res) => {
-    const { firstname, lastname, age, profilepic, gender, phone, email, password } =
+    const { firstname, lastname, age, pictureToDB, gender, phone, email, password } =
       req.body;
 
     const allCustomer = await Customer.find({});
@@ -19,7 +19,7 @@ module.exports = {
     }
 
     let cloImageResult = '';
-    await cloudinary.uploader.upload(profilepic,
+    await cloudinary.uploader.upload(pictureToDB,
       {
         folder: "trainme_customers_avatar",
         upload_preset: 'unsigned_upload_customer',
@@ -46,13 +46,18 @@ module.exports = {
         });
       }
 
+      const profilepic = {
+        image: pictureToDB,
+        public_id: cloImageResult.public_id
+      }
+
       const customer = new Customer({
         firstname: firstname,
         lastname: lastname,
         age: age,
         gender: gender,
         phone: phone,
-        profilepic: cloImageResult.secure_url,
+        profilepic,
         email: email,
         password: hash,
       });

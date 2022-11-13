@@ -224,7 +224,7 @@ export function TrainerSignupForm() {
             phone: phone,
             password: password,
             gender: gender,
-            profilepic: profilePicture
+            pictureToDB: profilePicture
         };
         // console.log(trainerToAddToDB);
 

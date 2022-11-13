@@ -11,7 +11,12 @@ const trainerSchema = new mongoose.Schema({
     install a package when no profile pic is provided, 
     the default will be a default regular profile pic
    */
-  profilepic: { type: String, default: 'PICTURE' },
+  // profilepic: { type: String, default: 'PICTURE' },
+  profilepic:
+  {
+    image: { type: String, required: true },
+    public_id: { type: String, required: true }
+  },
   password: { type: String, required: true },
   rating: {
     rate: { type: Number, default: 0 },

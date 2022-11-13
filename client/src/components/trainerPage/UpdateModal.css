@@ -18,7 +18,7 @@ body.active-modal {
     background-color: rgb(52, 146, 76)
 }
 
-.modal, .overlay {
+.modal, .overlay, .overlay-customers {
     width: 100vw;
     height: 100vh;
     top: 9vh;
@@ -136,4 +136,30 @@ body.active-modal {
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
     color: white;
+}
+
+.modal-customer-container {
+    height: 30rem;
+    width: 40rem;
+    overflow: scroll;
+    display: block;
+    text-align: center;
+    /* justify-content: center;
+    align-items: center;
+    align-content: center; */
+    padding: 1.5em 1em 1.5em 1em;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    line-height: 1.8;
+    /* background: #f1f1f1; */
+    box-shadow: 2px 0px 20px 8px rgb(93, 88, 187) inset;
+    border-radius: 15px;
+
+}
+
+.overlay-customers {
+    background: rgba(0, 0, 0, 0.846);
 }

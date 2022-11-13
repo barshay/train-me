@@ -5,12 +5,18 @@ import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
 import { Marginer } from '../marginer';
 import axios from 'axios';
+import '../trainerPage/UpdateModal.css';
+
 
 const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   const [contactCardExist, setContactCardExist] = useState(true);
   const [customerCardExist, setCustomerCardExist] = useState(true);
   const [trainerCardExist, setTrainerCardExist] = useState(true);
   const [coursesCardExist, setCoursesCardExist] = useState(true);
+  const [courseTrainerData, setCourseTrainerData] = useState([]);
+  const [customersModal, setCustomersModal] = useState(false);
+  const [courseCustomerData, setCourseCustomerData] = useState([]);
+
 
   const [contactUsEmpty, setContactUsEmpty] = useState(false);
   const [customersCardEmpty, setCustomersCardEmpty] = useState(false);
@@ -33,7 +39,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     setCoursesData
   } = useContext(MyContext);
 
-  useEffect(() => {
+  useEffect((id) => {
     contactUsData.length > 0 && setContactCardExist(false);
     (contactUsData.length === 0 && contactMessageFlag) && setContactUsEmpty(true);
 
@@ -49,6 +55,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }, [contactUsData, customersData, trainersData, coursesData])
 
   const getContactUsApiAnswer = async () => {
+    console.log("courseTrainerData: ", courseTrainerData);
     try {
       const contactUsUrl = 'http://localhost:8000/contactUs';
       const response = await axios.get(contactUsUrl);
@@ -216,6 +223,23 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log(response);
       const data = await response.data;
       setCoursesData(data);
+
+      // try {
+      const allTrainersUrl = 'http://localhost:8000/trainer';
+      const response2 = await axios.get(allTrainersUrl);
+      console.log(response);
+      const data2 = await response2.data;
+      // for (const i in data) {
+      //   if (data[i]._id === id) {
+      setCourseTrainerData(data2);
+      console.log("courseTrainerData", courseTrainerData);
+      // }
+      // }
+      // } catch (err) {
+      //   console.log("error in 'getCoursesApiAnswer' ", err);
+      // }
+
+
       setCoursesCardExist(true);
       setCoursesMessageFlag(true);
 
@@ -237,6 +261,20 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       setLoading(false);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  const getCourseCustomersData = async () => {
+    try {
+      const allCustomersUrl = "http://localhost:8000/customer";
+      const response = await axios.get(allCustomersUrl);
+      console.log(response);
+      const data = await response.data;
+      setCourseCustomerData(data);
+      setCustomersModal(!customersModal);
+
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -335,13 +373,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           {!customerCardExist &&
             customersData.map((item) =>
               <div key={item._id} className="card-container">
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Img customersDisplayAvatar={item.profilepic.public_id} alt="Customer avatar"></Img>
+                </div>
+                <Marginer direction="vertical" margin="0.5em" />
                 <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
                 <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
                 <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
                 <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
                 <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
                 <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                <div className="titles">Profile Pic: <span className="items">{item.profilepic}</span></div>
                 <Marginer direction="vertical" margin="0.5em" />
                 <button onClick={() => { deleteCustomerById(item._id) }} className="item-btn">Remove Customer</button>
               </div>
@@ -355,13 +396,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           {!trainerCardExist &&
             trainersData.map((item) =>
               <div key={item._id} className="card-container">
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Img trainersDisplayAvatar={item.profilepic.public_id} alt="Trainer avatar"></Img>
+                </div>
+                <Marginer direction="vertical" margin="0.5em" />
                 <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
                 <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
                 <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
                 <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
                 <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
                 <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                <div className="titles">Profile Pic: <span className="items">{item.profilepic}</span></div>
                 <Marginer direction="vertical" margin="0.5em" />
                 <button onClick={() => { deleteTrainerById(item._id) }} className="item-btn">Remove Trainer</button>
               </div>
@@ -372,32 +416,79 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             [<div className="cardEmpty-message">There are not Courses!</div>,
             <span className="close-message" onClick={closeMessageHandler}>✖</span>]
           }
-          {!coursesCardExist &&
+          {(!coursesCardExist && courseTrainerData) &&
             coursesData.map((item) =>
               <div key={item._id} className="card-container">
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Img courseAvatar={item.picture.public_id} alt="Course avatar"></Img>
+                </div>
+                <Marginer direction="vertical" margin="0.5em" />
                 <div className="titles">Name: <span className="items">{item.name}</span></div>
                 <div className="titles">Category: <span className="items">{item.category}</span></div>
                 <div className="titles">Description: <span className="items">{item.description}</span></div>
                 <div className="titles">Lesson Time: <span className="numeric-items" >{item.lessontime} Minutes</span></div>
                 <div className="titles">Cost: <span className="numeric-items">{item.cost}</span></div>
-                <div className="titles">Trainer:
+                <div className="titles courseTrainer-title">Trainer
+                  {
+                    courseTrainerData.map((trainer) => {
+                      if (trainer._id === item.trainer) {
+                        return (
+                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <span style={{ fontSize: "15px", color: "black" }}>{trainer.firstname + " " + trainer.lastname}</span>
+                            <Img courseTrainerAvatar={trainer.profilepic.public_id} alt="Trainer avatar"></Img>
+                          </div>
+                        )
+                      }
+                    })
+                  }
+                  <Marginer direction="vertical" margin="0.5em" />
                   <span className="items">
-                    <div style={{ color: "#334598", fontSize: "14px", paddingBottom: "0.5em", paddingTop: "0.3em" }}>trainer ID:</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        color: "#334598",
+                        fontSize: "14px",
+                        paddingBottom: "0.5em",
+                        paddingTop: "0.3em",
+                        justifyContent: "center"
+                      }}
+                    >Trainer ID:</div>
                     {item.trainer}
                   </span>
                 </div>
-                <div className="titles">Customers:
+                <div className="titles courseCustomer-title">Customers
                   {item.customers.length === 0 ?
                     <div className="numeric-items" >Amount: {item.customers.length} </div> :
                     [
-                      <div className="numeric-items" >Amount: {item.customers.length}
-                        <div style={{ color: "#334598" }}>Customer/s ID:</div>
+                      <div className="course-customer-length" > {item.customers.length}
                       </div>,
-                      item.customers.map((customer, index) =>
-                        <div style={{ height: "0.7em", display: "flex" }}>
-                          <span key={index} className="items lineHeight">{customer}</span>
+                      <button className="course-customer-btn" onClick={getCourseCustomersData}>View Customers</button>,
+                      customersModal &&
+                      <div className="modal" >
+                        <div className="overlay-customers" onClick={getCourseCustomersData}></div>
+                        <div className="modal-customer-container" >
+                          {
+                            [
+                              console.log("all customers: ", item.customers),
+                              courseCustomerData && courseCustomerData.map((customerData) => {
+                                {
+                                  return (item.customers.map((customer, index) => {
+                                    return (customer === customerData._id) &&
+                                      (
+                                        // console.log("customer: ", customer),
+                                        // console.log("customerData: ", customerData._id),
+                                        <div key={index} className="customers-modal-card">
+                                          <span style={{ fontSize: "15px", color: "white" }}>{customerData.firstname + " " + customerData.lastname}</span>
+                                          <Img customersDisplayAvatar={customerData.profilepic.public_id} alt="Customer avatar"></Img>
+                                        </div>)
+                                  }))
+                                }
+                              })
+                            ]
+                          }
                         </div>
-                      )
+                      </div>
+
                     ]
                   }
                 </div>

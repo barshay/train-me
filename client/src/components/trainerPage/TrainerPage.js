@@ -6,6 +6,7 @@ import { Marginer } from '../marginer';
 import axios from 'axios';
 import { FileInput, PreviewPicture } from './styledHelper';
 import UpdateModal from './UpdateModal';
+import './UpdateModal.css';
 
 const TrainerPage = ({ trainerAvatar }) => {
   const { trainerName, trainerID } = useContext(MyContext);
@@ -20,6 +21,8 @@ const TrainerPage = ({ trainerAvatar }) => {
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [toggleFiltered, setToggleFiltered] = useState(false);
   const [isDataExist, setIsDataExist] = useState(false);
+  const [customersData, setCustomersData] = useState([]);
+  const [customersModal, setCustomersModal] = useState(false);
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -149,7 +152,7 @@ const TrainerPage = ({ trainerAvatar }) => {
       name,
       category,
       description,
-      picture,
+      pictureToDB: picture,
       lessontime: lessonTime,
       cost,
       trainer: trainerID,
@@ -162,7 +165,6 @@ const TrainerPage = ({ trainerAvatar }) => {
     setPicture('');
     setLessonTime('');
     setCost('');
-
 
     axios({
       method: 'post',
@@ -207,13 +209,15 @@ const TrainerPage = ({ trainerAvatar }) => {
     */
   const resetFileInput = (e) => {
     e.preventDefault();
-    inputFileRef.current.value = null;
+    if (inputFileRef.current.value !== null) {
+      inputFileRef.current.value = null;
+    }
   };
 
   let filteredCoursesByTrainerId = {};
   let filteredArr = [];
   const getAllCoursesHandle = async () => {
-    
+
     if (isDataExist) {
       console.log("return");
       return;
@@ -246,8 +250,8 @@ const TrainerPage = ({ trainerAvatar }) => {
     //   })
 
     try {
-      const allTrainersUrl = 'http://localhost:8000/course';
-      const response = await axios.get(allTrainersUrl);
+      const allCoursesUrl = 'http://localhost:8000/course';
+      const response = await axios.get(allCoursesUrl);
       console.log(response);
       const data = await response.data;
 
@@ -299,13 +303,21 @@ const TrainerPage = ({ trainerAvatar }) => {
     setFilteredCourses([]);
   }
 
+  // const toggleData = () => {
+  //   setIsDataExist(false);
+  //   console.log("isDataExist: ", isDataExist)
+  // }
+
   const removeCourseHandler = async (id) => {
+    // toggleData();
+    setIsDataExist(false);
+    console.log("isDataExist: ", isDataExist);
+    // if (!isDataExist) {
     try {
       const deleteCourseUrl = `http://localhost:8000/course/${id}`;
       const response = await axios.delete(deleteCourseUrl);
       console.log(response);
       // const data = await response.data;
-      setIsDataExist(false);
       getAllCoursesHandle();
       if (toggleFiltered) {
         filteredCoursesByExistingCustomer();
@@ -313,7 +325,41 @@ const TrainerPage = ({ trainerAvatar }) => {
     } catch (error) {
       console.log(error);
     }
+    // }
+
   }
+
+  const getCourseCustomers = async (customersArr) => {
+    try {
+      setCustomersData([]);
+      console.log("Customers Array: ", customersArr);
+      const allCustomersUrl = "http://localhost:8000/customer";
+      const response = await axios.get(allCustomersUrl);
+      console.log(response);
+      let data = await response.data;
+      for (let x = 0; x < data.length; x++) {
+        for (let y = 0; y < customersArr.length; y++) {
+          if (data[x]._id === customersArr[y]) {
+            if (!customersData.includes(customersArr[y])) {
+              setCustomersData(prevState => ([
+                ...prevState,
+                data[x]
+              ]));
+            }
+          }
+        }
+      }
+      toggleCustomersModal(!customersModal);
+      console.log("Customers Data:  ", customersData);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const toggleCustomersModal = () => {
+    setCustomersModal(!customersModal);
+  };
+
 
   return (
     <>
@@ -480,34 +526,41 @@ const TrainerPage = ({ trainerAvatar }) => {
                     [
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <div className="courseCard-container" key={course._id}>
+                          <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
+                            <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
+                          </div>
                           <div className="course-title">Name: <span className="item">{course.name}</span></div>
                           <div className="course-title">Category: <span className="item">{course.category}</span></div>
                           <div className="course-title">Description: <span className="item">{course.description}</span></div>
                           <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
                           <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
                           <div className="course-title">Customers:
-                            {course.customers < 1
-                              ?
-                              <span className="numeric-items">{course.customers.length}</span>
-                              :
-                              [
-                                <div className="numeric-items" >Amount: {course.customers.length}
-                                  <div style={{ color: "#334598" }}>Customer/s ID:</div>
-                                </div>,
-                                <span>
-                                  {course.customers.map((customer, index) =>
-                                    <div style={{ height: "0.7em", display: "flex" }}>
-                                      <span key={index} className="customers-line">{customer}</span>
-                                    </div>
-                                  )}
-                                </span>
-                              ]
+                            <div className="numeric-items" >Amount: {course.customers.length}
+                              {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
+                            </div>
+                            <button onClick={() => { getCourseCustomers(course.customers) }}>
+                              View Customer/s
+                            </button>
+
+                            {(customersData && customersModal) &&
+                              <div className="modal" >
+                                <div onClick={toggleCustomersModal} className="overlay-customers"></div>
+                                <div className="modal-customer-container" >
+                                  {
+                                    customersData.map((customer, index) => [
+                                      <div key={index} className="customers-modal-card">
+                                        <span style={{ fontSize: "15px", color: "white" }}>{customer.firstname + " " + customer.lastname}</span>
+                                        <Img customersDisplayAvatar={customer.profilepic.public_id} alt="Customer avatar"></Img>
+                                      </div>
+                                    ])
+                                  }
+                                </div>
+                              </div>
                             }
                           </div>
                         </div>
                         <div className="card-actions">
-                          {<UpdateModal courseId={course._id} />}
-                          {/* <button className="" onClick={() => { updateCourseHandler(course._id) }}>Update</button> */}
+                          <UpdateModal courseId={course._id} />
                           <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
                         </div>
                       </div>
@@ -517,6 +570,9 @@ const TrainerPage = ({ trainerAvatar }) => {
                     [
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <div className="courseCard-container" key={course._id}>
+                          <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
+                            <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
+                          </div>
                           <div className="course-title">Name: <span className="item">{course.name}</span></div>
                           <div className="course-title">Category: <span className="item">{course.category}</span></div>
                           <div className="course-title">Description: <span className="item">{course.description}</span></div>
@@ -524,22 +580,43 @@ const TrainerPage = ({ trainerAvatar }) => {
                           <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
                           <div className="course-title">Customers:
                             {course.customers < 1 ?
-                              <span className="numeric-items">{course.customers.length}</span> :
-                              [<div className="numeric-items" >Amount: {course.customers.length}
-                                <div style={{ color: "#334598" }}>Customer/s ID:</div>
-                              </div>,
-                              <span>
-                                {course.customers.map((customer, index) =>
-                                  <div style={{ height: "0.7em", display: "flex" }}>
-                                    <span key={index} className="customers-line">{customer}</span>
+                              <span className="numeric-items">{course.customers.length}</span>
+                              :
+                              [
+                                <div className="numeric-items" >Amount: {course.customers.length}
+                                  {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
+                                </div>,
+                                // <span>
+                                //   {course.customers.map((customer, index) =>
+                                //     <div style={{ height: "0.7em", display: "flex" }}>
+                                //       <span key={index} className="customers-line">{customer}</span>
+                                //     </div>
+                                //   )}
+                                // </span>
+                                <button onClick={() => { getCourseCustomers(course.customers) }}>
+                                  View Customer/s
+                                </button>,
+
+                                (customersData && customersModal) &&
+                                <div className="modal" >
+                                  <div onClick={toggleCustomersModal} className="overlay-customers"></div>
+                                  <div className="modal-customer-container" >
+                                    {
+                                      customersData.map((customer, index) => [
+                                        <div key={index} className="customers-modal-card">
+                                          <span style={{ fontSize: "15px", color: "white" }}>{customer.firstname + " " + customer.lastname}</span>
+                                          <Img customersDisplayAvatar={customer.profilepic.public_id} alt="Customer avatar"></Img>
+                                        </div>
+                                      ])
+                                    }
                                   </div>
-                                )}
-                              </span>]}
+                                </div>
+
+                              ]}
                           </div>
                         </div>
                         <div className="card-actions">
-                          <UpdateModal />
-                          {/* <button className="" onClick={() => { updateCourseHandler(course._id) }}>Update</button> */}
+                          <UpdateModal courseId={course._id} />
                           <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
                         </div>
                       </div>
@@ -568,6 +645,9 @@ const TrainerPage = ({ trainerAvatar }) => {
             </button>
             <button className="trainer-actions-btn" onClick={() => { getAllCoursesHandle() }} >
               My Courses
+            </button>
+            <button className="trainer-actions-btn" onClick={() => { getAllCoursesHandle() }} >
+              My Customers
             </button>
           </div>
         </div>

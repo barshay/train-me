@@ -24,8 +24,14 @@ import { face, FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
 // Import plugins
 // import { lazyload, placeholder } from '@cloudinary/react';
 
-const Img = ({ adminAvatar, customerAvatar, trainerAvatar }) => {
-
+const Img = ( props ) => {
+  const { adminAvatar,
+    customerAvatar,
+    trainerAvatar,
+    courseAvatar,
+    customersDisplayAvatar,
+    trainersDisplayAvatar,
+    courseTrainerAvatar } = props;
   // Create and configure your Cloudinary instance.
   const cld = new Cloudinary({
     cloud: {
@@ -55,6 +61,23 @@ const Img = ({ adminAvatar, customerAvatar, trainerAvatar }) => {
     .roundCorners(byRadius(30))   // Round the corners.
     .rotate(byAngle(12));
 
+  const courseImage = cld.image(courseAvatar);
+  courseImage
+    .resize(thumbnail().width(300).height(300));  // Crop the image.
+
+  const customersImage = cld.image(customersDisplayAvatar);
+  customersImage
+    .resize(thumbnail().width(300).height(300));
+
+  const trainersImage = cld.image(trainersDisplayAvatar);
+  trainersImage
+    .resize(thumbnail().width(300).height(300));
+
+  const courseTrainerImage = cld.image(courseTrainerAvatar);
+  courseTrainerImage
+    .resize(thumbnail().width(150).height(150).gravity(focusOn(face()))) 
+    .roundCorners(byRadius(30));
+
   return (
     <>
       {adminAvatar &&
@@ -72,6 +95,26 @@ const Img = ({ adminAvatar, customerAvatar, trainerAvatar }) => {
         <AdvancedImage
           className="c-image"
           cldImg={trainerImage}
+        />}
+      {courseAvatar &&
+        <AdvancedImage
+          className="course-image"
+          cldImg={courseImage}
+        />}
+      {customersDisplayAvatar &&
+        <AdvancedImage
+          className="course-image"
+          cldImg={customersImage}
+        />}
+      {trainersDisplayAvatar &&
+        <AdvancedImage
+          className="course-image"
+          cldImg={trainersImage}
+        />}
+      {courseTrainerAvatar &&
+        <AdvancedImage
+          className="course-display-trainer-image"
+        cldImg={courseTrainerImage}
         />}
     </>
   )

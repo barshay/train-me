@@ -15,6 +15,6 @@ app.put("/:courseId", updateCourse);
 app.get("/", getAllCourses);
 app.get("/:courseId", getCourseById);
 app.delete("/:courseId", deleteCourseById);
-app.delete("/", deleteAllCourses);
+// app.delete("/", deleteAllCourses);
 
 module.exports = app;
