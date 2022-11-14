@@ -5,28 +5,27 @@ import { motion } from "framer-motion";
 import { AccountContext } from "./accountContext";
 import { CustomerSignupForm } from "./CustomerSignupForm";
 import { TrainerSignupForm } from "./TrainerSignupForm";
-import { BoldCustomer, BoldHello } from './common';
-import { BoldTrainer } from './common';
+import { BoldCustomer, BoldHello } from "./common";
+import { BoldTrainer } from "./common";
 
 const AccountPageContainer = styled.div`
- min-height: 120vh;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    /* justify-content: center; */
-    /* padding-top: 1em; */
-    margin-top: 3em;
-    padding-right: 1.5em;
-    background-image: url("https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
+  min-height: 120vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* justify-content: center; */
+  /* padding-top: 1em; */
+  margin-top: 3em;
+  padding-right: 1.5em;
+  background-image: url("https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 
-    background-repeat: no-repeat;
-    /* background-image: url("https://media.istockphoto.com/photos/personal-trainer-guiding-woman-doing-barbell-squats-at-gym-picture-id616121640?k=20&m=616121640&s=612x612&w=0&h=uu26D6gUs5w3JEXGbX9tCc3YcxCMlMOA13ane0or2Nc="); */
-
-`
+  background-repeat: no-repeat;
+  /* background-image: url("https://media.istockphoto.com/photos/personal-trainer-guiding-woman-doing-barbell-squats-at-gym-picture-id616121640?k=20&m=616121640&s=612x612&w=0&h=uu26D6gUs5w3JEXGbX9tCc3YcxCMlMOA13ane0or2Nc="); */
+`;
 
 const BoxContainer = styled.div`
   width: 280px;
@@ -44,16 +43,16 @@ const BoxContainer = styled.div`
   opacity: 0.8;
 
   @media (max-width: 800px) {
-  /* width: 200px; */
+    /* width: 200px; */
     display: inline-flex;
     margin-top: 6em;
   }
 
   @media (max-width: 500px) {
-  width: 200px;
+    width: 200px;
     display: inline-flex;
     margin-top: 8em;
-      /* max-height: 350px; */
+    /* max-height: 350px; */
   }
 `;
 
@@ -68,7 +67,7 @@ const TopContainer = styled.div`
 
   @media (max-width: 500px) {
     display: flex;
-      justify-content: flex-start;
+    justify-content: flex-start;
     width: 100%;
     height: 200px;
   }
@@ -177,13 +176,16 @@ export function AccountBox() {
     }, 450);
   };
 
-
-  const contextValue = { switchToCustomerSignup, switchToSignin, switchToTrainerSignup };
+  const contextValue = {
+    switchToCustomerSignup,
+    switchToSignin,
+    switchToTrainerSignup,
+  };
 
   return (
     <AccountContext.Provider value={contextValue}>
       <AccountPageContainer>
-        <BoxContainer >
+        <BoxContainer>
           <TopContainer>
             <BackDrop
               initial={false}
@@ -202,14 +204,22 @@ export function AccountBox() {
               <HeaderContainer>
                 <HeaderText>Create</HeaderText>
                 <HeaderText>Account</HeaderText>
-                <SmallText><BoldHello>Hello</BoldHello><BoldCustomer> Customer </BoldCustomer> Please sign-up to continue!</SmallText>
+                <SmallText>
+                  <BoldHello>Hello</BoldHello>
+                  <BoldCustomer> Customer </BoldCustomer> Please sign-up to
+                  continue!
+                </SmallText>
               </HeaderContainer>
             )}
             {active === "signup as a trainer" && (
               <HeaderContainer>
                 <HeaderText>Create</HeaderText>
                 <HeaderText>Account</HeaderText>
-                <SmallText><BoldHello>Hello</BoldHello><BoldTrainer> Trainer </BoldTrainer>Please sign-up to continue!</SmallText>
+                <SmallText>
+                  <BoldHello>Hello</BoldHello>
+                  <BoldTrainer> Trainer </BoldTrainer>Please sign-up to
+                  continue!
+                </SmallText>
               </HeaderContainer>
             )}
           </TopContainer>

@@ -3,7 +3,7 @@ const app = express();
 
 const {
   signup,
-  //   login,
+  login,
   //   getAllTrainers,
   //   getTrainerById,
   //   updateTrainer,
@@ -11,7 +11,7 @@ const {
 } = require("../controllers/user");
 
 app.post("/signup", signup);
-// app.post("/login", login);
+app.post("/login", login);
 // app.get("/", getAllTrainers);
 // app.get("/:trainerId", getTrainerById);
 // app.patch("/:trainerId", updateTrainer);
