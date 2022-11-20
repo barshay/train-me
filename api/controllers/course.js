@@ -1,4 +1,7 @@
 const Course = require("../models/course");
+const Customer = require("../models/customer");
+const Trainer = require("../models/trainer");
+
 const serverResponse = require('../utils/serverResponse');
 const { coursesAllowedUpdates } = require('../../constants/allowedUpdates');
 const jwt = require("jsonwebtoken");
@@ -140,19 +143,25 @@ module.exports = {
     getAllCourses: async (req, res) => {
         try {
             const allCourses = await Course.find({})
-            // let filteredCoursesByTrainerId = {};
-            // for (const i in allCourses) {
-            //     if (allCourses[i].trainer === trainerId) {
-            //         // console.log(trainerId);
-            //         filteredCoursesByTrainerId[i] = allCourses[i]
-            //     }
-            // }
-            // console.log(filteredCoursesByTrainerId);
             return serverResponse(res, 200, allCourses);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });
         }
     },
+
+    getAllAdminCourses: async (req, res) => {
+        try {
+            const allCourses = await Course.find({})
+            const allTrainers = await Trainer.find({})
+            const allData = [];
+            allData.push(allCourses, allTrainers);
+            return serverResponse(res, 200, allData);
+        } catch (e) {
+            return serverResponse(res, 500, { message: "internal error occurred " + e });
+        }
+    },
+
+    
 
     getCourseById: async (req, res) => {
         try {
@@ -178,6 +187,26 @@ module.exports = {
             return serverResponse(res, 200, course);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });
+        }
+    },
+
+
+    getCourseCustomersData: async (req, res) => {
+        try {
+            const courseItems  = req.body
+            const allCustomers = await Customer.find({})
+            const filteredCoursesArr = [];
+            for (const x in allCustomers) {
+                for (const y in courseItems) {
+                    if (courseItems[y] == allCustomers[x]._id) {
+                        filteredCoursesArr.push(allCustomers[x]);
+                    }
+                }
+        }
+            // console.log("filteredCoursesArr: ", filteredCoursesArr);
+            return serverResponse(res, 200, filteredCoursesArr);
+        } catch (e) {
+            return serverResponse(res, 500, { message: "internal error occured " + e });
         }
     },
 

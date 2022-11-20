@@ -533,7 +533,7 @@ const TrainerPage = ({ trainerAvatar }) => {
                           <div className="course-title">Category: <span className="item">{course.category}</span></div>
                           <div className="course-title">Description: <span className="item">{course.description}</span></div>
                           <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
-                          <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
+                          <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
                           <div className="course-title">Customers:
                             <div className="numeric-items" >Amount: {course.customers.length}
                               {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
@@ -577,7 +577,7 @@ const TrainerPage = ({ trainerAvatar }) => {
                           <div className="course-title">Category: <span className="item">{course.category}</span></div>
                           <div className="course-title">Description: <span className="item">{course.description}</span></div>
                           <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
-                          <div className="course-title">Cost: <span className="numeric-items">{course.cost}</span></div>
+                          <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
                           <div className="course-title">Customers:
                             {course.customers < 1 ?
                               <span className="numeric-items">{course.customers.length}</span>

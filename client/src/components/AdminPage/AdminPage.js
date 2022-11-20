@@ -9,14 +9,14 @@ import '../trainerPage/UpdateModal.css';
 
 
 const AdminPage = ({ loading, setLoading, adminAvatar }) => {
+  // setLoading(false);
   const [contactCardExist, setContactCardExist] = useState(true);
   const [customerCardExist, setCustomerCardExist] = useState(true);
   const [trainerCardExist, setTrainerCardExist] = useState(true);
   const [coursesCardExist, setCoursesCardExist] = useState(true);
   const [courseTrainerData, setCourseTrainerData] = useState([]);
   const [customersModal, setCustomersModal] = useState(false);
-  const [courseCustomerData, setCourseCustomerData] = useState([]);
-
+  const [courseCustomersData, setCourseCustomersData] = useState([]);
 
   const [contactUsEmpty, setContactUsEmpty] = useState(false);
   const [customersCardEmpty, setCustomersCardEmpty] = useState(false);
@@ -26,6 +26,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   const [customerMessageFlag, setCustomerMessageFlag] = useState(false);
   const [trainerMessageFlag, setTrainerMessageFlag] = useState(false);
   const [coursesMessageFlag, setCoursesMessageFlag] = useState(false);
+  const [toggleFilteredCourses, setToggleFilteredCourses] = useState(true);
 
   const {
     adminName,
@@ -39,7 +40,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     setCoursesData
   } = useContext(MyContext);
 
-  useEffect((id) => {
+  useEffect(() => {
     contactUsData.length > 0 && setContactCardExist(false);
     (contactUsData.length === 0 && contactMessageFlag) && setContactUsEmpty(true);
 
@@ -55,6 +56,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }, [contactUsData, customersData, trainersData, coursesData])
 
   const getContactUsApiAnswer = async () => {
+    setLoading(true);
     console.log("courseTrainerData: ", courseTrainerData);
     try {
       const contactUsUrl = 'http://localhost:8000/contactUs';
@@ -119,6 +121,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }
 
   const getTrainersApiAnswer = async () => {
+    setLoading(true);
     try {
       const allTrainersUrl = 'http://localhost:8000/trainer';
       const response = await axios.get(allTrainersUrl);
@@ -142,8 +145,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       setCoursesCardExist(true);
       setCoursesCardEmpty(false);
       setCoursesMessageFlag(false);
-
       setLoading(false);
+
     } catch (error) {
       console.log(error);
     }
@@ -168,6 +171,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }
 
   const getCustomersApiAnswer = async () => {
+    setLoading(true);
     try {
       const allCustomersUrl = "http://localhost:8000/customer";
       const response = await axios.get(allCustomersUrl);
@@ -216,63 +220,86 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     }
   }
 
+  const CommonDefinitionForCourses = () => {
+    setCoursesCardExist(true);
+    setCoursesMessageFlag(true);
+
+    setContactUsData([])
+    setContactCardExist(true);
+    setContactUsEmpty(false);
+    setContactMessageFlag(false);
+
+    setTrainersData([]);
+    setTrainerCardExist(true);
+    setTrainersCardEmpty(false);
+    setTrainerMessageFlag(false);
+
+    setCustomersData([]);
+    setCustomerCardExist(true);
+    setCustomersCardEmpty(false);
+    setCustomerMessageFlag(false);
+  }
+
   const getCoursesApiAnswer = async () => {
+    setLoading(true);
     try {
-      const allCoursesUrl = 'http://localhost:8000/course';
+      const allCoursesUrl = 'http://localhost:8000/course/admincourses';
       const response = await axios.get(allCoursesUrl);
-      console.log(response);
+      // console.log(response);
       const data = await response.data;
-      setCoursesData(data);
+      // console.log("data: ", data);
+      setCoursesData(data[0]);
+      // console.log("coursesData: ", coursesData);
+      setCourseTrainerData(data[1]);
+      // console.log("CourseTrainerData: ", courseTrainerData);
 
-      // try {
-      const allTrainersUrl = 'http://localhost:8000/trainer';
-      const response2 = await axios.get(allTrainersUrl);
-      console.log(response);
-      const data2 = await response2.data;
-      // for (const i in data) {
-      //   if (data[i]._id === id) {
-      setCourseTrainerData(data2);
-      console.log("courseTrainerData", courseTrainerData);
-      // }
-      // }
-      // } catch (err) {
-      //   console.log("error in 'getCoursesApiAnswer' ", err);
-      // }
+      CommonDefinitionForCourses();
 
-
-      setCoursesCardExist(true);
-      setCoursesMessageFlag(true);
-
-      setContactUsData([])
-      setContactCardExist(true);
-      setContactUsEmpty(false);
-      setContactMessageFlag(false);
-
-      setTrainersData([]);
-      setTrainerCardExist(true);
-      setTrainersCardEmpty(false);
-      setTrainerMessageFlag(false);
-
-      setCustomersData([]);
-      setCustomerCardExist(true);
-      setCustomersCardEmpty(false);
-      setCustomerMessageFlag(false);
-
+      if (!toggleFilteredCourses) {
+        setToggleFilteredCourses(!toggleFilteredCourses)
+      }
       setLoading(false);
     } catch (error) {
       console.log(error);
     }
   }
 
-  const getCourseCustomersData = async () => {
-    try {
-      const allCustomersUrl = "http://localhost:8000/customer";
-      const response = await axios.get(allCustomersUrl);
-      console.log(response);
-      const data = await response.data;
-      setCourseCustomerData(data);
+  const getCourseCustomersData = async (courseItems) => {
+    setLoading(true);
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/courseCustomers",
+      headers: { 'content-type': 'application/json' },
+      data: courseItems
+    }).then((res) => {
+      console.log('Fetching customers ', res.data);
+      setCourseCustomersData(res.data);
       setCustomersModal(!customersModal);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
+  const FilteredCoursesWithCustomers = async () => {
+    try {
+      const allCoursesUrl = 'http://localhost:8000/course/admincourses';
+      const response = await axios.get(allCoursesUrl);
+      // console.log(response);
+      const data = await response.data;
+
+      const filteredCourses = []
+      data[0].map((course) => {
+        if (course.customers.length > 0) {
+          filteredCourses.push(course);
+        }
+      })
+      setCoursesData(filteredCourses);
+      // console.log("coursesData: ", coursesData);
+      setCourseTrainerData(data[1]);
+      // console.log("CourseTrainerData: ", courseTrainerData);
+
+      CommonDefinitionForCourses();
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -295,11 +322,29 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     setTrainerMessageFlag(false);
   }
 
+  const toggleModal = () => {
+    setCustomersModal(!customersModal);
+  }
+
+  const toggleFilteredCoursesModal = () => {
+    // console.log("Before: ", toggleFilteredCourses)
+    // setToggleFilteredCourses(!toggleFilteredCourses);
+    // console.log("After: ", toggleFilteredCourses)
+    if (toggleFilteredCourses == true) {
+      console.log("true-get filtered courses");
+      setLoading(true);
+      FilteredCoursesWithCustomers();
+      setToggleFilteredCourses(!toggleFilteredCourses);
+    } else {
+      console.log("false-get all courses");
+      setLoading(true);
+      getCoursesApiAnswer();
+      setToggleFilteredCourses(!toggleFilteredCourses);
+    }
+  }
+
   return (
     <>
-      {loading &&
-        <section className="smooth spinner" >{ }</section>
-      }
       <div className="admin-page-container">
         <div className="admin-actions-container">
           {adminName &&
@@ -340,30 +385,38 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           className={
             `${((contactUsData.length > 0 || contactMessageFlag)
               || (customersData.length > 0 || customerMessageFlag)
-              || (trainersData.length > 0 || trainerMessageFlag)
-              || coursesData.length > 0 || coursesMessageFlag) ? "allCards-container" : 'admin-image-home-container'}`
+              || (trainersData.length > 0 || trainerMessageFlag)) ?
+              "allCards-container" :
+              (coursesData.length > 0 || coursesMessageFlag) ?
+                'allAdminCoursesCards-container' :
+                'admin-image-home-container'}`
           }
         >
           {contactUsEmpty &&
-            [<div className="cardEmpty-message">There are not Contact messages!</div>,
-            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+            [
+              <div className="cardEmpty-message">There are not Contact messages!</div>,
+              <span className="close-message" onClick={closeMessageHandler}>✖</span>
+            ]
           }
           {!contactCardExist &&
-            contactUsData.map((item) =>
-              <div key={item._id} className="card-container">
-                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
-                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
-                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
-                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
-                <div className="titles">Message Title: <span className="items">{item.messagetitle}</span></div>
-                <div className="titles">Message: <span className="items">{item.message}</span></div>
-                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
-                <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <button onClick={() => { deleteContactById(item._id) }} className="item-btn">Remove Item</button>
-              </div>
-            )
+            [
+              loading && <section className="smooth spinner" >{ }</section>,
+              contactUsData.map((item) =>
+                <div key={item._id} className="card-container">
+                  <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                  <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                  <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                  <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                  <div className="titles">Message Title: <span className="items">{item.messagetitle}</span></div>
+                  <div className="titles">Message: <span className="items">{item.message}</span></div>
+                  <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                  <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
+                  <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <button onClick={() => { deleteContactById(item._id) }} className="item-btn">Remove Item</button>
+                </div>
+              )
+            ]
           }
 
           {customersCardEmpty &&
@@ -416,86 +469,106 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             [<div className="cardEmpty-message">There are not Courses!</div>,
             <span className="close-message" onClick={closeMessageHandler}>✖</span>]
           }
-          {(!coursesCardExist && courseTrainerData) &&
-            coursesData.map((item) =>
-              <div key={item._id} className="card-container">
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Img courseAvatar={item.picture.public_id} alt="Course avatar"></Img>
-                </div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <div className="titles">Name: <span className="items">{item.name}</span></div>
-                <div className="titles">Category: <span className="items">{item.category}</span></div>
-                <div className="titles">Description: <span className="items">{item.description}</span></div>
-                <div className="titles">Lesson Time: <span className="numeric-items" >{item.lessontime} Minutes</span></div>
-                <div className="titles">Cost: <span className="numeric-items">{item.cost}</span></div>
-                <div className="titles courseTrainer-title">Trainer
-                  {
-                    courseTrainerData.map((trainer) => {
-                      if (trainer._id === item.trainer) {
-                        return (
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                            <span style={{ fontSize: "15px", color: "black" }}>{trainer.firstname + " " + trainer.lastname}</span>
-                            <Img courseTrainerAvatar={trainer.profilepic.public_id} alt="Trainer avatar"></Img>
-                          </div>
-                        )
-                      }
-                    })
-                  }
-                  <Marginer direction="vertical" margin="0.5em" />
-                  <span className="items">
-                    <div
-                      style={{
-                        display: "flex",
-                        color: "#334598",
-                        fontSize: "14px",
-                        paddingBottom: "0.5em",
-                        paddingTop: "0.3em",
-                        justifyContent: "center"
-                      }}
-                    >Trainer ID:</div>
-                    {item.trainer}
-                  </span>
-                </div>
-                <div className="titles courseCustomer-title">Customers
-                  {item.customers.length === 0 ?
-                    <div className="numeric-items" >Amount: {item.customers.length} </div> :
-                    [
-                      <div className="course-customer-length" > {item.customers.length}
-                      </div>,
-                      <button className="course-customer-btn" onClick={getCourseCustomersData}>View Customers</button>,
-                      customersModal &&
-                      <div className="modal" >
-                        <div className="overlay-customers" onClick={getCourseCustomersData}></div>
-                        <div className="modal-customer-container" >
-                          {
-                            [
-                              console.log("all customers: ", item.customers),
-                              courseCustomerData && courseCustomerData.map((customerData) => {
-                                {
-                                  return (item.customers.map((customer, index) => {
-                                    return (customer === customerData._id) &&
-                                      (
-                                        // console.log("customer: ", customer),
-                                        // console.log("customerData: ", customerData._id),
-                                        <div key={index} className="customers-modal-card">
-                                          <span style={{ fontSize: "15px", color: "white" }}>{customerData.firstname + " " + customerData.lastname}</span>
-                                          <Img customersDisplayAvatar={customerData.profilepic.public_id} alt="Customer avatar"></Img>
-                                        </div>)
-                                  }))
-                                }
-                              })
-                            ]
-                          }
-                        </div>
-                      </div>
 
-                    ]
-                  }
+          {(!coursesCardExist && courseTrainerData) &&
+            [
+              loading && <section className="smooth spinner" >{ }</section>,
+              <p className="courses-navbar">Courses Amount:
+                <span className="amount-item">{coursesData.length}</span>
+                <button
+                  className="navbar-btn"
+                  onClick={toggleFilteredCoursesModal}
+                >{toggleFilteredCourses ? "Courses With Customers" : "All Courses"}</button>
+              </p>,
+              coursesData.map((item) =>
+                <div key={item._id} className="course-card-container">
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Img courseAvatar={item.picture.public_id} alt="Course avatar"></Img>
+                  </div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <div style={{ display: "flex", flexDirection: "column", width: "7em", padding: "0.5em 0 0 0.8em", justifyContent: "space-evenly" }}>
+                    <div className="course-name">{item.name}</div>
+                    <div className="course-titles">Category: <span className="items">{item.category}</span></div>
+                    <div className="course-titles">Price: <span className="admin-numeric-items">{item.cost} ₪</span></div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", width: "10em", padding: "0.5em 0 0 1em", justifyContent: "space-evenly" }}>
+                    <div className="course-titles">Description: <span className="items">{item.description}</span></div>
+                    <div className="course-titles">Lesson Time: <span className="admin-numeric-items" >{item.lessontime} Minutes</span></div>
+                  </div>
+                  <div className="course-titles courseUsers-title">
+                    {
+                      courseTrainerData.map((trainer, index) => {
+                        if (trainer._id === item.trainer) {
+                          return (
+                            <>
+                              <div style={{ display: "flex", flexDirection: "row" }}>
+                                <div key={index} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                  <span style={{ paddingBottom: "0.3em", fontFamily: "Lucida Sans" }}>Trainer</span>
+                                  <Img courseTrainerAvatar={trainer.profilepic.public_id} alt="Trainer avatar"></Img>
+                                </div>
+                                <div style={{ display: "block", alignItems: "center", marginLeft: "0.5em" }}>
+                                  <div style={{ fontSize: "15px", color: "whitesmoke", marginBottom: "1em", fontFamily: "Lucida Sans", fontWeight: "bold" }}>{trainer.firstname + " " + trainer.lastname}</div>
+                                  <div className="course-trainerDetails">
+                                    <span style={{ color: "#334598" }}>ID:</span>
+                                    <span style={{ fontSize: "12px", color: "white" }}>{trainer._id}</span>
+                                    <div style={{ color: "#334598" }}> Rate:
+                                      {trainer.rating.rate}
+                                    </div>
+                                    <div style={{ color: "#334598" }}>Count:
+                                      {trainer.rating.count}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )
+                        }
+                      })
+                    }
+                    <Marginer direction="vertical" margin="0.5em" />
+
+                    <div className="courseCustomer-title">Customers
+                      {item.customers.length === 0 ?
+                        <div className="course-customer-length"
+                          style={{ color: "rgb(226, 98, 98)" }}
+                        > {item.customers.length} </div> :
+                        [
+                          <div
+                            className="course-customer-length"
+                            style={{ borderRadius: "50%", color: "rgb(54, 169, 71)" }}
+                          > {item.customers.length}
+                          </div>,
+                          <button
+                            className="course-customer-btn"
+                            onClick={() => { getCourseCustomersData(item.customers) }}
+                          >View Customers
+                          </button>,
+                          (customersModal && courseCustomersData) &&
+                          <div className="modal" >
+                            <div className="overlay-customers" onClick={toggleModal}></div>
+                            <div className="modal-customer-container" >
+                              {
+                                courseCustomersData.map((customerData, index) => {
+                                  return (
+                                    <div key={index} className="customers-modal-card">
+                                      <span style={{ fontSize: "15px", color: "white" }}>{customerData.firstname + " " + customerData.lastname}</span>
+                                      <Img customersDisplayAvatar={customerData.profilepic.public_id} alt="Customer avatar"></Img>
+                                    </div>
+                                  )
+                                })
+                              }
+                            </div>
+                          </div>
+                        ]
+                      }
+                    </div>
+
+                  </div>
+
+                  {/* <button onClick={() => { deleteCourseById(item._id) }} className="item-btn">Remove Course</button> */}
                 </div>
-                <Marginer direction="vertical" margin="0.5em" />
-                {/* <button onClick={() => { deleteCourseById(item._id) }} className="item-btn">Remove Course</button> */}
-              </div>
-            )
+              )
+            ]
           }
         </div>
 
@@ -531,10 +604,10 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
         {(!coursesCardExist) &&
           <div>
-            <button onClick={closeCoursesPageHandler} className="close-card-btn users-close-btn"></button>
-            <p className="amount-container">Courses Amount:
-              <span className="amount-item">{coursesData.length}</span>
-            </p>
+            <button
+              onClick={closeCoursesPageHandler}
+              className="close-card-btn users-close-btn"
+            ></button>
           </div>
         }
       </div>
@@ -544,3 +617,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 }
 
 export default AdminPage
+
+
+
+
+
