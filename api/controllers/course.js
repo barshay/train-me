@@ -190,6 +190,23 @@ module.exports = {
         }
     },
 
+    // getAllTrainerCustomersHandle: async (req, res) => {
+    //     const trainerID = req.body
+    //     let filteredCoursesByTrainerId = {};
+    //     let filteredArr = [];
+    //     try {
+    //         for(const i in data) {
+    //             if (data[i].trainer === trainerID) {
+    //                 // console.log(trainerID);
+    //                 filteredCoursesByTrainerId[i] = data[i];
+    //                 filteredArr.push(filteredCoursesByTrainerId[i]);
+    //             }
+    //         }
+    //         return serverResponse(res, 200, filteredArr);
+    //     } catch (e){
+    //         return serverResponse(res, 500, { message: "internal error occured " + e });
+    //     }
+    // },
 
     getCourseCustomersData: async (req, res) => {
         try {

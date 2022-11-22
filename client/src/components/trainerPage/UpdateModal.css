@@ -7,6 +7,7 @@ body.active-modal {
     background-color: rgb(52, 73, 146);
     border-radius: 2em;
     width: 4.7em;
+    cursor: url(/Users/evyatarhale/GO-CODE/train-me/client/src/images/circlePointer.png), pointer;
     /* padding: 10px 20px;
     display: block;
     margin: 100px auto 0;
@@ -99,7 +100,8 @@ body.active-modal {
 .close-modal {
     background-color: rgb(100, 100, 205);
     margin: 1em;
-    color: rgb(52, 50, 50)
+    color: rgb(52, 50, 50);
+    cursor: pointer;
 }
 
 .close-modal:hover {
@@ -120,7 +122,8 @@ body.active-modal {
 .update-modal {
     background-color: rgb(100, 100, 205);
     margin: 1em;
-    color: rgb(52, 50, 50)
+    color: rgb(52, 50, 50);
+    cursor: pointer;
 }
 
 .update-modal:hover {

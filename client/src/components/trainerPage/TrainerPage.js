@@ -309,10 +309,8 @@ const TrainerPage = ({ trainerAvatar }) => {
   // }
 
   const removeCourseHandler = async (id) => {
-    // toggleData();
     setIsDataExist(false);
     console.log("isDataExist: ", isDataExist);
-    // if (!isDataExist) {
     try {
       const deleteCourseUrl = `http://localhost:8000/course/${id}`;
       const response = await axios.delete(deleteCourseUrl);
@@ -325,8 +323,6 @@ const TrainerPage = ({ trainerAvatar }) => {
     } catch (error) {
       console.log(error);
     }
-    // }
-
   }
 
   const getCourseCustomers = async (customersArr) => {
@@ -359,6 +355,10 @@ const TrainerPage = ({ trainerAvatar }) => {
   const toggleCustomersModal = () => {
     setCustomersModal(!customersModal);
   };
+
+  const getAllCustomersHandler = () => {
+    
+  }
 
 
   return (
@@ -535,10 +535,10 @@ const TrainerPage = ({ trainerAvatar }) => {
                           <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
                           <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
                           <div className="course-title">Customers:
-                            <div className="numeric-items" >Amount: {course.customers.length}
+                            <span className="customers-amount" >{course.customers.length}
                               {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
-                            </div>
-                            <button onClick={() => { getCourseCustomers(course.customers) }}>
+                            </span>
+                            <button className="viewCustomers-btn" onClick={() => { getCourseCustomers(course.customers) }}>
                               View Customer/s
                             </button>
 
@@ -583,9 +583,9 @@ const TrainerPage = ({ trainerAvatar }) => {
                               <span className="numeric-items">{course.customers.length}</span>
                               :
                               [
-                                <div className="numeric-items" >Amount: {course.customers.length}
+                                <span className="customers-amount" >{course.customers.length}
                                   {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
-                                </div>,
+                                </span>,
                                 // <span>
                                 //   {course.customers.map((customer, index) =>
                                 //     <div style={{ height: "0.7em", display: "flex" }}>
@@ -593,7 +593,7 @@ const TrainerPage = ({ trainerAvatar }) => {
                                 //     </div>
                                 //   )}
                                 // </span>
-                                <button onClick={() => { getCourseCustomers(course.customers) }}>
+                                <button className="viewCustomers-btn" onClick={() => { getCourseCustomers(course.customers) }}>
                                   View Customer/s
                                 </button>,
 

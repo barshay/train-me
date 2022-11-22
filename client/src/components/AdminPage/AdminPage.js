@@ -220,7 +220,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     }
   }
 
-  const CommonDefinitionForCourses = () => {
+  const commonSettingDefinitionForCourses = () => {
     setCoursesCardExist(true);
     setCoursesMessageFlag(true);
 
@@ -253,7 +253,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       setCourseTrainerData(data[1]);
       // console.log("CourseTrainerData: ", courseTrainerData);
 
-      CommonDefinitionForCourses();
+      commonSettingDefinitionForCourses();
 
       if (!toggleFilteredCourses) {
         setToggleFilteredCourses(!toggleFilteredCourses)
@@ -298,7 +298,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       setCourseTrainerData(data[1]);
       // console.log("CourseTrainerData: ", courseTrainerData);
 
-      CommonDefinitionForCourses();
+      commonSettingDefinitionForCourses();
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -324,21 +324,21 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
   const toggleModal = () => {
     setCustomersModal(!customersModal);
+    setLoading(!loading);
   }
 
   const toggleFilteredCoursesModal = () => {
-    // console.log("Before: ", toggleFilteredCourses)
-    // setToggleFilteredCourses(!toggleFilteredCourses);
-    // console.log("After: ", toggleFilteredCourses)
-    if (toggleFilteredCourses == true) {
-      console.log("true-get filtered courses");
+    if (toggleFilteredCourses) {
+      // setCoursesData([]);
+      // setCoursesMessageFlag(false);
       setLoading(true);
       FilteredCoursesWithCustomers();
       setToggleFilteredCourses(!toggleFilteredCourses);
     } else {
-      console.log("false-get all courses");
-      setLoading(true);
+      // setCoursesData([]);
+      // setCoursesMessageFlag(false);
       getCoursesApiAnswer();
+      setLoading(true);
       setToggleFilteredCourses(!toggleFilteredCourses);
     }
   }
@@ -388,7 +388,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
               || (trainersData.length > 0 || trainerMessageFlag)) ?
               "allCards-container" :
               (coursesData.length > 0 || coursesMessageFlag) ?
-                'allAdminCoursesCards-container' :
+                'allAdminCoursesCards-container' : 
                 'admin-image-home-container'}`
           }
         >
@@ -424,22 +424,25 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             <span className="close-message" onClick={closeMessageHandler}>✖</span>]
           }
           {!customerCardExist &&
-            customersData.map((item) =>
-              <div key={item._id} className="card-container">
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Img customersDisplayAvatar={item.profilepic.public_id} alt="Customer avatar"></Img>
+            [
+              loading && <section className="smooth spinner" >{ }</section>,
+              customersData.map((item) =>
+                <div key={item._id} className="card-container">
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Img customersDisplayAvatar={item.profilepic.public_id} alt="Customer avatar"></Img>
+                  </div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                  <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                  <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                  <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                  <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
+                  <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <button onClick={() => { deleteCustomerById(item._id) }} className="item-btn">Remove Customer</button>
                 </div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
-                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
-                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
-                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
-                <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
-                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <button onClick={() => { deleteCustomerById(item._id) }} className="item-btn">Remove Customer</button>
-              </div>
-            )
+              )
+            ]
           }
 
           {trainersCardEmpty &&
@@ -447,22 +450,25 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             <span className="close-message" onClick={closeMessageHandler}>✖</span>]
           }
           {!trainerCardExist &&
-            trainersData.map((item) =>
-              <div key={item._id} className="card-container">
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Img trainersDisplayAvatar={item.profilepic.public_id} alt="Trainer avatar"></Img>
+            [
+              loading && <section className="smooth spinner" >{ }</section>,
+              trainersData.map((item) =>
+                <div key={item._id} className="card-container">
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Img trainersDisplayAvatar={item.profilepic.public_id} alt="Trainer avatar"></Img>
+                  </div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                  <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                  <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                  <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                  <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
+                  <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                  <Marginer direction="vertical" margin="0.5em" />
+                  <button onClick={() => { deleteTrainerById(item._id) }} className="item-btn">Remove Trainer</button>
                 </div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
-                <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
-                <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
-                <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
-                <div className="titles">Age: <span className="numeric-items">{item.age}</span></div>
-                <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                <Marginer direction="vertical" margin="0.5em" />
-                <button onClick={() => { deleteTrainerById(item._id) }} className="item-btn">Remove Trainer</button>
-              </div>
-            )
+              )
+            ]
           }
 
           {coursesCardEmpty &&
@@ -476,7 +482,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
               <p className="courses-navbar">Courses Amount:
                 <span className="amount-item">{coursesData.length}</span>
                 <button
-                  className="navbar-btn"
+                  className={toggleFilteredCourses ? "navbar-btn" : "filtered-navbar-btn"}
                   onClick={toggleFilteredCoursesModal}
                 >{toggleFilteredCourses ? "Courses With Customers" : "All Courses"}</button>
               </p>,
@@ -489,7 +495,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   <div style={{ display: "flex", flexDirection: "column", width: "7em", padding: "0.5em 0 0 0.8em", justifyContent: "space-evenly" }}>
                     <div className="course-name">{item.name}</div>
                     <div className="course-titles">Category: <span className="items">{item.category}</span></div>
-                    <div className="course-titles">Price: <span className="admin-numeric-items">{item.cost} ₪</span></div>
+                    <div className="course-titles"><span className="admin-price">{item.cost} ₪</span></div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", width: "10em", padding: "0.5em 0 0 1em", justifyContent: "space-evenly" }}>
                     <div className="course-titles">Description: <span className="items">{item.description}</span></div>

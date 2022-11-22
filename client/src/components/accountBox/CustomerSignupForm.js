@@ -177,7 +177,7 @@ export function CustomerSignupForm() {
       }));
       errorsConsole.age = "Age feild is mandatory!";
     };
-    if (gender === "Choose your gender") {
+    if (gender === "Choose your Gender please") {
       console.log(gender);
       isValid = false;
       setMandatoryErrors(prevState => ({
@@ -364,12 +364,12 @@ export function CustomerSignupForm() {
             placeholder="Gender"
             value={gender}
             onChange={(e) => { setGender(e.target.value) }}>
-            <option>Choose your gender please</option>
+            <option>Choose your Gender please</option>
             <option value="male">male</option>
             <option value="female">female</option>
           </select>
           {mandatoryErrors[gender] ?
-            <ErrorStyle>gender feild is mandatory!</ErrorStyle> : ''
+            <ErrorStyle>Gender feild is mandatory!</ErrorStyle> : ''
           }
           <Marginer direction="vertical" margin="0.5em" />
           <span style={{fontSize: '14px', textDecoration: 'underLine', color: 'gray'}}>Choose your Avatar here</span>
