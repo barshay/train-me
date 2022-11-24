@@ -137,9 +137,19 @@ module.exports = {
 
   deleteCustomerById: async (req, res) => {
     try {
-      const customerID = req.params.customerId;
-      const customer = await Customer.findOneAndDelete({ _id: customerID });
-      return serverResponse(res, 200, customer);
+      const id = req.params.customerId;
+      console.log(id)
+      const customer = await Customer.findById(id);
+      console.log(customer)
+      const imgId = customer.profilepic.public_id;
+      if (imgId) {
+        await cloudinary.uploader.destroy(imgId);
+      }
+      await Customer.findOneAndDelete({ _id: customer });
+
+      const allCustomers = await Customer.find({});
+
+      return serverResponse(res, 200, allCustomers);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
     }

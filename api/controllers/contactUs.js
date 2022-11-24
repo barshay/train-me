@@ -37,9 +37,12 @@ module.exports = {
   deleteContactById: async (req, res) => {
     try {
       console.log(req.params);
-      const contactID = req.params.contactId;
-      const contact = await ContactUs.findOneAndDelete({ _id: contactID });
-      return serverResponse(res, 200, contact);
+      
+      await ContactUs.findOneAndDelete({ _id: req.params.contactId });
+
+      const allContactUs = await ContactUs.find({});
+
+      return serverResponse(res, 200, allContactUs);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occurred " + e });
     }

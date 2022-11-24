@@ -140,9 +140,19 @@ module.exports = {
 
   deleteTrainerById: async (req, res) => {
     try {
-      const trainerID = req.params.trainerId;
-      const trainer = await Trainer.findOneAndDelete({ _id: trainerID });
-      return serverResponse(res, 200, trainer);
+      const id = req.params.trainerId;
+      console.log(id)
+      const trainerID = await Trainer.findById(id);
+      console.log(trainerID)
+      const imgId = trainerID.profilepic.public_id;
+      if (imgId) {
+        await cloudinary.uploader.destroy(imgId);
+      }
+      await Trainer.findOneAndDelete({ _id: trainerID });
+
+      const allTrainers = await Trainer.find({}); 
+
+      return serverResponse(res, 200, allTrainers);
     } catch (e) {
       return serverResponse(res, 500, { message: "internal error occured " + e });
     }

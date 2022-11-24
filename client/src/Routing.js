@@ -101,8 +101,8 @@ const Routing = () => {
                 isLoggedIn ? ( */}
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="customer" element={<CustomerPage loading={loading} customerAvatar={customerAvatar} />} />
-                    <Route path="trainer" element={<TrainerPage loading={loading} trainerAvatar={trainerAvatar} />} />
+                    <Route path="customer" element={<CustomerPage loading={loading} setLoading={setLoading} customerAvatar={customerAvatar} />} />
+                    <Route path="trainer" element={<TrainerPage loading={loading} setLoading={setLoading} trainerAvatar={trainerAvatar} />} />
                     <Route path="admin" element={<AdminPage loading={loading} setLoading={setLoading} adminAvatar={adminAvatar} />} />
                     <Route path="account" element={<AccountBox />} />
                     <Route path="adminaccount" element={<AdminAccountPage />} />

@@ -77,7 +77,7 @@ module.exports = {
     updateCourse: async (req, res) => {
         try {
             const updates = Object.keys(req.body);
-            console.log(updates)
+            // console.log(updates)
             const isValidOperation = updates.every((update) =>
                 coursesAllowedUpdates.includes(update)
             );
@@ -128,7 +128,20 @@ module.exports = {
                 (courseProduct[update] = data[update])
             );
             await courseProduct.save();
-            return serverResponse(res, 200, courseProduct);
+
+            const trainerID = courseProduct.trainer
+            console.log("trainerID: ", trainerID)
+            let filteredCoursesByTrainerId = {};
+            let filteredArr = [];
+            const allCourses = await Course.find({})
+            for (const i in allCourses) {
+                if (allCourses[i].trainer.equals(trainerID)) {
+                    filteredCoursesByTrainerId[i] = allCourses[i];
+                    filteredArr.push(filteredCoursesByTrainerId[i]);
+                } 
+            }
+            // console.log(filteredArr);
+            return serverResponse(res, 200, filteredArr);
         } catch (err) {
             return serverResponse(res, 500, {
                 message: "Internal error while trying to update course",
@@ -136,10 +149,6 @@ module.exports = {
         }
     },
 
-    /**  
-        how to get the trainer id from front via params 
-        to fetch only the courses belonging to that trainer 
-     */
     getAllCourses: async (req, res) => {
         try {
             const allCourses = await Course.find({})
@@ -161,8 +170,6 @@ module.exports = {
         }
     },
 
-    
-
     getCourseById: async (req, res) => {
         try {
             console.log(req.params);
@@ -183,34 +190,48 @@ module.exports = {
                 await cloudinary.uploader.destroy(imgId);
             }
 
-            const course = await Course.findOneAndDelete({ _id: courseProduct });
-            return serverResponse(res, 200, course);
+            await Course.findOneAndDelete({ _id: courseProduct });
+
+            let filteredCoursesByTrainerId = {};
+            let filteredArr = [];
+            const allCourses = await Course.find({})
+            const trainerID = courseProduct.trainer
+            // console.log("courseProduct: ", courseProduct.trainer)
+            for (const i in allCourses) {
+                if (allCourses[i].trainer.equals(trainerID)) {
+                    filteredCoursesByTrainerId[i] = allCourses[i];
+                    filteredArr.push(filteredCoursesByTrainerId[i]);
+                }
+            }
+            // console.log(filteredArr);
+            return serverResponse(res, 200, filteredArr);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occurred " + e });
         }
     },
 
-    // getAllTrainerCustomersHandle: async (req, res) => {
-    //     const trainerID = req.body
-    //     let filteredCoursesByTrainerId = {};
-    //     let filteredArr = [];
-    //     try {
-    //         for(const i in data) {
-    //             if (data[i].trainer === trainerID) {
-    //                 // console.log(trainerID);
-    //                 filteredCoursesByTrainerId[i] = data[i];
-    //                 filteredArr.push(filteredCoursesByTrainerId[i]);
-    //             }
-    //         }
-    //         return serverResponse(res, 200, filteredArr);
-    //     } catch (e){
-    //         return serverResponse(res, 500, { message: "internal error occured " + e });
-    //     }
-    // },
+    getAllTrainerCourses: async (req, res) => {
+        const { trainerID } = req.body
+        console.log("trainerID: ", trainerID)
+        let filteredCoursesByTrainerId = {};
+        let filteredArr = [];
+        const allCourses = await Course.find({})
+        try {
+            for (const i in allCourses) {
+                if (allCourses[i].trainer == trainerID) {
+                    filteredCoursesByTrainerId[i] = allCourses[i];
+                    filteredArr.push(filteredCoursesByTrainerId[i]);
+                }
+            }
+            return serverResponse(res, 200, filteredArr);
+        } catch (e) {
+            return serverResponse(res, 500, { message: "internal error occured " + e });
+        }
+    },
 
     getCourseCustomersData: async (req, res) => {
         try {
-            const courseItems  = req.body
+            const courseItems = req.body
             const allCustomers = await Customer.find({})
             const filteredCoursesArr = [];
             for (const x in allCustomers) {
@@ -219,7 +240,7 @@ module.exports = {
                         filteredCoursesArr.push(allCustomers[x]);
                     }
                 }
-        }
+            }
             // console.log("filteredCoursesArr: ", filteredCoursesArr);
             return serverResponse(res, 200, filteredCoursesArr);
         } catch (e) {

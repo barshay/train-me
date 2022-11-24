@@ -114,7 +114,9 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       const contactUsUrl = `http://localhost:8000/contactUs/${id}`;
       const response = await axios.delete(contactUsUrl);
       console.log(response);
-      getContactUsApiAnswer();
+      const data = await response.data
+      console.log(data);
+      setContactUsData(data);
     } catch (error) {
       console.log(error);
     }
@@ -164,7 +166,9 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       const contactUsUrl = `http://localhost:8000/trainer/${id}`;
       const response = await axios.delete(contactUsUrl);
       console.log(response);
-      getTrainersApiAnswer();
+      const data = await response.data
+      console.log(data);
+      setTrainersData(data);
     } catch (error) {
       console.log(error);
     }
@@ -214,7 +218,9 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       const contactUsUrl = `http://localhost:8000/customer/${id}`;
       const response = await axios.delete(contactUsUrl);
       console.log(response);
-      getCustomersApiAnswer();
+      const data = await response.data
+      console.log(data);
+      setCustomersData(data);
     } catch (error) {
       console.log(error);
     }
@@ -617,7 +623,6 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           </div>
         }
       </div>
-
     </>
   )
 }

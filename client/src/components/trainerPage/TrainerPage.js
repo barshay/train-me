@@ -8,9 +8,8 @@ import { FileInput, PreviewPicture } from './styledHelper';
 import UpdateModal from './UpdateModal';
 import './UpdateModal.css';
 
-const TrainerPage = ({ trainerAvatar }) => {
+const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const { trainerName, trainerID } = useContext(MyContext);
-
   const [mandatoryErrors, setMandatoryErrors] = useState([]);
   const [errors, setErrors] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -213,66 +212,59 @@ const TrainerPage = ({ trainerAvatar }) => {
       inputFileRef.current.value = null;
     }
   };
+  // const fetchAllTrainerCourses = async (dataID) => {
+  //   console.log("ok 2")
+  //   console.log("Data: ", dataID)
+  //     axios({
+  //       method: 'post',
+  //       url: "http://localhost:8000/course/trainerCourses",
+  //       headers: { 'content-type': 'application/json' },
+  //       data: dataID
+  //     }).then((res) => {
+  //       console.log('Fetching trainer Customers ', res.data);
+  //       console.log("ok 3")
+  //       return res;
+  //     }).catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
-  let filteredCoursesByTrainerId = {};
-  let filteredArr = [];
-  const getAllCoursesHandle = async () => {
-
+  const getAllTrainerCoursesHandler = (trainerID) => {
+    // setLoading(true);
+    // console.log("trainerID: ", trainerID)
     if (isDataExist) {
       console.log("return");
       return;
     };
+    const id = {
+      trainerID
+    }
 
-    // console.log(trainerID);
-    // axios({
-    //   method: 'post',
-    //   url: "http://localhost:8000/course/courseById",
-    //   headers: { 'content-type': 'application/json' },
-    //   data: trainerID
-    // }).then((res) => {
-    //   console.log(res.data);
+    // console.log("ok 1")
+    // const data = fetchAllTrainerCourses(trainerID)
+    // setIsDataExist(true);
+    // setFilteredCoursesArr(data);
+    // setPostCoursePage(false);
+    // setShowTrainerHomePage(false);
+    // setMyCoursesPage(true);
 
-    // })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   })
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/trainerCourses",
+      headers: { 'content-type': 'application/json' },
+      data: id
+    }).then((res) => {
+      console.log('Fetching trainer Customers ', res.data);
+      setIsDataExist(true);
+      setFilteredCoursesArr(res.data);
 
-    // axios.get('http://localhost:8000/course', {
-    //   params: {
-    //     ID: trainerID
-    //   }
-    // })
-    //   .then(function (response) {
-    //     console.log(response.data);
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err);
-    //   })
-
-    try {
-      const allCoursesUrl = 'http://localhost:8000/course';
-      const response = await axios.get(allCoursesUrl);
-      console.log(response);
-      const data = await response.data;
-
-      for (const i in data) {
-        if (data[i].trainer === trainerID) {
-          // console.log(trainerID);
-          filteredCoursesByTrainerId[i] = data[i];
-          filteredArr.push(filteredCoursesByTrainerId[i]);
-        }
-      }
-      setIsDataExist(true)
-      setFilteredCoursesArr(filteredArr);
-      // console.log(filteredCoursesByTrainerId);
-      // console.log(filteredArr);
-      // console.log(filteredCoursesArr);
+      // setLoading(false);
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
       setMyCoursesPage(true);
-    } catch (error) {
+    }).catch((error) => {
       console.log(error);
-    }
+    });
   }
 
   const closeCoursesPage = () => {
@@ -280,13 +272,12 @@ const TrainerPage = ({ trainerAvatar }) => {
     setMyCoursesPage(false);
     setToggleFiltered(false);
     setFilteredCourses([]);
+    // setFilteredCoursesArr([]);
     setIsDataExist(false);
   }
 
   const filteredCoursesByExistingCustomer = () => {
     const filtered = [];
-    // getAllCoursesHandle();
-    // console.log("im in");
     console.log(filteredCoursesArr);
     for (const i in filteredCoursesArr) {
       if (filteredCoursesArr[i].customers.length > 0) {
@@ -303,20 +294,16 @@ const TrainerPage = ({ trainerAvatar }) => {
     setFilteredCourses([]);
   }
 
-  // const toggleData = () => {
-  //   setIsDataExist(false);
-  //   console.log("isDataExist: ", isDataExist)
-  // }
-
   const removeCourseHandler = async (id) => {
     setIsDataExist(false);
-    console.log("isDataExist: ", isDataExist);
+    // console.log("isDataExist: ", isDataExist);
     try {
       const deleteCourseUrl = `http://localhost:8000/course/${id}`;
       const response = await axios.delete(deleteCourseUrl);
-      console.log(response);
-      // const data = await response.data;
-      getAllCoursesHandle();
+      const data = await response.data;
+      console.log("data After removed: ", data);
+      // getAllTrainerCoursesHandler(trainerID);
+      setFilteredCoursesArr(data)
       if (toggleFiltered) {
         filteredCoursesByExistingCustomer();
       }
@@ -356,14 +343,19 @@ const TrainerPage = ({ trainerAvatar }) => {
     setCustomersModal(!customersModal);
   };
 
-  const getAllCustomersHandler = () => {
-    
+  const getAllCoursesCustomers = async () => {
+    try {
+
+    } catch(err) {
+      console.warn(err);    
+    }
   }
 
-
   return (
-    <>
+    // <>
+    <MyContext.Provider value={{filteredCoursesArr, setFilteredCoursesArr}}>
       <div className="trainer-page-container">
+        {/* {loading && <section className="smooth spinner" >{ }</section>} */}
         {showTrainerHomePage && <div className="trainer-image-home-container"></div>}
         {postCoursePage &&
           <div className="popup-container">
@@ -502,7 +494,8 @@ const TrainerPage = ({ trainerAvatar }) => {
           (filteredCoursesArr.length > 0 && myCoursesPage) &&
           <div className="my-courses-form" >
             <div className="courses-buttons-div">
-              <button className="close-postCourse-btn" onClick={() => { closeCoursesPage(); }}>{ }</button>
+            {loading && <section className="smooth spinner" >{ }</section>}
+              <button className="close-postCourse-btn" onClick={closeCoursesPage}>{ }</button>
               <div className="filteredButtons-container">
                 {
                   !toggleFiltered
@@ -560,7 +553,13 @@ const TrainerPage = ({ trainerAvatar }) => {
                           </div>
                         </div>
                         <div className="card-actions">
-                          <UpdateModal courseId={course._id} />
+                          <UpdateModal
+                            setLoading={setLoading}
+                            loading={loading}
+                            courseId={course._id}
+                            setFilteredCourses={setFilteredCoursesArr}
+                            filteredCourses={filteredCoursesArr}
+                          />
                           <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
                         </div>
                       </div>
@@ -643,16 +642,18 @@ const TrainerPage = ({ trainerAvatar }) => {
             <button className="trainer-actions-btn" onClick={() => { handleCoursePopup() }} >
               Add a new Course
             </button>
-            <button className="trainer-actions-btn" onClick={() => { getAllCoursesHandle() }} >
+            <button className="trainer-actions-btn" onClick={() => { getAllTrainerCoursesHandler(trainerID) }} >
               My Courses
             </button>
-            <button className="trainer-actions-btn" onClick={() => { getAllCoursesHandle() }} >
+            <button className="trainer-actions-btn" onClick={() => { getAllTrainerCoursesHandler(trainerID) }} >
               My Customers
             </button>
           </div>
         </div>
       </div>
-    </>
+       </MyContext.Provider>
+      // </>
+
   )
 }
 

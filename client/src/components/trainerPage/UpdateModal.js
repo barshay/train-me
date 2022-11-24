@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useContext } from "react";
 import "./UpdateModal.css";
 import { FileInput, PreviewPicture } from './styledHelper';
+import MyContext from '../../MyContext';
 import axios from 'axios';
 
-const UpdateModal = ({courseId}) => {
+const UpdateModal = ({ courseId, loading, setLoading }) => {
+    const { filteredCoursesArr, setFilteredCoursesArr } = useContext(MyContext);
     const [modal, setModal] = useState(false);
 
     const [mandatoryErrors, setMandatoryErrors] = useState([]);
@@ -14,6 +16,7 @@ const UpdateModal = ({courseId}) => {
     const [updatedCost, setUpdatedCost] = useState('');
 
     const toggleModal = () => {
+        console.log(filteredCoursesArr);
         setModal(!modal);
         setUpdatedPicture('');
         setUpdatedLessonTime('');
@@ -48,9 +51,10 @@ const UpdateModal = ({courseId}) => {
     }
 
     let isValid = true;
-    const updateCourseHandler = async (id, e) => {
+    const updateCourseHandler = async (e) => {
+        e.preventDefault();
         console.log("ID: ", courseId);
-        // e.preventDefault();
+        // setLoading(true);
         let errorsConsole = {};
         setErrors([]);
         setMandatoryErrors([]);
@@ -122,21 +126,13 @@ const UpdateModal = ({courseId}) => {
             data: updatedCourseToAddToDB
         }).then((res) => {
             console.log('Updating a Course ', res.data);
-
+            setFilteredCoursesArr(res.data);
+            // setLoading(false);
+            setModal(!modal);
+            console.log("filteredCoursesArr: ", filteredCoursesArr);
         }).catch((error) => {
             console.log(error);
         });
-
-
-        // try {
-        //     const updateCourseUrl = `http://localhost:8000/course/${id}`;
-        //     const response = await axios.put(updateCourseUrl);
-        //     console.log(response);
-        //     const data = await response.data;
-
-        // } catch (error) {
-        //     console.log(error);
-        // }
     }
 
     return (
@@ -149,6 +145,7 @@ const UpdateModal = ({courseId}) => {
                 <div className="modal">
                     <div onClick={toggleModal} className="overlay"></div>
                     <div className="modal-content-container">
+                        {loading && <section className="smooth spinner" >{ }</section>}
                         <div className={updatedPicture ? "modal-with-image" : "modal-labels"}>
                             <input
                                 className="modal-form-field"
@@ -203,7 +200,7 @@ const UpdateModal = ({courseId}) => {
                         </div>
 
                         <div className="close-update-modal-container">
-                            <button className="update-modal" onClick={() => { updateCourseHandler() }}>
+                            <button className="update-modal" onClick={(e) => { updateCourseHandler(e) }}>
                                 UPDATE
                             </button>
                             <button className="close-modal" onClick={toggleModal}>
