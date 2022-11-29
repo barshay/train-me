@@ -22,6 +22,8 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const [isDataExist, setIsDataExist] = useState(false);
   const [customersData, setCustomersData] = useState([]);
   const [customersModal, setCustomersModal] = useState(false);
+  const [allCustomersPage, setAllCustomersPage] = useState(false);
+  const [allCoursesCustomersData, setAllCoursesCustomersData] = useState([]);
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -185,6 +187,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     setShowTrainerHomePage(false);
     setMyCoursesPage(false);
     setIsDataExist(false);
+    setAllCustomersPage(false);
   }
 
   const closePostCourseHandler = () => {
@@ -212,22 +215,6 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       inputFileRef.current.value = null;
     }
   };
-  // const fetchAllTrainerCourses = async (dataID) => {
-  //   console.log("ok 2")
-  //   console.log("Data: ", dataID)
-  //     axios({
-  //       method: 'post',
-  //       url: "http://localhost:8000/course/trainerCourses",
-  //       headers: { 'content-type': 'application/json' },
-  //       data: dataID
-  //     }).then((res) => {
-  //       console.log('Fetching trainer Customers ', res.data);
-  //       console.log("ok 3")
-  //       return res;
-  //     }).catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
 
   const getAllTrainerCoursesHandler = (trainerID) => {
     // setLoading(true);
@@ -239,14 +226,6 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     const id = {
       trainerID
     }
-
-    // console.log("ok 1")
-    // const data = fetchAllTrainerCourses(trainerID)
-    // setIsDataExist(true);
-    // setFilteredCoursesArr(data);
-    // setPostCoursePage(false);
-    // setShowTrainerHomePage(false);
-    // setMyCoursesPage(true);
 
     axios({
       method: 'post',
@@ -261,6 +240,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       // setLoading(false);
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
+      setAllCustomersPage(false);
       setMyCoursesPage(true);
     }).catch((error) => {
       console.log(error);
@@ -312,48 +292,75 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     }
   }
 
-  const getCourseCustomers = async (customersArr) => {
-    try {
-      setCustomersData([]);
-      console.log("Customers Array: ", customersArr);
-      const allCustomersUrl = "http://localhost:8000/customer";
-      const response = await axios.get(allCustomersUrl);
-      console.log(response);
-      let data = await response.data;
-      for (let x = 0; x < data.length; x++) {
-        for (let y = 0; y < customersArr.length; y++) {
-          if (data[x]._id === customersArr[y]) {
-            if (!customersData.includes(customersArr[y])) {
-              setCustomersData(prevState => ([
-                ...prevState,
-                data[x]
-              ]));
-            }
-          }
-        }
-      }
+  const getCourseCustomers = (customersArr) => {
+    setCustomersData([]);
+    // console.log("Customers Array: ", customersArr);
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/courseCustomers",
+      headers: { 'content-type': 'application/json' },
+      data: customersArr
+    }).then((res) => {
+      console.log('Fetching customers ', res.data);
+      setCustomersData(res.data);
       toggleCustomersModal(!customersModal);
-      console.log("Customers Data:  ", customersData);
-    } catch (err) {
-      console.log(err);
-    }
+      // console.log("Customers Data:  ", customersData);
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   const toggleCustomersModal = () => {
     setCustomersModal(!customersModal);
   };
 
-  const getAllCoursesCustomers = async () => {
-    try {
-
-    } catch(err) {
-      console.warn(err);    
+  const getAllCoursesCustomers = (trainerID) => {
+    console.log(trainerID);
+    const id = {
+      trainerID
     }
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/coursesCustomers",
+      headers: { 'content-type': 'application/json' },
+      data: id
+    }).then((res) => {
+      console.log('Fetching All Courses Customers ', res.data);
+      setAllCoursesCustomersData(res.data);
+      console.log(allCoursesCustomersData);
+      // setIsDataExist(true);
+
+      // setLoading(false);
+      setPostCoursePage(false);
+      setShowTrainerHomePage(false);
+      setMyCoursesPage(false);
+      setIsDataExist(false);
+      setAllCustomersPage(true);
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response);
+      } else if (error.request) {
+        console.log(error.request);
+      } else if (error.message) {
+        console.log(error.message);
+      }
+    });
+  }
+
+  const closeAllCoursesCustomersPage = () => {
+    setShowTrainerHomePage(true);
+    // setMyCoursesPage(false);
+    // setToggleFiltered(false);
+    // setFilteredCourses([]);
+    // setIsDataExist(false);
+
+    setAllCustomersPage(false);
+
   }
 
   return (
     // <>
-    <MyContext.Provider value={{filteredCoursesArr, setFilteredCoursesArr}}>
+    <MyContext.Provider value={{ filteredCoursesArr, setFilteredCoursesArr }}>
       <div className="trainer-page-container">
         {/* {loading && <section className="smooth spinner" >{ }</section>} */}
         {showTrainerHomePage && <div className="trainer-image-home-container"></div>}
@@ -494,7 +501,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           (filteredCoursesArr.length > 0 && myCoursesPage) &&
           <div className="my-courses-form" >
             <div className="courses-buttons-div">
-            {loading && <section className="smooth spinner" >{ }</section>}
+              {loading && <section className="smooth spinner" >{ }</section>}
               <button className="close-postCourse-btn" onClick={closeCoursesPage}>{ }</button>
               <div className="filteredButtons-container">
                 {
@@ -517,7 +524,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                 filteredCourses.length > 0 ?
                   filteredCourses.map((course) =>
                     [
-                      <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div key={course._id} style={{ display: "flex", flexDirection: "column" }}>
                         <div className="courseCard-container" key={course._id}>
                           <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
                             <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
@@ -567,7 +574,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                   ) :
                   filteredCoursesArr.map((course) =>
                     [
-                      <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div key={course._id} style={{ display: "flex", flexDirection: "column" }}>
                         <div className="courseCard-container" key={course._id}>
                           <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
                             <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
@@ -626,6 +633,43 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           </div>
         }
 
+        {
+          allCustomersPage &&
+          [<div style={{ display: "flex", flexDirection: "column" }}>
+            <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesCustomersPage}>{ }</button>
+            <div className="allCoursesCustomers-container">
+              {
+                Object.keys(allCoursesCustomersData).map((keyName, keyIndex) => {
+                  return (
+                    <div key={keyIndex} className="allCardsAndTitlesHolder">
+                      <div className="allCoursesCustomers-course-title-holder">
+                        {keyName}
+                        <div className="customersAmount-insideTitle">{allCoursesCustomersData[keyName].length}</div>
+                      </div>
+                      <div className="allCoursesCustomers-allCardsHolder">
+                        {allCoursesCustomersData[keyName].map((customer, index) => {
+                          return (
+                            <div key={index} className="allCoursesCustomers-cardholder">
+                              <div >
+                                <Img courseAvatar={customer.profilepic.public_id} alt="Course avatar"></Img>
+                              </div>
+                              <div className="allCoursesCustomers-card-row">{customer.firstname + " " + customer.lastname}</div>
+                              <div className="allCoursesCustomers-card-row">{customer.email}</div>
+                              <div className="allCoursesCustomers-card-row">{customer.phone}</div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className="dashed-BorderBetweenCourses"></div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </div>
+          ]
+        }
+
         <div className="trainer-actions-container">
           {trainerName &&
             <div style={{ display: "flex" }}>
@@ -645,14 +689,14 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
             <button className="trainer-actions-btn" onClick={() => { getAllTrainerCoursesHandler(trainerID) }} >
               My Courses
             </button>
-            <button className="trainer-actions-btn" onClick={() => { getAllTrainerCoursesHandler(trainerID) }} >
+            <button className="trainer-actions-btn" onClick={() => { getAllCoursesCustomers(trainerID) }} >
               My Customers
             </button>
           </div>
         </div>
       </div>
-       </MyContext.Provider>
-      // </>
+    </MyContext.Provider >
+    // </>
 
   )
 }

@@ -406,3 +406,87 @@
     border: 1px dashed white;
     border-radius: 5px;
 }
+
+.allCoursesCustomers-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.allCardsAndTitlesHolder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.allCoursesCustomers-course-title-holder {
+    display: flex;
+    justify-content: center;
+    color: blue;
+    font-weight: bold;
+    font-family: fantasy;
+    height: 1.5em;
+}
+
+.allCoursesCustomers-allCardsHolder {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1em 1em 0 1em;
+    margin-bottom: 1em;
+}
+
+.allCoursesCustomers-cardholder {
+    display: block;
+    margin: 1em 1em 1em 1em;
+    padding: 0.4em 1em 0.4em 1em;
+    border-radius: 10px;
+    background-color: rgb(245, 237, 227);
+    box-shadow: inset 20px 20px 50px 10px rgb(239, 199, 206), 0 0 10px black;
+}
+
+.allCoursesCustomers-card-row {
+    /* padding-left: 0.2em; */
+    display: flex;
+    justify-content: center;
+}
+
+.dashed-BorderBetweenCourses {
+    border-bottom: 3px dotted rgba(61, 81, 126, 0.689);
+    margin: 0 5em 2em 5em;
+}
+
+.close-allCoursesCostomers-container {
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid rgb(185, 121, 121);
+    background-color: rgb(48, 44, 44);
+    opacity: 1;
+    height: 2em;
+    width: 2em;
+    margin-left: 2em;
+}
+
+.close-allCoursesCostomers-container:before {
+    content: "✖";
+    cursor: pointer;
+    color: white;
+    opacity: 0.8;
+}
+
+.close-allCoursesCostomers-container:hover {
+    background-color: red;
+}
+
+.customersAmount-insideTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dotted rgb(42, 51, 36);
+    border-radius: 50%;
+    margin-left: 1em;
+    width: 2em;
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+    filter: drop-shadow(15px 12px 0.8px rgb(191, 150, 191));
+}
