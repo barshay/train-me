@@ -7,6 +7,7 @@ import axios from 'axios';
 import { FileInput, PreviewPicture } from './styledHelper';
 import UpdateModal from './UpdateModal';
 import './UpdateModal.css';
+// import ButtonMailto from '../../assets/ButtonMailto';
 
 const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const { trainerName, trainerID } = useContext(MyContext);
@@ -519,7 +520,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                 </span>
               </div>
             </div>
-            <div className="allCoursesCards-container scroller">
+            <div className="allCoursesCards-container">
               {
                 filteredCourses.length > 0 ?
                   filteredCourses.map((course) =>
@@ -635,38 +636,52 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
 
         {
           allCustomersPage &&
-          [<div style={{ display: "flex", flexDirection: "column" }}>
-            <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesCustomersPage}>{ }</button>
-            <div className="allCoursesCustomers-container">
-              {
-                Object.keys(allCoursesCustomersData).map((keyName, keyIndex) => {
-                  return (
-                    <div key={keyIndex} className="allCardsAndTitlesHolder">
-                      <div className="allCoursesCustomers-course-title-holder">
-                        {keyName}
-                        <div className="customersAmount-insideTitle">{allCoursesCustomersData[keyName].length}</div>
-                      </div>
-                      <div className="allCoursesCustomers-allCardsHolder">
-                        {allCoursesCustomersData[keyName].map((customer, index) => {
-                          return (
-                            <div key={index} className="allCoursesCustomers-cardholder">
-                              <div >
-                                <Img courseAvatar={customer.profilepic.public_id} alt="Course avatar"></Img>
+          [
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", justifyContent: "space-between"}}>
+                <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesCustomersPage}>{ }</button>
+                <button
+                  className="mailToAll-btn"
+                  onClick={() => window.location = `mailto:${Object.keys(allCoursesCustomersData).map((keyName) => {
+                    return (allCoursesCustomersData[keyName].map((customer) => {
+                      return customer.email
+                    }));
+                  })
+                    }`}>Send E-Mail to All
+                </button>
+              </div>
+              <div className="allCoursesCustomers-container">
+                {
+                  Object.keys(allCoursesCustomersData).map((keyName, keyIndex) => {
+                    return (
+                      <div key={keyIndex} className="allCardsAndTitlesHolder">
+                        <div className="allCoursesCustomers-course-title-holder">
+                          {keyName}
+                          <div className="customersAmount-insideTitle">{allCoursesCustomersData[keyName].length}</div>
+                        </div>
+                        <div className="allCoursesCustomers-allCardsHolder">
+                          {allCoursesCustomersData[keyName].map((customer, index) => {
+                            return (
+                              <div key={index} className="allCoursesCustomers-cardholder">
+                                <div >
+                                  <Img courseAvatar={customer.profilepic.public_id} alt="Course avatar"></Img>
+                                </div>
+                                <div className="allCoursesCustomers-card-row">{customer.firstname + " " + customer.lastname}</div>
+                                {/* <div className="allCoursesCustomers-card-row">{customer.email}</div> */}
+                                {/* <ButtonMailto label="Write me an E-Mail" mailto="mailto:evyatar4988@gmail.com" /> */}
+                                <div className="allCoursesCustomers-card-row">{customer.phone}</div>
+                                <button className="mail-btn" onClick={() => window.location = `mailto:${customer.email}`}>Send E-Mail</button>
                               </div>
-                              <div className="allCoursesCustomers-card-row">{customer.firstname + " " + customer.lastname}</div>
-                              <div className="allCoursesCustomers-card-row">{customer.email}</div>
-                              <div className="allCoursesCustomers-card-row">{customer.phone}</div>
-                            </div>
-                          )
-                        })}
+                            )
+                          })}
+                        </div>
+                        <div className="dashed-BorderBetweenCourses"></div>
                       </div>
-                      <div className="dashed-BorderBetweenCourses"></div>
-                    </div>
-                  )
-                })
-              }
+                    )
+                  })
+                }
+              </div>
             </div>
-          </div>
           ]
         }
 

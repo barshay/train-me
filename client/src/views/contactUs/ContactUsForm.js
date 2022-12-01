@@ -289,7 +289,7 @@ const ContactUsForm = () => {
 
         <input
           className="form-field"
-          type="text"
+          type="textarea"
           placeholder="Message"
           value={message}
           onChange={(e) => { setMessage(e.target.value) }} />

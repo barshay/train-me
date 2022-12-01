@@ -57,7 +57,6 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
   const getContactUsApiAnswer = async () => {
     setLoading(true);
-    console.log("courseTrainerData: ", courseTrainerData);
     try {
       const contactUsUrl = 'http://localhost:8000/contactUs';
       const response = await axios.get(contactUsUrl);
@@ -394,7 +393,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
               || (trainersData.length > 0 || trainerMessageFlag)) ?
               "allCards-container" :
               (coursesData.length > 0 || coursesMessageFlag) ?
-                'allAdminCoursesCards-container' : 
+                'allAdminCoursesCards-container' :
                 'admin-image-home-container'}`
           }
         >
@@ -419,7 +418,12 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
                   <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
                   <Marginer direction="vertical" margin="0.5em" />
-                  <button onClick={() => { deleteContactById(item._id) }} className="item-btn">Remove Item</button>
+                  <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                    <button className="contactUs-item-btn"
+                      onClick={() => window.location = `mailto:${item.email}`}>Send E-Mail
+                    </button>
+                    <button onClick={() => { deleteContactById(item._id) }} className="contactUs-item-btn">Remove Item</button>
+                  </div>
                 </div>
               )
             ]
@@ -584,13 +588,18 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           }
         </div>
 
-        {(!contactCardExist) &&
+        {(!contactCardExist && contactUsData) &&
           <div style={{ display: "block", flexDirection: "row" }}>
             <button onClick={closeContactPageHandler} className="close-card-btn"></button>
-            <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete All</button>
             <p className="amount-container">Contact Amount:
               <span className="amount-item">{contactUsData.length}</span>
             </p>
+            <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete All</button>
+            <button
+              onClick={() => window.location = `mailto:${contactUsData.map((contact) => {
+                return contact.email
+              })}`}>Send E-Mail to All
+            </button>
           </div>
         }
 
@@ -611,6 +620,11 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             <p className="amount-container">Trainers Amount:
               <span className="amount-item">{trainersData.length}</span>
             </p>
+            <button
+              onClick={() => window.location = `mailto:${trainersData.map((trainer) => {
+                return trainer.email
+              })}`}>Send E-Mail to All
+            </button>
           </div>
         }
 
