@@ -6,7 +6,7 @@ import MyContext from '../../MyContext';
 import { Marginer } from '../marginer';
 import axios from 'axios';
 import '../trainerPage/UpdateModal.css';
-
+import BackToTopBtn from '../../customHooks/BackToTopBtn';
 
 const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   // setLoading(false);
@@ -26,7 +26,11 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   const [customerMessageFlag, setCustomerMessageFlag] = useState(false);
   const [trainerMessageFlag, setTrainerMessageFlag] = useState(false);
   const [coursesMessageFlag, setCoursesMessageFlag] = useState(false);
+
   const [toggleFilteredCourses, setToggleFilteredCourses] = useState(true);
+  const [trainerLabelID, setTrainerLabelID] = useState('');
+  const [isFilteredById, setIsFilteredById] = useState(false);
+
 
   const {
     adminName,
@@ -53,7 +57,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     coursesData.length > 0 && setCoursesCardExist(false);
     (coursesData.length === 0 && coursesMessageFlag) && setCoursesCardEmpty(true);
 
-  }, [contactUsData, customersData, trainersData, coursesData])
+  }, [contactUsData, customersData, trainersData, coursesData]);
+
 
   const getContactUsApiAnswer = async () => {
     setLoading(true);
@@ -297,6 +302,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
         if (course.customers.length > 0) {
           filteredCourses.push(course);
         }
+        return null
       })
       setCoursesData(filteredCourses);
       // console.log("coursesData: ", coursesData);
@@ -309,6 +315,42 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log(err);
     }
   }
+
+  const getAllTrainerCoursesHandler = () => {
+    // setLoading(true);
+    // console.log("trainerID: ", trainerLabelID)
+
+    if (trainerLabelID === '') {
+      console.log("trainer Label ID must have value!");
+      return;
+    };
+
+    const id =
+    {
+      trainerLabelID
+    }
+
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/trainerCourses",
+      headers: { 'content-type': 'application/json' },
+      data: id
+    }).then((res) => {
+      console.log('Fetching trainer Courses ', res.data);
+
+      setLoading(false);
+      setTrainerLabelID('');
+      if (res.data.length === 0) {
+        console.log("Incorrect ID or no courses!")
+      } else {
+        setCoursesData(res.data);
+      }
+
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
 
   const closeCoursesPageHandler = () => {
     setCoursesCardExist(true);
@@ -333,6 +375,18 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }
 
   const toggleFilteredCoursesModal = () => {
+
+
+
+
+    // if (!isFilteredById) {
+    //   setIsFilteredById(true);
+    //   return;
+    // }
+
+
+
+
     if (toggleFilteredCourses) {
       // setCoursesData([]);
       // setCoursesMessageFlag(false);
@@ -425,7 +479,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                     <button onClick={() => { deleteContactById(item._id) }} className="contactUs-item-btn">Remove Item</button>
                   </div>
                 </div>
-              )
+              ),
+              <BackToTopBtn />
             ]
           }
 
@@ -451,7 +506,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   <Marginer direction="vertical" margin="0.5em" />
                   <button onClick={() => { deleteCustomerById(item._id) }} className="item-btn">Remove Customer</button>
                 </div>
-              )
+              ),
+              <BackToTopBtn />
             ]
           }
 
@@ -477,13 +533,14 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   <Marginer direction="vertical" margin="0.5em" />
                   <button onClick={() => { deleteTrainerById(item._id) }} className="item-btn">Remove Trainer</button>
                 </div>
-              )
+              ),
+              <BackToTopBtn />
             ]
           }
 
           {coursesCardEmpty &&
-            [<div className="cardEmpty-message">There are not Courses!</div>,
-            <span className="close-message" onClick={closeMessageHandler}>✖</span>]
+            [<span className="close-message" onClick={closeMessageHandler}>✖</span>,
+            <div className="cardEmpty-message">There are not Courses!</div>]
           }
 
           {(!coursesCardExist && courseTrainerData) &&
@@ -495,6 +552,28 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   className={toggleFilteredCourses ? "navbar-btn" : "filtered-navbar-btn"}
                   onClick={toggleFilteredCoursesModal}
                 >{toggleFilteredCourses ? "Courses With Customers" : "All Courses"}</button>
+                <button
+                  className="navbar-btn"
+                  style={{ marginLeft: "1em" }}
+                  onClick={getAllTrainerCoursesHandler}
+                >Filter by ID <span style={{ color: "red" }}>~&#62;</span>
+                </button>
+                <input
+                  type="text"
+                  placeholder="Enter the requested ID.."
+                  style={{
+                    marginLeft: "0.2em",
+                    borderBottomRightRadius: "8px",
+                    borderLeft: "none",
+                    borderTop: "none",
+                    marginRight: "-2px",
+                    backgroundColor: "lightgray",
+                    borderColor: "black"
+                  }}
+                  value={trainerLabelID}
+                  onChange={(e) => { setTrainerLabelID(e.target.value) }}
+                ></input>
+
               </p>,
               coursesData.map((item) =>
                 <div key={item._id} className="course-card-container">
@@ -539,6 +618,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                             </>
                           )
                         }
+                        return null
                       })
                     }
                     <Marginer direction="vertical" margin="0.5em" />
@@ -584,11 +664,14 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   {/* <button onClick={() => { deleteCourseById(item._id) }} className="item-btn">Remove Course</button> */}
                 </div>
               )
+              ,
+              <BackToTopBtn />
             ]
           }
         </div>
 
-        {(!contactCardExist && contactUsData) &&
+        {
+          (!contactCardExist && contactUsData) &&
           <div style={{ display: "block", flexDirection: "row" }}>
             <button onClick={closeContactPageHandler} className="close-card-btn"></button>
             <p className="amount-container">Contact Amount:
@@ -603,7 +686,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           </div>
         }
 
-        {(!customerCardExist) &&
+        {
+          (!customerCardExist) &&
           <div >
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button onClick={closeCustomerPageHandler} className="close-card-btn users-close-btn"></button>

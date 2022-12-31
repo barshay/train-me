@@ -157,9 +157,10 @@ const ContactUsForm = () => {
     isValid = true;
     setSubmitted(true);
 
-    const newContact = { firstName, lastName, email, phone, messageTitle, message, gender, contactMethod };
-    setContactUsData((prev) => [newContact, ...prev]);
+    // const newContact = { firstName, lastName, email, phone, messageTitle, message, gender, contactMethod };
     // console.log(newContact);
+    // setContactUsData((prev) => [newContact, ...prev]);
+
     setFirstName('');
     setLastName('');
     setEmail('');
@@ -169,9 +170,15 @@ const ContactUsForm = () => {
     setGender('');
     setContactMethod('');
 
+    const capitalizeFirstLowercaseRest = str => {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+    const capitalizedFirstName = capitalizeFirstLowercaseRest(firstName);
+    const capitalizedLastName = capitalizeFirstLowercaseRest(lastName);
+
     const contactToAddToDB = {
-      firstname: firstName,
-      lastname: lastName,
+      firstname: capitalizedFirstName,
+      lastname: capitalizedLastName,
       email: email,
       phone: phone,
       messagetitle: messageTitle,

@@ -16,7 +16,7 @@ import MyContext from '../../MyContext';
 import { AccountContext } from "./accountContext";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import CapitalizeFirstLowercaseRest from '../../customHooks/CapitalizeFirstLowercaseRest';
 
 export function TrainerSignupForm() {
     const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
@@ -216,9 +216,12 @@ export function TrainerSignupForm() {
         };
         isValid = true;
 
+        const capitalizedFirstName = CapitalizeFirstLowercaseRest(firstName);
+        const capitalizedLastName = CapitalizeFirstLowercaseRest(lastName);
+        
         const trainerToAddToDB = {
-            firstname: firstName,
-            lastname: lastName,
+            firstname: capitalizedFirstName,
+            lastname: capitalizedLastName,
             age: +age,
             email: email,
             phone: phone,

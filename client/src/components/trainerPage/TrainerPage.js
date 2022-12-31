@@ -7,7 +7,6 @@ import axios from 'axios';
 import { FileInput, PreviewPicture } from './styledHelper';
 import UpdateModal from './UpdateModal';
 import './UpdateModal.css';
-// import ButtonMailto from '../../assets/ButtonMailto';
 
 const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const { trainerName, trainerID } = useContext(MyContext);
@@ -316,6 +315,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   };
 
   const getAllCoursesCustomers = (trainerID) => {
+    console.log("Data before", allCoursesCustomersData);
     console.log(trainerID);
     const id = {
       trainerID
@@ -328,8 +328,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     }).then((res) => {
       console.log('Fetching All Courses Customers ', res.data);
       setAllCoursesCustomersData(res.data);
-      console.log(allCoursesCustomersData);
-      // setIsDataExist(true);
+      console.log("Data after", allCoursesCustomersData);
 
       // setLoading(false);
       setPostCoursePage(false);
@@ -356,8 +355,12 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     // setIsDataExist(false);
 
     setAllCustomersPage(false);
-
   }
+
+  // const closeMessageHandler = () => {
+  //   setShowTrainerHomePage(true);
+  //   setAllCustomersPage(false);
+  // }
 
   return (
     // <>
@@ -495,6 +498,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
         {
           (myCoursesPage && filteredCoursesArr.length === 0) &&
           <div className="message-emptyArr">
+            <span className="close-emptyData-message" onClick={closeCoursesPage}>✖</span>
             There are not Courses yet!
           </div>
         }
@@ -573,8 +577,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                       </div>
                     ]
                   ) :
-                  filteredCoursesArr.map((course) =>
-                    [
+                  [filteredCoursesArr.map((course) =>
                       <div key={course._id} style={{ display: "flex", flexDirection: "column" }}>
                         <div className="courseCard-container" key={course._id}>
                           <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
@@ -626,19 +629,25 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                           <UpdateModal courseId={course._id} />
                           <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
                         </div>
-                      </div>
-                    ]
-                  )
+                      </div>,                    
+                  ),
+                  ]
               }
             </div>
           </div>
         }
 
         {
-          allCustomersPage &&
+          (allCustomersPage && Object.keys(allCoursesCustomersData).length === 0) &&
+          <div className="message-emptyArr">
+            <span className="close-emptyData-message" onClick={closeAllCoursesCustomersPage}>✖</span>
+            There are not Customers yet!</div>
+        }
+        {
+          (allCustomersPage && Object.keys(allCoursesCustomersData).length !== 0) &&
           [
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", justifyContent: "space-between"}}>
+              <div style={{ display: "flex", justifyContent: "space-between", width: "58.9em" }}>
                 <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesCustomersPage}>{ }</button>
                 <button
                   className="mailToAll-btn"

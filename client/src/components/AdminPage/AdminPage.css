@@ -142,8 +142,12 @@
 .course-trainerDetails {
     padding: 0.2em 0.2em 0.2em 0.2em;
     background-color: rgb(121, 120, 120);
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    /* border-bottom-right-radius: 15px; */
+    opacity: 0.7;
     /* Needed for IE */
-    box-shadow: 5px 5px 5px rgb(68 68 68 / 0.6);
+    box-shadow: 5px 5px 5px rgba(231, 157, 193, 0.3);
     -ms-filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=3,MakeShadow=true,ShadowOpacity=0.30)";
     filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=3, MakeShadow=true, ShadowOpacity=0.30);
     zoom: 1;

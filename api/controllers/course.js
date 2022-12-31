@@ -211,8 +211,17 @@ module.exports = {
     },
 
     getAllTrainerCourses: async (req, res) => {
-        const { trainerID } = req.body
-        console.log("trainerID: ", trainerID)
+        // console.log(req.body)
+        let trainerID = {};
+        if (req.body.trainerLabelID) {
+            trainerID = req.body.trainerLabelID
+            // console.log("trainerID from trainerLabelID: ", trainerID);
+        } else {
+            trainerID = req.body.trainerID
+            // console.log("trainerID from trainer ID: ", trainerID);
+        }
+        // const {trainerID}  = req.body
+        // console.log("trainerID: ", trainerID)
         let filteredCoursesByTrainerId = {};
         let filteredArr = [];
         const allCourses = await Course.find({})

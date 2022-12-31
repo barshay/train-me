@@ -14,7 +14,9 @@ import { Marginer } from "../../marginer";
 import MyContext from '../../../MyContext';
 import { AccountContext } from "../accountContext";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import CapitalizeFirstLowercaseRest from '../../../customHooks/CapitalizeFirstLowercaseRest';
+
 
 export function AdminSignup() {
     const { switchToSignin } = useContext(AccountContext);
@@ -154,9 +156,12 @@ export function AdminSignup() {
         };
         isValid = true;
 
+        const capitalizedFirstName = CapitalizeFirstLowercaseRest(firstName);
+        const capitalizedLastName = CapitalizeFirstLowercaseRest(lastName);
+
         const adminToAddToDB = {
-            firstname: firstName,
-            lastname: lastName,
+            firstname: capitalizedFirstName,
+            lastname: capitalizedLastName,
             email: email,
             password: password,
             profilepic: profilePicture
