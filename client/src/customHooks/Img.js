@@ -24,7 +24,7 @@ import { face, FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
 // Import plugins
 // import { lazyload, placeholder } from '@cloudinary/react';
 
-const Img = ( props ) => {
+const Img = (props) => {
   const { adminAvatar,
     customerAvatar,
     trainerAvatar,
@@ -75,7 +75,7 @@ const Img = ( props ) => {
 
   const courseTrainerImage = cld.image(courseTrainerAvatar);
   courseTrainerImage
-    .resize(thumbnail().width(150).height(150).gravity(focusOn(face()))) 
+    .resize(thumbnail().width(150).height(150).gravity(focusOn(face())))
     .roundCorners(byRadius(30));
 
   return (
@@ -114,7 +114,7 @@ const Img = ( props ) => {
       {courseTrainerAvatar &&
         <AdvancedImage
           className="course-display-trainer-image"
-        cldImg={courseTrainerImage}
+          cldImg={courseTrainerImage}
         />}
     </>
   )

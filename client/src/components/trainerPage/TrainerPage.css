@@ -26,6 +26,19 @@
     height: 15em;
 }
 
+.trainer-userName {
+    overFlow: scroll;
+    display: table-caption;
+    /* font-family: Montserrat, Arial, sans-serif; */
+    /* font-size: 1em; */
+    background-color: black;
+    color: transparent;
+    text-shadow: 0px 2px 3px lightgrey;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-align: center;
+}
+
 .trainer-image-home-container {
     background-image: url("https://static.wixstatic.com/media/4103a2_aaf38e85cafe4be199c1c95da18d5e24~mv2.png");
     background-size: cover;
@@ -178,7 +191,7 @@
 .courses-buttons-div {
     display: flex;
     flex-direction: row;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     /* padding-left: 1em; */
 }
 
@@ -262,6 +275,13 @@
     flex-direction: column;
     width: 80em;
 
+}
+
+.myCourses-topBar {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 5em;
+    font-family: Neue;
 }
 
 .allCoursesCards-container {
@@ -433,6 +453,12 @@
     text-decoration-color: rgb(246, 244, 244);
 }
 
+.my-customers-form {
+    display: flex;
+    flex-direction: column;
+    width: 80em;
+}
+
 .allCoursesCustomers-container {
     display: flex;
     flex-direction: column;
@@ -504,24 +530,41 @@
     margin: 0 5em 2em 5em;
 }
 
+.allCustomers-counter {
+    display: flex;
+    background-color: gray;
+    font-size: 20px;
+    justify-content: center;
+    margin: 0 2em 0 2em;
+    border: 2px solid pink;
+    border-right: none;
+    border-left: none;
+    color: whitesmoke;
+    text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+}
+
 .close-emptyData-message {
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
-    font-size:18px;
+    font-size: 18px;
     height: 1.5em;
     width: 1.5em;
     margin-right: 1.5em;
     color: rgb(54, 54, 50);
     border: 1px solid red;
     border-radius: 50%;
-    margin-bottom:3em;
+    margin-bottom: 3em;
 }
 
 .close-emptyData-message:hover {
     color: red;
     background-color: black;
     cursor: pointer;
+}
+
+.my-courses-form {
+    width: 80em;
 }
 
 .close-allCoursesCostomers-container {

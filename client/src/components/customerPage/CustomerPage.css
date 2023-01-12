@@ -17,16 +17,30 @@
     height: 20em;
 }
 
+
+.customer-userName {
+    overFlow: scroll;
+    display: table-caption;
+    /* font-family: Montserrat, Arial, sans-serif; */
+    /* font-size: 1em; */
+    background-color: black;
+    color: transparent;
+    text-shadow: 0px 2px 3px lightgrey;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-align: center;
+}
+
 .customer-image-home-container {
     background-image: url("https://images.pexels.com/photos/7590968/pexels-photo-7590968.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
     background-size: cover;
     background-repeat: no-repeat;
     /* margin-top: -8em; */
     opacity: 0.7;
-    width: 72em;
+    width: 55em;
     height: 80vh;
     border-radius: 2em;
-    margin-right: 2em;
+    /* margin-right: 2em; */
 }
 
 .customer-actions-btn {

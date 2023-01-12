@@ -149,14 +149,14 @@ module.exports = {
         }
     },
 
-    getAllCourses: async (req, res) => {
-        try {
-            const allCourses = await Course.find({})
-            return serverResponse(res, 200, allCourses);
-        } catch (e) {
-            return serverResponse(res, 500, { message: "internal error occurred " + e });
-        }
-    },
+    // getAllCourses: async (req, res) => {
+    //     try {
+    //         const allCourses = await Course.find({})
+    //         return serverResponse(res, 200, allCourses);
+    //     } catch (e) {
+    //         return serverResponse(res, 500, { message: "internal error occurred " + e });
+    //     }
+    // },
 
     getAllAdminCourses: async (req, res) => {
         try {
@@ -286,7 +286,7 @@ module.exports = {
                             } else {
                                 filteredCoursesCustomersObj[filteredArr[x].name] = [allCustomers[z]]
                             }
-                        } 
+                        }
                     }
                 }
             }
@@ -294,6 +294,28 @@ module.exports = {
             return serverResponse(res, 200, filteredCoursesCustomersObj);
         } catch (e) {
             return serverResponse(res, 500, { message: "internal error occured " + e });
+        }
+    },
+
+    getAllTrainersCoursesWithoutCustomers: async (req, res) => {
+        try {
+            const allCourses = await Course.find({});
+            const coursesWithoutCustomersArr = [];
+            allCourses.map((course) => {
+                const tempObj = {};
+                tempObj.name = course.name;
+                tempObj.category = course.category;
+                tempObj.description = course.description;
+                tempObj.lessontime = course.lessontime;
+                tempObj.picture = course.picture;
+                tempObj.trainer = course.trainer;
+                tempObj.cost = course.cost;
+                coursesWithoutCustomersArr.push(tempObj);
+            })
+            // console.log("All Courses: ", coursesWithoutCustomersArr);
+            return serverResponse(res, 200, coursesWithoutCustomersArr);
+        } catch (e) {
+            return serverResponse(res, 500, { message: "internal error occurred " + e });
         }
     },
 

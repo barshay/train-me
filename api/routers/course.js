@@ -11,6 +11,7 @@ const {
     getAllAdminCourses,
     getAllTrainerCourses,
     getAllCoursesCustomers,
+    getAllTrainersCoursesWithoutCustomers,
     deleteAllCourses
 } = require("../controllers/course");
 
@@ -18,9 +19,10 @@ app.post("/", addNewCourse);
 app.post("/courseCustomers", getCourseCustomersData);
 app.post("/coursesCustomers", getAllCoursesCustomers);
 app.put("/:courseId", updateCourse);
-app.get("/", getAllCourses);
+// app.get("/", getAllCourses);
 app.post("/trainerCourses", getAllTrainerCourses);
 app.get("/admincourses", getAllAdminCourses);
+app.get("/allTrainersCourses", getAllTrainersCoursesWithoutCustomers);
 app.get("/:courseId", getCourseById);
 app.delete("/:courseId", deleteCourseById);
 // app.delete("/", deleteAllCourses);

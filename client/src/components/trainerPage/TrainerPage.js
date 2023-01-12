@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import './TrainerPage.css';
 import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
@@ -7,6 +7,8 @@ import axios from 'axios';
 import { FileInput, PreviewPicture } from './styledHelper';
 import UpdateModal from './UpdateModal';
 import './UpdateModal.css';
+import RemoveModal from './RemoveModal';
+
 
 const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const { trainerName, trainerID } = useContext(MyContext);
@@ -24,6 +26,10 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const [customersModal, setCustomersModal] = useState(false);
   const [allCustomersPage, setAllCustomersPage] = useState(false);
   const [allCoursesCustomersData, setAllCoursesCustomersData] = useState([]);
+  const [allCoursesTrainersData, setAllCoursesTrainersData] = useState([]);
+  const [allCoursesPage, setAllCoursesPage] = useState(false);
+  let allCustomersCounter = 0;
+
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -32,8 +38,13 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const [lessonTime, setLessonTime] = useState('');
   const [cost, setCost] = useState('');
 
+  useEffect(() => {
+    if (filteredCourses.length !== 0) {
+      filteredCoursesByExistingCustomer();
+    }
+  }, [toggleFiltered]);
+  
   let inputFileRef = useRef(null);
-
   const handlePictureChange = (e) => {
     inputFileRef = e.target.value;
     const file = e.target.files[0];
@@ -149,8 +160,13 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     };
     isValid = true;
 
+    const capitalizeFirst = str => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+    const capitalizedFirstLetterName = capitalizeFirst(name);
+
     const courseToAddToDB = {
-      name,
+      name: capitalizedFirstLetterName,
       category,
       description,
       pictureToDB: picture,
@@ -188,6 +204,8 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     setMyCoursesPage(false);
     setIsDataExist(false);
     setAllCustomersPage(false);
+    setAllCoursesPage(false);
+    setAllCoursesTrainersData([]);
   }
 
   const closePostCourseHandler = () => {
@@ -241,13 +259,15 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
       setAllCustomersPage(false);
+      setAllCoursesPage(false);
+      setAllCoursesTrainersData([]);
       setMyCoursesPage(true);
     }).catch((error) => {
       console.log(error);
     });
   }
 
-  const closeCoursesPage = () => {
+  const closeMyCoursesPage = () => {
     setShowTrainerHomePage(true);
     setMyCoursesPage(false);
     setToggleFiltered(false);
@@ -272,24 +292,6 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const unfilteredCourse = () => {
     setToggleFiltered(false);
     setFilteredCourses([]);
-  }
-
-  const removeCourseHandler = async (id) => {
-    setIsDataExist(false);
-    // console.log("isDataExist: ", isDataExist);
-    try {
-      const deleteCourseUrl = `http://localhost:8000/course/${id}`;
-      const response = await axios.delete(deleteCourseUrl);
-      const data = await response.data;
-      console.log("data After removed: ", data);
-      // getAllTrainerCoursesHandler(trainerID);
-      setFilteredCoursesArr(data)
-      if (toggleFiltered) {
-        filteredCoursesByExistingCustomer();
-      }
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   const getCourseCustomers = (customersArr) => {
@@ -335,6 +337,8 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       setShowTrainerHomePage(false);
       setMyCoursesPage(false);
       setIsDataExist(false);
+      setAllCoursesPage(false);
+      setAllCoursesTrainersData([]);
       setAllCustomersPage(true);
     }).catch((error) => {
       if (error.response) {
@@ -361,6 +365,36 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   //   setShowTrainerHomePage(true);
   //   setAllCustomersPage(false);
   // }
+
+  const getAllTrainersCoursesHandler = async () => {
+    try {
+      if (allCoursesTrainersData.length !== 0) {
+        console.log("return!!");
+        return;
+      }
+      const allTrainersCoursesUrl = 'http://localhost:8000/course/allTrainersCourses';
+      const response = await axios.get(allTrainersCoursesUrl);
+      const data = await response.data;
+      console.log(data);
+      setAllCoursesTrainersData(data);
+
+      setAllCoursesPage(true);
+      setPostCoursePage(false);
+      setShowTrainerHomePage(false);
+      setMyCoursesPage(false);
+      setIsDataExist(false);
+      setAllCustomersPage(false);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const closeAllCoursesPage = () => {
+    setShowTrainerHomePage(true);
+    setAllCoursesPage(false);
+    setAllCoursesTrainersData([]);
+  }
 
   return (
     // <>
@@ -498,7 +532,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
         {
           (myCoursesPage && filteredCoursesArr.length === 0) &&
           <div className="message-emptyArr">
-            <span className="close-emptyData-message" onClick={closeCoursesPage}>✖</span>
+            <span className="close-emptyData-message" onClick={closeMyCoursesPage}>✖</span>
             There are not Courses yet!
           </div>
         }
@@ -507,7 +541,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           <div className="my-courses-form" >
             <div className="courses-buttons-div">
               {loading && <section className="smooth spinner" >{ }</section>}
-              <button className="close-postCourse-btn" onClick={closeCoursesPage}>{ }</button>
+              <button className="close-postCourse-btn" onClick={closeMyCoursesPage}>{ }</button>
               <div className="filteredButtons-container">
                 {
                   !toggleFiltered
@@ -572,64 +606,80 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                             setFilteredCourses={setFilteredCoursesArr}
                             filteredCourses={filteredCoursesArr}
                           />
-                          <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
+                          <RemoveModal
+                            courseId={course._id}
+                            loading={loading}
+                            setLoading={setLoading}
+                            setIsDataExist={setIsDataExist}
+                            setFilteredCoursesArr={setFilteredCoursesArr}
+                            toggleFiltered={toggleFiltered}
+                            setToggleFiltered={setToggleFiltered}
+                          />
                         </div>
                       </div>
                     ]
                   ) :
                   [filteredCoursesArr.map((course) =>
-                      <div key={course._id} style={{ display: "flex", flexDirection: "column" }}>
-                        <div className="courseCard-container" key={course._id}>
-                          <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
-                            <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
-                          </div>
-                          <div className="course-title">Name: <span className="item">{course.name}</span></div>
-                          <div className="course-title">Category: <span className="item">{course.category}</span></div>
-                          <div className="course-title">Description: <span className="item">{course.description}</span></div>
-                          <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
-                          <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
-                          <div className="course-title">Customers:
-                            {course.customers < 1 ?
-                              <span className="numeric-items">{course.customers.length}</span>
-                              :
-                              [
-                                <span className="customers-amount" >{course.customers.length}
-                                  {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
-                                </span>,
-                                // <span>
-                                //   {course.customers.map((customer, index) =>
-                                //     <div style={{ height: "0.7em", display: "flex" }}>
-                                //       <span key={index} className="customers-line">{customer}</span>
-                                //     </div>
-                                //   )}
-                                // </span>
-                                <button className="viewCustomers-btn" onClick={() => { getCourseCustomers(course.customers) }}>
-                                  View Customer/s
-                                </button>,
+                    <div key={course._id} style={{ display: "flex", flexDirection: "column" }}>
+                      <div className="courseCard-container" key={course._id}>
+                        <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
+                          <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
+                        </div>
+                        <div className="course-title">Name: <span className="item">{course.name}</span></div>
+                        <div className="course-title">Category: <span className="item">{course.category}</span></div>
+                        <div className="course-title">Description: <span className="item">{course.description}</span></div>
+                        <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
+                        <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
+                        <div className="course-title">Customers:
+                          {course.customers < 1 ?
+                            <span className="numeric-items">{course.customers.length}</span>
+                            :
+                            [
+                              <span className="customers-amount" >{course.customers.length}
+                                {/* <div style={{ color: "#334598" }}>Customer/s ID:</div> */}
+                              </span>,
+                              // <span>
+                              //   {course.customers.map((customer, index) =>
+                              //     <div style={{ height: "0.7em", display: "flex" }}>
+                              //       <span key={index} className="customers-line">{customer}</span>
+                              //     </div>
+                              //   )}
+                              // </span>
+                              <button className="viewCustomers-btn" onClick={() => { getCourseCustomers(course.customers) }}>
+                                View Customer/s
+                              </button>,
 
-                                (customersData && customersModal) &&
-                                <div className="modal" >
-                                  <div onClick={toggleCustomersModal} className="overlay-customers"></div>
-                                  <div className="modal-customer-container" >
-                                    {
-                                      customersData.map((customer, index) => [
-                                        <div key={index} className="customers-modal-card">
-                                          <span style={{ fontSize: "15px", color: "white" }}>{customer.firstname + " " + customer.lastname}</span>
-                                          <Img customersDisplayAvatar={customer.profilepic.public_id} alt="Customer avatar"></Img>
-                                        </div>
-                                      ])
-                                    }
-                                  </div>
+                              (customersData && customersModal) &&
+                              <div className="modal" >
+                                <div onClick={toggleCustomersModal} className="overlay-customers"></div>
+                                <div className="modal-customer-container" >
+                                  {
+                                    customersData.map((customer, index) => [
+                                      <div key={index} className="customers-modal-card">
+                                        <span style={{ fontSize: "15px", color: "white" }}>{customer.firstname + " " + customer.lastname}</span>
+                                        <Img customersDisplayAvatar={customer.profilepic.public_id} alt="Customer avatar"></Img>
+                                      </div>
+                                    ])
+                                  }
                                 </div>
+                              </div>
 
-                              ]}
-                          </div>
+                            ]}
                         </div>
-                        <div className="card-actions">
-                          <UpdateModal courseId={course._id} />
-                          <button className="card-btn" onClick={() => { removeCourseHandler(course._id) }}>Remove</button>
-                        </div>
-                      </div>,                    
+                      </div>
+                      <div className="card-actions">
+                        <UpdateModal courseId={course._id} loading={loading} setLoading={setLoading} />
+                        <RemoveModal
+                          courseId={course._id}
+                          loading={loading}
+                          setLoading={setLoading}
+                          setIsDataExist={setIsDataExist}
+                          setFilteredCoursesArr={setFilteredCoursesArr}
+                          toggleFiltered={toggleFiltered}
+                          setToggleFiltered={setToggleFiltered}
+                        />
+                      </div>
+                    </div>,
                   ),
                   ]
               }
@@ -646,8 +696,8 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
         {
           (allCustomersPage && Object.keys(allCoursesCustomersData).length !== 0) &&
           [
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "58.9em" }}>
+            <div className="my-customers-form">
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesCustomersPage}>{ }</button>
                 <button
                   className="mailToAll-btn"
@@ -661,37 +711,81 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
               </div>
               <div className="allCoursesCustomers-container">
                 {
-                  Object.keys(allCoursesCustomersData).map((keyName, keyIndex) => {
-                    return (
-                      <div key={keyIndex} className="allCardsAndTitlesHolder">
-                        <div className="allCoursesCustomers-course-title-holder">
-                          {keyName}
-                          <div className="customersAmount-insideTitle">{allCoursesCustomersData[keyName].length}</div>
-                        </div>
-                        <div className="allCoursesCustomers-allCardsHolder">
-                          {allCoursesCustomersData[keyName].map((customer, index) => {
-                            return (
-                              <div key={index} className="allCoursesCustomers-cardholder">
-                                <div >
-                                  <Img courseAvatar={customer.profilepic.public_id} alt="Course avatar"></Img>
+                  [
+                    Object.keys(allCoursesCustomersData).map((keyName, keyIndex) => {
+                      return (
+                        <div key={keyIndex} className="allCardsAndTitlesHolder">
+                          <div className="allCoursesCustomers-course-title-holder">
+                            {keyName}
+                            <div className="customersAmount-insideTitle">{allCoursesCustomersData[keyName].length}</div>
+                          </div>
+                          <div className="allCoursesCustomers-allCardsHolder">
+                            {allCoursesCustomersData[keyName].map((customer, index) => {
+                              allCustomersCounter++;
+                              return (
+                                <div key={index} className="allCoursesCustomers-cardholder">
+                                  <div >
+                                    <Img courseAvatar={customer.profilepic.public_id} alt="Course avatar"></Img>
+                                  </div>
+                                  <div className="allCoursesCustomers-card-row">{customer.firstname + " " + customer.lastname}</div>
+                                  {/* <div className="allCoursesCustomers-card-row">{customer.email}</div> */}
+                                  {/* <ButtonMailto label="Write me an E-Mail" mailto="mailto:evyatar4988@gmail.com" /> */}
+                                  <div className="allCoursesCustomers-card-row">{customer.phone}</div>
+                                  <button className="mail-btn" onClick={() => window.location = `mailto:${customer.email}`}>Send E-Mail</button>
                                 </div>
-                                <div className="allCoursesCustomers-card-row">{customer.firstname + " " + customer.lastname}</div>
-                                {/* <div className="allCoursesCustomers-card-row">{customer.email}</div> */}
-                                {/* <ButtonMailto label="Write me an E-Mail" mailto="mailto:evyatar4988@gmail.com" /> */}
-                                <div className="allCoursesCustomers-card-row">{customer.phone}</div>
-                                <button className="mail-btn" onClick={() => window.location = `mailto:${customer.email}`}>Send E-Mail</button>
-                              </div>
-                            )
-                          })}
+                              )
+                            })}
+                          </div>
+                          <div className="dashed-BorderBetweenCourses"></div>
                         </div>
-                        <div className="dashed-BorderBetweenCourses"></div>
-                      </div>
-                    )
-                  })
+                      )
+                    }),
+                    <div className="allCustomers-counter">Total:
+                      <span
+                        style={{ color: "blue", marginRight: "0.2em", marginLeft: "0.7em", textShadow: "none", textDecoration: "underline" }}>
+                        {allCustomersCounter}
+                      </span>
+                      Customers
+                    </div>
+                  ]
                 }
               </div>
             </div>
           ]
+        }
+
+        {allCoursesPage &&
+          // <div className="my-courses-form">
+          <div className="my-courses-form">
+            <div className="myCourses-topBar">
+              <button className="close-allCoursesCostomers-container" onClick={closeAllCoursesPage}>{ }</button>
+              <div style={{ marginLeft: "auto" }}>
+                Total Courses &gt;
+                <span style={{ color: "blue", marginLeft: "0.6em" }}>{allCoursesTrainersData.length}</span>
+              </div>
+            </div>
+            <div className="allCoursesCards-container">
+              {allCoursesTrainersData.map((course) => {
+                return (
+                  <div key={course._id} style={{ display: "flex", flexDirection: "column", padding: "0.2em" }}>
+                    <div className="courseCard-container" key={course._id}>
+                      {course.trainer === trainerID &&
+                        <div style={{ display: 'flex', justifyContent: "center", color: "lightslategray" }}>My Course</div>
+                      }
+                      <div style={{ display: "flex", justifyContent: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
+                        <Img courseAvatar={course.picture.public_id} alt="Course avatar"></Img>
+                      </div>
+                      <div className="course-title">Name: <span className="item">{course.name}</span></div>
+                      <div className="course-title">Category: <span className="item">{course.category}</span></div>
+                      <div className="course-title">Description: <span className="item">{course.description}</span></div>
+                      <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
+                      <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
+                    </div>
+                  </div>)
+              })}
+            </div>
+          </div>
+          // </div>
         }
 
         <div className="trainer-actions-container">
@@ -699,7 +793,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
                 <span style={{ color: "blue", fontSize: "14px" }}>Welcome</span>
-                <div style={{ overflow: "hidden", display: "table-caption" }}>{trainerName}</div>
+                <div className="trainer-userName">{trainerName}</div>
               </div>
               {trainerAvatar &&
                 <Img trainerAvatar={trainerAvatar} alt="Trainer avatar"></Img>
@@ -715,6 +809,9 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
             </button>
             <button className="trainer-actions-btn" onClick={() => { getAllCoursesCustomers(trainerID) }} >
               My Customers
+            </button>
+            <button className="trainer-actions-btn" onClick={getAllTrainersCoursesHandler} >
+              All Courses
             </button>
           </div>
         </div>

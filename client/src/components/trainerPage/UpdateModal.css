@@ -19,7 +19,7 @@ body.active-modal {
     background-color: rgb(52, 146, 76)
 }
 
-.modal, .overlay, .overlay-customers {
+.modal, .overlay-customers, .overlay {
     width: 100vw;
     height: 100vh;
     top: 9vh;
@@ -139,6 +139,7 @@ body.active-modal {
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
     color: white;
+    background-color: green;
 }
 
 .modal-customer-container {

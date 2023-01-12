@@ -29,8 +29,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
   const [toggleFilteredCourses, setToggleFilteredCourses] = useState(true);
   const [trainerLabelID, setTrainerLabelID] = useState('');
-  const [isFilteredById, setIsFilteredById] = useState(false);
-
+  const [isFilteredById, setIsFilteredById] = useState(true);
 
   const {
     adminName,
@@ -121,6 +120,8 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       const data = await response.data
       console.log(data);
       setContactUsData(data);
+      setContactUsEmpty(true);
+      setContactCardExist(true);
     } catch (error) {
       console.log(error);
     }
@@ -264,7 +265,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       // console.log("CourseTrainerData: ", courseTrainerData);
 
       commonSettingDefinitionForCourses();
-
+      setIsFilteredById(true);
       if (!toggleFilteredCourses) {
         setToggleFilteredCourses(!toggleFilteredCourses)
       }
@@ -304,12 +305,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
         }
         return null
       })
+
+      setCourseTrainerData(trainersData);
       setCoursesData(filteredCourses);
       // console.log("coursesData: ", coursesData);
+
       setCourseTrainerData(data[1]);
-      // console.log("CourseTrainerData: ", courseTrainerData);
+      console.log("CourseTrainerData: ", courseTrainerData);
 
       commonSettingDefinitionForCourses();
+      setIsFilteredById(true);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -317,13 +322,13 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }
 
   const getAllTrainerCoursesHandler = () => {
-    // setLoading(true);
     // console.log("trainerID: ", trainerLabelID)
 
     if (trainerLabelID === '') {
       console.log("trainer Label ID must have value!");
       return;
     };
+    setLoading(true);
 
     const id =
     {
@@ -337,15 +342,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       data: id
     }).then((res) => {
       console.log('Fetching trainer Courses ', res.data);
-
       setLoading(false);
       setTrainerLabelID('');
       if (res.data.length === 0) {
-        console.log("Incorrect ID or no courses!")
+        console.log("Incorrect ID or no courses!");
+        // console.log(res.data);
+        setIsFilteredById(false);
       } else {
         setCoursesData(res.data);
+        setIsFilteredById(true);
       }
-
     }).catch((error) => {
       console.log(error);
     });
@@ -375,29 +381,13 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
   }
 
   const toggleFilteredCoursesModal = () => {
-
-
-
-
-    // if (!isFilteredById) {
-    //   setIsFilteredById(true);
-    //   return;
-    // }
-
-
-
-
     if (toggleFilteredCourses) {
-      // setCoursesData([]);
-      // setCoursesMessageFlag(false);
-      setLoading(true);
+      setLoading(!loading);
       FilteredCoursesWithCustomers();
       setToggleFilteredCourses(!toggleFilteredCourses);
     } else {
-      // setCoursesData([]);
-      // setCoursesMessageFlag(false);
       getCoursesApiAnswer();
-      setLoading(true);
+      setLoading(!loading);
       setToggleFilteredCourses(!toggleFilteredCourses);
     }
   }
@@ -410,7 +400,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
                 <span style={{ color: "red", fontSize: "14px" }}>Welcome</span>
-                <div style={{ overflow: "scroll", display: "table-caption" }}>{adminName}</div>
+                <div className="userName">{adminName}</div>
               </div>
               {adminAvatar &&
                 <Img adminAvatar={adminAvatar} alt="Admin avatar"></Img>
@@ -419,23 +409,17 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           <Marginer direction="vertical" margin="1em" />
 
           <div style={{ width: "12em" }}>
-            <button className="actions-btn" onClick={() => getContactUsApiAnswer()}>
-              Contact Us messages
-            </button>
-            {/* </div>
-          <div > */}
             <button className="actions-btn" onClick={() => getCustomersApiAnswer()}>
               List of Customers
             </button>
-            {/* </div>
-          <div > */}
             <button className="actions-btn" onClick={() => getTrainersApiAnswer()}>
               List of Trainers
             </button>
-            {/* </div>
-          <div> */}
             <button className="actions-btn" onClick={() => getCoursesApiAnswer()}>
               List of Courses
+            </button>
+            <button className="actions-btn" onClick={() => getContactUsApiAnswer()}>
+              Contact Us messages
             </button>
           </div>
         </div>
@@ -451,49 +435,21 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                 'admin-image-home-container'}`
           }
         >
-          {contactUsEmpty &&
-            [
-              <div className="cardEmpty-message">There are not Contact messages!</div>,
-              <span className="close-message" onClick={closeMessageHandler}>✖</span>
-            ]
-          }
-          {!contactCardExist &&
-            [
-              loading && <section className="smooth spinner" >{ }</section>,
-              contactUsData.map((item) =>
-                <div key={item._id} className="card-container">
-                  <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
-                  <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
-                  <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
-                  <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
-                  <div className="titles">Message Title: <span className="items">{item.messagetitle}</span></div>
-                  <div className="titles">Message: <span className="items">{item.message}</span></div>
-                  <div className="titles">Gender: <span className="items">{item.gender}</span></div>
-                  <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
-                  <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
-                  <Marginer direction="vertical" margin="0.5em" />
-                  <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                    <button className="contactUs-item-btn"
-                      onClick={() => window.location = `mailto:${item.email}`}>Send E-Mail
-                    </button>
-                    <button onClick={() => { deleteContactById(item._id) }} className="contactUs-item-btn">Remove Item</button>
-                  </div>
-                </div>
-              ),
-              <BackToTopBtn />
-            ]
-          }
-
           {customersCardEmpty &&
             [<div className="cardEmpty-message">There are not Customers!</div>,
             <span className="close-message" onClick={closeMessageHandler}>✖</span>]
           }
           {!customerCardExist &&
             [
+              <div className="innerPage-topBar">
+                <div className="amount-container">Customers Amount:
+                  <span className="amount-item">{customersData.length}</span>
+                </div>
+              </div>,
               loading && <section className="smooth spinner" >{ }</section>,
               customersData.map((item) =>
                 <div key={item._id} className="card-container">
-                  <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ display: "flex", justifyContent: "center" }} alt="Customer Avatar">
                     <Img customersDisplayAvatar={item.profilepic.public_id} alt="Customer avatar"></Img>
                   </div>
                   <Marginer direction="vertical" margin="0.5em" />
@@ -517,6 +473,17 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           }
           {!trainerCardExist &&
             [
+              <div className="innerPage-topBar">
+                <button
+                  className='sendEmail-btn'
+                  onClick={() => window.location = `mailto:${trainersData.map((trainer) => {
+                    return trainer.email
+                  })}`}>Send E-Mail to All
+                </button>
+                <div className="amount-container">Trainers Amount:
+                  <span className="amount-item">{trainersData.length}</span>
+                </div>
+              </div>,
               loading && <section className="smooth spinner" >{ }</section>,
               trainersData.map((item) =>
                 <div key={item._id} className="card-container">
@@ -542,39 +509,33 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
             [<span className="close-message" onClick={closeMessageHandler}>✖</span>,
             <div className="cardEmpty-message">There are not Courses!</div>]
           }
-
           {(!coursesCardExist && courseTrainerData) &&
             [
               loading && <section className="smooth spinner" >{ }</section>,
-              <p className="courses-navbar">Courses Amount:
-                <span className="amount-item">{coursesData.length}</span>
+              <div className="courses-navbar">
                 <button
                   className={toggleFilteredCourses ? "navbar-btn" : "filtered-navbar-btn"}
                   onClick={toggleFilteredCoursesModal}
                 >{toggleFilteredCourses ? "Courses With Customers" : "All Courses"}</button>
                 <button
                   className="navbar-btn"
-                  style={{ marginLeft: "1em" }}
                   onClick={getAllTrainerCoursesHandler}
-                >Filter by ID <span style={{ color: "red" }}>~&#62;</span>
+                >Filter by ID <span className="cursor-filter-btn">~&#62;</span>
                 </button>
                 <input
                   type="text"
-                  placeholder="Enter the requested ID.."
-                  style={{
-                    marginLeft: "0.2em",
-                    borderBottomRightRadius: "8px",
-                    borderLeft: "none",
-                    borderTop: "none",
-                    marginRight: "-2px",
-                    backgroundColor: "lightgray",
-                    borderColor: "black"
-                  }}
+                  placeholder={isFilteredById ? "Enter the requested ID.." : "Incorrect ID"}
+                  className={isFilteredById ? "filterCourses-input" : "filterCourses-err"}
                   value={trainerLabelID}
                   onChange={(e) => { setTrainerLabelID(e.target.value) }}
                 ></input>
 
-              </p>,
+
+                <div className="amount-container">
+                  Courses Amount:
+                  <span className="amount-item">{coursesData.length}</span>
+                </div>
+              </div>,
               coursesData.map((item) =>
                 <div key={item._id} className="course-card-container">
                   <div style={{ display: "flex", justifyContent: "center" }}>
@@ -605,7 +566,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                                   <div style={{ fontSize: "15px", color: "whitesmoke", marginBottom: "1em", fontFamily: "Lucida Sans", fontWeight: "bold" }}>{trainer.firstname + " " + trainer.lastname}</div>
                                   <div className="course-trainerDetails">
                                     <span style={{ color: "#334598" }}>ID:</span>
-                                    <span style={{ fontSize: "12px", color: "white" }}>{trainer._id}</span>
+                                    <span style={{ fontSize: "12px", color: "white", overflowWrap: "break-word" }}>{trainer._id}</span>
                                     <div style={{ color: "#334598" }}> Rate:
                                       {trainer.rating.rate}
                                     </div>
@@ -668,47 +629,65 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
               <BackToTopBtn />
             ]
           }
+
+          {contactUsEmpty &&
+            [
+              <div className="cardEmpty-message">There are not Contact messages!</div>,
+              <span className="close-message" onClick={closeMessageHandler}>✖</span>
+            ]
+          }
+          {!contactCardExist &&
+            [
+              loading && <section className="smooth spinner" >{ }</section>,
+              <div className="innerPage-topBar">
+                <button
+                  className='sendEmail-btn'
+                  onClick={() => window.location = `mailto:${contactUsData.map((contact) => {
+                    return contact.email
+                  })}`}>Send E-Mail to All
+                </button>
+                <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete All</button>
+                <div className='amount-container'>Contact Amount:
+                  <span className="amount-item">{contactUsData.length}</span>
+                </div>
+              </div>,
+              contactUsData.map((item) =>
+                <div key={item._id} className="card-container">
+                  <div className="titles">First Name: <span className="items">{item.firstname}</span></div>
+                  <div className="titles">Last Name: <span className="items">{item.lastname}</span></div>
+                  <div className="titles">Email: <span className="numeric-items">{item.email}</span></div>
+                  <div className="titles">Phone: <span className="numeric-items">{item.phone}</span></div>
+                  <div className="titles">Message Title: <span className="items">{item.messagetitle}</span></div>
+                  <div className="titles">Message: <span className="items">{item.message}</span></div>
+                  <div className="titles">Gender: <span className="items">{item.gender}</span></div>
+                  <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
+                  <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
+                  <button onClick={() => { deleteContactById(item._id) }} className="item-btn" style={{marginTop:"0.7em"}}>Remove</button>
+                  <Marginer direction="vertical" margin="0.5em" />
+                </div>
+              ),
+              <BackToTopBtn />
+            ]
+          }
         </div>
 
         {
           (!contactCardExist && contactUsData) &&
           <div style={{ display: "block", flexDirection: "row" }}>
-            <button onClick={closeContactPageHandler} className="close-card-btn"></button>
-            <p className="amount-container">Contact Amount:
-              <span className="amount-item">{contactUsData.length}</span>
-            </p>
-            <button onClick={deleteAllContactHandler} className="deleteAllCards-btn">Delete All</button>
-            <button
-              onClick={() => window.location = `mailto:${contactUsData.map((contact) => {
-                return contact.email
-              })}`}>Send E-Mail to All
-            </button>
+            <button onClick={closeContactPageHandler} className="close-card-btn users-close-btn"></button>
           </div>
         }
 
         {
           (!customerCardExist) &&
-          <div >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <button onClick={closeCustomerPageHandler} className="close-card-btn users-close-btn"></button>
-            </div>
-            <p className="amount-container">Customers Amount:
-              <span className="amount-item">{customersData.length}</span>
-            </p>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button onClick={closeCustomerPageHandler} className="close-card-btn users-close-btn"></button>
           </div>
         }
 
         {(!trainerCardExist) &&
           <div>
             <button onClick={closeTrainerPageHandler} className="close-card-btn users-close-btn"></button>
-            <p className="amount-container">Trainers Amount:
-              <span className="amount-item">{trainersData.length}</span>
-            </p>
-            <button
-              onClick={() => window.location = `mailto:${trainersData.map((trainer) => {
-                return trainer.email
-              })}`}>Send E-Mail to All
-            </button>
           </div>
         }
 

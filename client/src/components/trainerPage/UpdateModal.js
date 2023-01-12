@@ -127,7 +127,7 @@ const UpdateModal = ({ courseId, loading, setLoading }) => {
         }).then((res) => {
             console.log('Updating a Course ', res.data);
             setFilteredCoursesArr(res.data);
-            // setLoading(false);
+            setLoading(false);
             setModal(!modal);
             console.log("filteredCoursesArr: ", filteredCoursesArr);
         }).catch((error) => {

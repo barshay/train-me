@@ -18,7 +18,7 @@ const CustomerPage = ({ customerAvatar }) => {
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
                 <span style={{ color: "green", fontSize: "14px" }}>Welcome</span>
-                <div style={{ overflow: "scroll", display: "table-caption" }}>{customerName}</div>
+                <div className="customer-userName">{customerName}</div>
               </div>
               {customerAvatar &&
                 <Img customerAvatar={customerAvatar} alt="Customer avatar"></Img>
