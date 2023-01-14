@@ -19,7 +19,7 @@
 
 .trainer-actions-container {
     display: block;
-    width: 17em;
+    width: 20em;
     align-content: center;
     padding: 0 1em 0 1em;
     border-left: 1.8px dashed rgb(97, 133, 210);
@@ -262,13 +262,18 @@
 }
 
 .message-emptyArr {
-    width: 52.6em;
+    width: 53.3em;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
     color: rgb(119, 94, 143);
 }
+/* @media screen and (min-width: 1440px) {
+    .message-emptyArr {
+        width: 42.7em;
+    }
+} */
 
 .my-courses-form {
     display: flex;
@@ -291,13 +296,13 @@
     margin-bottom: 0.5em;
     padding-left: 3.3em;
     /* justify-content: flex-start; */
-    height: 25em;
+    height: 35em;
     overflow: auto;
 }
 
 @media screen and (min-width: 1300px) {
     .allCoursesCards-container {
-        height: 35em;
+        height: 45em;
     }
 }
 

@@ -231,7 +231,7 @@ export function TrainerSignupForm() {
         };
         // console.log(trainerToAddToDB);
 
-        setTrainerName(firstName + " " + lastName);
+        setTrainerName(capitalizedFirstName + " " + capitalizedLastName);
         setProfilePicture('');
         // setLoading(true);
 

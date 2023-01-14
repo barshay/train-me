@@ -106,13 +106,13 @@ const ContactUsForm = () => {
       errorsConsole.messageTitle = "Message Title feild is mandatory!";
     };
 
-    if ((message && message.length < 10) || message.length > 100) {
+    if ((message && message.length < 10) || message.length > 150) {
       isValid = false;
       setErrors(prevState => ({
         ...prevState,
-        [message]: "Message must be in a range of 10-100"
+        [message]: "Message must be in a range of 10-150"
       }));
-      errorsConsole.message = "Message must be in a range of 100-50";
+      errorsConsole.message = "Message must be in a range of 10-150";
     } else if (!message) {
       isValid = false;
       setMandatoryErrors(prevState => ({
@@ -207,7 +207,7 @@ const ContactUsForm = () => {
       <form className="contactUs-form">
         {submitted &&
           <p className="success-message">
-            Success! Thank you for contacting us, we will contact you as soon as possible.
+            Success! Thank you for contacting us, We'll contact you back as soon as possible.
           </p>}
         <input
           className="form-field"
@@ -294,9 +294,10 @@ const ContactUsForm = () => {
           </p> : ''
         }
 
-        <input
+        <textarea
+          rows={3}
           className="form-field"
-          type="textarea"
+          // type="textarea"
           placeholder="Message"
           value={message}
           onChange={(e) => { setMessage(e.target.value) }} />
@@ -307,7 +308,7 @@ const ContactUsForm = () => {
         }
         {errors[message] ?
           <p style={{ fontSize: "12px", color: "red", paddingLeft: "0.3em", marginTop: "0" }}>
-            Message must be in a range of 10-100 characters!
+            Message must be in a range of 10-150 characters!
           </p> : ''
         }
 
@@ -343,9 +344,11 @@ const ContactUsForm = () => {
           </p> : ''
         }
 
-        <button
-          className="btn-container"
-          type="submit" onClick={(handleSubmitContactAdding)}>Send Us a Message</button>
+        <div style={{display: 'flex', justifyContent: "center"}}>
+          <button
+            className="btn-container"
+            type="submit" onClick={(handleSubmitContactAdding)}>Send Us a Message</button>
+        </div>
       </form>
     </div>
   )

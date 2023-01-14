@@ -168,7 +168,7 @@ export function AdminSignup() {
         };
         console.log("admin To Add To DB: " + adminToAddToDB);
 
-        setAdminName(firstName + " " + lastName);
+        setAdminName(capitalizedFirstName + " " + capitalizedLastName);
         setFirstName('');
         setLastName('');
         setEmail('');

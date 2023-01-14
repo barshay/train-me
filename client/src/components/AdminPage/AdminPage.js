@@ -9,7 +9,6 @@ import '../trainerPage/UpdateModal.css';
 import BackToTopBtn from '../../customHooks/BackToTopBtn';
 
 const AdminPage = ({ loading, setLoading, adminAvatar }) => {
-  // setLoading(false);
   const [contactCardExist, setContactCardExist] = useState(true);
   const [customerCardExist, setCustomerCardExist] = useState(true);
   const [trainerCardExist, setTrainerCardExist] = useState(true);
@@ -43,6 +42,16 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
     setCoursesData
   } = useContext(MyContext);
 
+  //setting the time for once, for greeting the appropriate greeting.
+  const [time, setTime] = useState(0);
+  const [isTimeChecked, setIsTimeChecked] = useState(false);
+  if (!isTimeChecked) {
+    const today = new Date();
+    setTime(today.getHours());
+    console.log("Time is: ", time);
+    setIsTimeChecked(true);
+  }
+
   useEffect(() => {
     contactUsData.length > 0 && setContactCardExist(false);
     (contactUsData.length === 0 && contactMessageFlag) && setContactUsEmpty(true);
@@ -61,6 +70,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
   const getContactUsApiAnswer = async () => {
     setLoading(true);
+    console.log("time from admin.js: ", time);
     try {
       const contactUsUrl = 'http://localhost:8000/contactUs';
       const response = await axios.get(contactUsUrl);
@@ -399,7 +409,9 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
           {adminName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
-                <span style={{ color: "red", fontSize: "14px" }}>Welcome</span>
+                {(time >= 0 && time < 12) && <span style={{ color: "red", fontSize: "14px" }} >Good Morning</span>}
+                {(time < 16 && time >= 12) && <span style={{ color: "red", fontSize: "14px" }} >Good AfterNoon</span>}
+                {(time <= 23 && time >= 16) && <span style={{ color: "red", fontSize: "14px" }} >Good Evening</span>}
                 <div className="userName">{adminName}</div>
               </div>
               {adminAvatar &&
@@ -662,7 +674,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
                   <div className="titles">Gender: <span className="items">{item.gender}</span></div>
                   <div className="titles">Contact Method: <span className="items">{item.contactmethod}</span></div>
                   <div className="titles">Date Created: <span className="items">{item.createdat}</span></div>
-                  <button onClick={() => { deleteContactById(item._id) }} className="item-btn" style={{marginTop:"0.7em"}}>Remove</button>
+                  <button onClick={() => { deleteContactById(item._id) }} className="item-btn" style={{ marginTop: "0.7em" }}>Remove</button>
                   <Marginer direction="vertical" margin="0.5em" />
                 </div>
               ),

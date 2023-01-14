@@ -222,7 +222,7 @@ export function CustomerSignupForm() {
     };
     // console.log(customerToAddToDB);
 
-    setCustomerName(firstName + " " + lastName);
+    setCustomerName(capitalizedFirstName + " " + capitalizedLastName);
     setProfilePicture('');
     setLoading(true);
 

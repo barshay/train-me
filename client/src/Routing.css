@@ -1,11 +1,17 @@
 .active-link {
-    color: rgb(111, 174, 191);
-    /* margin-left: 1em; */
     padding-right: 1em;
     padding-left: 1em;
-    text-decoration: none;
+    /* text-decoration: none; */
     border-radius: 50px 20px;
 
+    overflow: hidden;
+    background: linear-gradient(to right, rgba(221, 221, 88, 0.801), midnightblue 40%, rgba(118, 118, 11, 0.472));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: 100%;
+    transition: background-position 2s ease;
 }
 
 .container-link {
@@ -24,14 +30,15 @@
 
 /* mouse over link */
 a:hover {
-    color: rgb(54, 57, 58);
-    background-color: rgb(212, 201, 201);
-    /* border: 1px solid rgb(71, 173, 214); */
+    border: 1px solid rgb(155, 179, 189);
+    background-position: 0 100%;
 }
 
 /* selected link */
-a:active {
-    color: blue;
+a:focus {
+    border: 1px solid rgb(155, 179, 189);
+    background-position: 0%;
+
 }
 
 .container-header {

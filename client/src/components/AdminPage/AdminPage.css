@@ -72,6 +72,7 @@
     width: 36.3rem;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin: 0 0 1em 0;
     background: #6B6A72;
     background: -moz-linear-gradient(left, #6B6A72 0%, #A5A5A5 50%, #B9B7B9 100%);
@@ -317,7 +318,7 @@
 
 .deleteAllCards-btn {
     height: 1.2em;
-    margin: 0.2em 0.2em 0 0.2em;
+    margin: 0 0.2em 0 0.2em;
     background-color: lightgray;
     display: flex;
     align-items: center;
@@ -397,7 +398,7 @@
 .sendEmail-btn {
     height: 1.2em;
     /* padding: 1em; */
-    margin: 0.2em 0.2em 0 0;
+    margin: 0 0.2em 0 0;
     background-color: lightgray;
     display: flex;
     align-items: center;

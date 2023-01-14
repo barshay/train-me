@@ -30,13 +30,22 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   const [allCoursesPage, setAllCoursesPage] = useState(false);
   let allCustomersCounter = 0;
 
-
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [picture, setPicture] = useState('');
   const [lessonTime, setLessonTime] = useState('');
   const [cost, setCost] = useState('');
+
+  //setting the time for once, for greeting the appropriate greeting.
+  const [time, setTime] = useState(0);
+  const [isTimeChecked, setIsTimeChecked] = useState(false);
+  if (!isTimeChecked) {
+    const today = new Date();
+    setTime(today.getHours());
+    console.log("Time is: ", time);
+    setIsTimeChecked(true);
+  }
 
   useEffect(() => {
     if (filteredCourses.length !== 0) {
@@ -792,7 +801,9 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           {trainerName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
-                <span style={{ color: "blue", fontSize: "14px" }}>Welcome</span>
+                  {(time >= 0 && time < 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good Morning</span>}
+                  {(time < 16 && time >= 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good AfterNoon</span>}
+                  {(time <= 23 && time >= 16) && <span style={{ color: "blue", fontSize: "14px" }} >Good Evening</span>}
                 <div className="trainer-userName">{trainerName}</div>
               </div>
               {trainerAvatar &&

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import './CustomerPage.css';
 import Img from '../../customHooks/Img';
 import MyContext from '../../MyContext';
@@ -7,6 +7,16 @@ import axios from 'axios';
 
 const CustomerPage = ({ customerAvatar }) => {
   const { customerName } = useContext(MyContext);
+
+  //setting the time for once, for greeting the appropriate greeting.
+  const [time, setTime] = useState(0);
+  const [isTimeChecked, setIsTimeChecked] = useState(false);
+  if (!isTimeChecked) {
+    const today = new Date();
+    setTime(today.getHours());
+    console.log("Time is: ", time);
+    setIsTimeChecked(true);
+  }
 
   return (
     <>
@@ -17,7 +27,9 @@ const CustomerPage = ({ customerAvatar }) => {
           {customerName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
-                <span style={{ color: "green", fontSize: "14px" }}>Welcome</span>
+                {(time >= 0 && time < 12) && <span style={{ color: "green", fontSize: "14px" }} >Good Morning</span>}
+                {(time < 16 && time >= 12) && <span style={{ color: "green", fontSize: "14px" }} >Good AfterNoon</span>}
+                {(time <= 23 && time >= 16) && <span style={{ color: "green", fontSize: "14px" }} >Good Evening</span>}        
                 <div className="customer-userName">{customerName}</div>
               </div>
               {customerAvatar &&
