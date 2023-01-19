@@ -35,7 +35,12 @@ export function LoginForm() {
   const [errors, setErrors] = useState([]);
 
   const isValidEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
+    return /\S+@\S+\.\S+/.test(email); 
+    //Todo
+    // fix regex statement here and on customer+trainer signUp. 
+    // The regex version below is preferred,
+    // it works but the email returned an invalid email, even though it went into the private area.
+    // /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
   }
 
   let isValid = true;
@@ -115,7 +120,7 @@ export function LoginForm() {
       customerMessage === 'Welcome Customer' && navigate(`/customer`);
       setLoading(false);
     }).catch((error) => {
-      console.log("message from front");
+      (error.response.status === 422 && isValid) && window.alert("Invalid email or password!");
       console.log(error);
     });
   }
@@ -140,7 +145,7 @@ export function LoginForm() {
       setTrainerName(response.data.name);
       trainerMessage === 'Welcome Trainer' && navigate(`/trainer`);
     }).catch((error) => {
-      console.log("message from front");
+      (error.response.status === 422 && isValid) && window.alert("Invalid email or password!");
       console.log(error);
     });
   }

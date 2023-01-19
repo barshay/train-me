@@ -22,7 +22,7 @@ app.put("/:courseId", updateCourse);
 // app.get("/", getAllCourses);
 app.post("/trainerCourses", getAllTrainerCourses);
 app.get("/admincourses", getAllAdminCourses);
-app.get("/allTrainersCourses", getAllTrainersCoursesWithoutCustomers);
+app.post("/allTrainersCourses", getAllTrainersCoursesWithoutCustomers);
 app.get("/:courseId", getCourseById);
 app.delete("/:courseId", deleteCourseById);
 // app.delete("/", deleteAllCourses);

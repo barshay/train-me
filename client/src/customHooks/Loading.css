@@ -26,6 +26,7 @@
     color: blue;
     font-size: 12px;
     font-weight: bold;
+    z-index: 10;
 }
 
 .spinner.smooth::after {

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import {
   BoldLink,
   BoldLinkTrainer,
@@ -22,7 +22,7 @@ import CapitalizeFirstLowercaseRest from '../../customHooks/CapitalizeFirstLower
 export function CustomerSignupForm() {
   const { switchToSignin, switchToTrainerSignup } = useContext(AccountContext);
   const { setCustomerName, customerAvatarHandler, setLoading, loading } = useContext(MyContext);
-  setLoading(false);
+  // setLoading(false);
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState('');
@@ -206,6 +206,7 @@ export function CustomerSignupForm() {
       return;
     };
     isValid = true;
+    setLoading(true);
 
     const capitalizedFirstName = CapitalizeFirstLowercaseRest(firstName);
     const capitalizedLastName = CapitalizeFirstLowercaseRest(lastName);
@@ -224,7 +225,6 @@ export function CustomerSignupForm() {
 
     setCustomerName(capitalizedFirstName + " " + capitalizedLastName);
     setProfilePicture('');
-    setLoading(true);
 
     axios({
       method: 'post',
@@ -232,10 +232,11 @@ export function CustomerSignupForm() {
       headers: { 'content-type': 'application/json' },
       data: customerToAddToDB
     }).then((res) => {
-      console.log('Posting a New Customer ', res.data);
+      // console.log('Posting a New Customer ', res.data);
       const uploadedImg = res.data.cloImageResult.public_id;
       customerAvatarHandler(uploadedImg);
       if (isValid) {
+        setLoading(false);
         navigate(`/customer`);
       } else return;
     }).catch((error) => {
@@ -255,6 +256,11 @@ export function CustomerSignupForm() {
     inputFileRef.current.value = null;
   };
 
+  useEffect(() => {
+    setLoading(false)
+  }, [])
+
+
   return (
     <>
       {loading &&
@@ -264,6 +270,7 @@ export function CustomerSignupForm() {
 
       <BoxContainer>
         <FormContainer>
+          {loading && <section className="smooth spinner" >{ }</section>}
           {emailExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{emailExistErr} choose another one please</ErrorStyle>}
           <Input
             type="text"

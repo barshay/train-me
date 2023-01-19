@@ -21,22 +21,34 @@ const CustomerPage = ({ customerAvatar }) => {
   return (
     <>
       <div className="customer-page-container">
-        <div className="customer-image-home-container">
-        </div>
+        <div className="customer-image-home-container"></div>
         <div className="customer-actions-container">
-          {customerName &&
-            <div style={{ display: "flex" }}>
+          {
+            customerName &&
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <div style={{ display: "block" }}>
-                {(time >= 0 && time < 12) && <span style={{ color: "green", fontSize: "14px" }} >Good Morning</span>}
-                {(time < 16 && time >= 12) && <span style={{ color: "green", fontSize: "14px" }} >Good AfterNoon</span>}
-                {(time <= 23 && time >= 16) && <span style={{ color: "green", fontSize: "14px" }} >Good Evening</span>}        
+                {(time >= 0 && time < 12) && <span style={{ color: "lightGreen", fontSize: "14px" }} >Good Morning</span>}
+                {(time < 16 && time >= 12) && <span style={{ color: "lightGreen", fontSize: "14px" }} >Good AfterNoon</span>}
+                {(time <= 23 && time >= 16) && <span style={{ color: "lightGreen", fontSize: "14px" }} >Good Evening</span>}
                 <div className="customer-userName">{customerName}</div>
               </div>
               {customerAvatar &&
                 <Img customerAvatar={customerAvatar} alt="Customer avatar"></Img>
               }
-            </div>}
+            </div>
+          }
           <Marginer direction="vertical" margin="1em" />
+          <div style={{ marginLeft: "2em" }}>
+            <button className="customer-actions-btn" onClick={() => { }} >
+              My Courses
+            </button>
+            <button className="customer-actions-btn" onClick={() => { }} >
+              All Trainers
+            </button>
+            <button className="customer-actions-btn" onClick={() => { }} >
+              All Courses
+            </button>
+          </div>
         </div>
       </div>
     </>

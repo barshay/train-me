@@ -105,6 +105,9 @@ export function AdminLogin() {
             setAdminName(response.data.name);
             message === 'Welcome Admin' && navigate(`/admin`);
         }).catch((error) => {
+            if (error.response.status === 422) {
+                window.alert("Invalid email or password!");
+            }
             console.log("message from front");
             console.log(error);
         });

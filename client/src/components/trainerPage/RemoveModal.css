@@ -22,7 +22,7 @@ body.active-modal {
 .modal, .overlay-customers, .overlay {
     width: 100vw;
     height: 100vh;
-    top: 9vh;
+    top: 7.2vh;
     left: 0;
     right: 0;
     bottom: 0;
@@ -40,6 +40,7 @@ body.active-modal {
     left: 60%;
     transform: translate(-50%, -50%);
     line-height: 1.8;
+    z-index: 2;
 }
 
 .close-remove-modal-container {

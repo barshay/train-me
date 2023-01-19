@@ -296,6 +296,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       console.log('Fetching customers ', res.data);
       setCourseCustomersData(res.data);
       setCustomersModal(!customersModal);
+      setLoading(false);
     }).catch((error) => {
       console.log(error);
     });
@@ -387,7 +388,6 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
 
   const toggleModal = () => {
     setCustomersModal(!customersModal);
-    setLoading(!loading);
   }
 
   const toggleFilteredCoursesModal = () => {
@@ -401,7 +401,7 @@ const AdminPage = ({ loading, setLoading, adminAvatar }) => {
       setToggleFilteredCourses(!toggleFilteredCourses);
     }
   }
-
+  // setLoading(true);
   return (
     <>
       <div className="admin-page-container">

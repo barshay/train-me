@@ -9,9 +9,8 @@ const customerSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   /**
    install a package when no profile pic is provided, 
-   the default will be a default regular profile pic
+   the default will be a abstract/randome profile picture
   */
-  // profilepic: { type: String, default: "PICTURE" },
   profilepic:
   {
     image: { type: String, required: true },

@@ -52,7 +52,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       filteredCoursesByExistingCustomer();
     }
   }, [toggleFiltered]);
-  
+
   let inputFileRef = useRef(null);
   const handlePictureChange = (e) => {
     inputFileRef = e.target.value;
@@ -168,6 +168,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       return;
     };
     isValid = true;
+    setLoading(true);
 
     const capitalizeFirst = str => {
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -201,6 +202,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       console.log('Posting a New Course ', res.data);
       setSubmitted(true);
       resetFileInput(e);
+      setLoading(false);
       // const uploadedImg = res.data.cloImageResult;
     }).catch((error) => {
       console.log(error);
@@ -244,7 +246,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   };
 
   const getAllTrainerCoursesHandler = (trainerID) => {
-    // setLoading(true);
+    !isDataExist && setLoading(true);
     // console.log("trainerID: ", trainerID)
     if (isDataExist) {
       console.log("return");
@@ -264,7 +266,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       setIsDataExist(true);
       setFilteredCoursesArr(res.data);
 
-      // setLoading(false);
+      setLoading(false);
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
       setAllCustomersPage(false);
@@ -286,6 +288,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   }
 
   const filteredCoursesByExistingCustomer = () => {
+    setLoading(true);
     const filtered = [];
     console.log(filteredCoursesArr);
     for (const i in filteredCoursesArr) {
@@ -295,12 +298,15 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       }
     }
     setFilteredCourses(filtered);
+    setLoading(false);
     console.log(filteredCourses);
   }
 
   const unfilteredCourse = () => {
+    setLoading(true);
     setToggleFiltered(false);
     setFilteredCourses([]);
+    setLoading(false);
   }
 
   const getCourseCustomers = (customersArr) => {
@@ -326,6 +332,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   };
 
   const getAllCoursesCustomers = (trainerID) => {
+    !allCustomersPage && setLoading(true);
     console.log("Data before", allCoursesCustomersData);
     console.log(trainerID);
     const id = {
@@ -341,7 +348,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
       setAllCoursesCustomersData(res.data);
       console.log("Data after", allCoursesCustomersData);
 
-      // setLoading(false);
+      setLoading(false);
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
       setMyCoursesPage(false);
@@ -376,27 +383,33 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
   // }
 
   const getAllTrainersCoursesHandler = async () => {
-    try {
-      if (allCoursesTrainersData.length !== 0) {
-        console.log("return!!");
-        return;
-      }
-      const allTrainersCoursesUrl = 'http://localhost:8000/course/allTrainersCourses';
-      const response = await axios.get(allTrainersCoursesUrl);
-      const data = await response.data;
-      console.log(data);
-      setAllCoursesTrainersData(data);
+    !allCoursesPage && setLoading(true);
+    // console.log("loading true: ", loading);
+    if (allCoursesTrainersData.length !== 0) {
+      console.log("return!!");
+      return;
+    }
+
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/course/allTrainersCourses",
+      headers: { 'content-type': 'application/json' },
+      data: { trainerID }
+    }).then((res) => {
+      // console.log('Fetching all Trainers Courses ', res.data);
+      setAllCoursesTrainersData(res.data)
 
       setAllCoursesPage(true);
+      setLoading(false);
+      console.log("loading false: ", loading);
       setPostCoursePage(false);
       setShowTrainerHomePage(false);
       setMyCoursesPage(false);
       setIsDataExist(false);
       setAllCustomersPage(false);
-
-    } catch (error) {
+    }).catch((error) => {
       console.log(error);
-    }
+    });
   }
 
   const closeAllCoursesPage = () => {
@@ -409,7 +422,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
     // <>
     <MyContext.Provider value={{ filteredCoursesArr, setFilteredCoursesArr }}>
       <div className="trainer-page-container">
-        {/* {loading && <section className="smooth spinner" >{ }</section>} */}
+        {loading && <section className="smooth spinner" >{ }</section>}
         {showTrainerHomePage && <div className="trainer-image-home-container"></div>}
         {postCoursePage &&
           <div className="popup-container">
@@ -549,7 +562,7 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           (filteredCoursesArr.length > 0 && myCoursesPage) &&
           <div className="my-courses-form" >
             <div className="courses-buttons-div">
-              {loading && <section className="smooth spinner" >{ }</section>}
+              {/* {loading && <section className="smooth spinner" >{ }</section>} */}
               <button className="close-postCourse-btn" onClick={closeMyCoursesPage}>{ }</button>
               <div className="filteredButtons-container">
                 {
@@ -789,6 +802,10 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
                       <div className="course-title">Description: <span className="item">{course.description}</span></div>
                       <div className="course-title">Lesson time: <span className="numeric-items">{course.lessontime}</span></div>
                       <div className="course-title">Price: <span className="numeric-items">{course.cost} ₪</span></div>
+                      {(course.trainer === trainerID && course.customers < 1)
+                        ? <div className="course-title">Customers: <span className="numeric-items" style={{marginBottom: "0.2em"}}>{course.customers}</span></div>
+                        : (course.trainer === trainerID && course.customers >= 1) ?
+                          <div className="course-title">Customers: <span className="customers-amount" style={{ marginBottom: "0.2em" }}>{course.customers}</span></div> : ""}
                     </div>
                   </div>)
               })}
@@ -801,9 +818,9 @@ const TrainerPage = ({ trainerAvatar, setLoading, loading }) => {
           {trainerName &&
             <div style={{ display: "flex" }}>
               <div style={{ display: "block" }}>
-                  {(time >= 0 && time < 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good Morning</span>}
-                  {(time < 16 && time >= 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good AfterNoon</span>}
-                  {(time <= 23 && time >= 16) && <span style={{ color: "blue", fontSize: "14px" }} >Good Evening</span>}
+                {(time >= 0 && time < 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good Morning</span>}
+                {(time < 16 && time >= 12) && <span style={{ color: "blue", fontSize: "14px" }} >Good AfterNoon</span>}
+                {(time <= 23 && time >= 16) && <span style={{ color: "blue", fontSize: "14px" }} >Good Evening</span>}
                 <div className="trainer-userName">{trainerName}</div>
               </div>
               {trainerAvatar &&

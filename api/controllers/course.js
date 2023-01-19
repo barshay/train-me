@@ -299,8 +299,11 @@ module.exports = {
 
     getAllTrainersCoursesWithoutCustomers: async (req, res) => {
         try {
+            const trainerId = req.body
+            // console.log("Trainer ID: ", trainerId);
             const allCourses = await Course.find({});
             const coursesWithoutCustomersArr = [];
+            console.log(coursesWithoutCustomersArr);
             allCourses.map((course) => {
                 const tempObj = {};
                 tempObj.name = course.name;
@@ -310,7 +313,10 @@ module.exports = {
                 tempObj.picture = course.picture;
                 tempObj.trainer = course.trainer;
                 tempObj.cost = course.cost;
-                coursesWithoutCustomersArr.push(tempObj);
+                if (course.trainer == trainerId.trainerID) {
+                    tempObj.customers = course.customers.length
+                }
+                coursesWithoutCustomersArr.unshift(tempObj);
             })
             // console.log("All Courses: ", coursesWithoutCustomersArr);
             return serverResponse(res, 200, coursesWithoutCustomersArr);

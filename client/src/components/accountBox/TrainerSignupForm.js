@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import {
     BoldLink,
     BoldLinkCustomer,
@@ -21,7 +21,7 @@ import CapitalizeFirstLowercaseRest from '../../customHooks/CapitalizeFirstLower
 export function TrainerSignupForm() {
     const { switchToSignin, switchToCustomerSignup } = useContext(AccountContext);
 
-    const { setTrainerName, setLoading, trainerAvatarHandler, setTrainerID } = useContext(MyContext);
+    const { setTrainerName, setLoading, loading, trainerAvatarHandler, setTrainerID} = useContext(MyContext);
 
     const navigate = useNavigate();
 
@@ -215,6 +215,7 @@ export function TrainerSignupForm() {
             return;
         };
         isValid = true;
+        setLoading(true);
 
         const capitalizedFirstName = CapitalizeFirstLowercaseRest(firstName);
         const capitalizedLastName = CapitalizeFirstLowercaseRest(lastName);
@@ -233,7 +234,6 @@ export function TrainerSignupForm() {
 
         setTrainerName(capitalizedFirstName + " " + capitalizedLastName);
         setProfilePicture('');
-        // setLoading(true);
 
         axios({
             method: 'post',
@@ -241,12 +241,14 @@ export function TrainerSignupForm() {
             headers: { 'content-type': 'application/json' },
             data: trainerToAddToDB
         }).then((res) => {
-            console.log('Posting a New Trainer ', res.data);
+            // console.log('Posting a New Trainer ', res.data);
+            // console.log("loading= ", loading);
             const uploadedImg = res.data.cloImageResult.public_id;
             trainerAvatarHandler(uploadedImg);
             setTrainerID(res.data.result._id);
-            setLoading(false);
+            // console.log("loading= ", loading);
             if (isValid) {
+                setLoading(false);
                 navigate(`/trainer`);
             } else return;
         }).catch((error) => {
@@ -267,12 +269,17 @@ export function TrainerSignupForm() {
         inputFileRef.current.value = null;
     };
 
+    useEffect(() => {
+      setLoading(false)
+    }, [])
+    
     return (
         <>
             {profilePicture && <PreviewPicture src={profilePicture} alt="trainer-avatar"></PreviewPicture>}
 
             <BoxContainer>
                 <FormContainer>
+                    {loading && <section className="smooth spinner" >{ }</section>}
                     {emailExistErr && <ErrorStyle style={{ fontSize: "14px" }}>{emailExistErr} choose another one please</ErrorStyle>}
                     <Input
                         type="text"
